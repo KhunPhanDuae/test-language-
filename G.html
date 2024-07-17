@@ -31,16 +31,14 @@
     <script>
         function convertText() {
             const mappings = {
-                ',': 'ꩻ',
-                ';': 'ႏ',
-                '7Phan.D': 'KhunPhanDuae'
+                'Hello': 'ခွဲးဟဝ်ဒျာႏ'
             };
             
             let inputText = document.getElementById('inputText').value;
             let outputText = inputText;
 
             for (const [original, replacement] of Object.entries(mappings)) {
-                const regex = new RegExp(original, 'g');
+                const regex = new RegExp('\\b' + original + '\\b', 'gi'); // Using \\b for word boundary
                 outputText = outputText.replace(regex, replacement);
             }
 
@@ -52,7 +50,7 @@
     </script>
 </head>
 <body>
-    <h1>Character Converter</h1>
+    <h1>Character ဿConverter</h1>
     <textarea id="inputText" rows="10" cols="50" placeholder="Enter text here..."></textarea>
     <br>
     <textarea id="outputText" rows="10" cols="50" placeholder="Converted text will appear here..."></textarea>
