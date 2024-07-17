@@ -3,86 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pa'O to English Translator</title>
+    <title>Character Converter</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            line-height: 1.6;
-            padding: 20px;
+            text-align: center;
+            background-color: #f0f0f0;
         }
         h1 {
-            text-align: center;
             color: #333;
         }
-        .translator-form {
-            max-width: 500px;
-            margin: 0 auto;
-            background: #f9f9f9;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        .translator-form label {
-            font-weight: bold;
-            display: block;
-            margin-bottom: 10px;
-        }
-        .translator-form input[type="text"] {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 3px;
-            font-size: 16px;
-        }
-        .translator-form button {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            background: #333;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            border-radius: 3px;
-            font-size: 16px;
-        }
-        .translator-form button:hover {
-            background: #555;
-        }
-        .translation-result {
-            margin-top: 20px;
-            border-top: 1px solid #ddd;
-            padding-top: 10px;
+        img {
+            width: 300px;
+            height: auto;
+            border: 2px solid #333;
+            border-radius: 10px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
         }
     </style>
-</head>
-<body>
-    <h1>Pa'O to English Translator</h1>
-    <div class="translator-form">
-        <label for="paOText">ပအိုဝ်းစကား (Pa'O)</label>
-        <input type="text" id="paOText" placeholder="ခွဲးဟဝ်ဒျာႏ" autofocus>
-        <button onclick="translateToEnglish()">Translate</button>
-        <div class="translation-result">
-            <p><strong>အင်္ဂလိပ်စကား (English):</strong> <span id="englishResult"></span></p>
-        </div>
-    </div>
-
     <script>
-        function translateToEnglish() {
-            const paOInput = document.getElementById('paOText').value;
-            let englishTranslation = '';
+        function convertText() {
+            const mappings = {
+                ',': 'ꩻ',
+                ';': 'ႏ',
+                '7Phan.D':'KhunPhanDuae'
+            };
+            
+            let inputText = document.getElementById('inputText').value;
+            let outputText = inputText;
 
-            // Add translation logic here (e.g., dictionary lookup or API call)
-
-            // Example translation (replace with actual logic)
-            if (paOInput === 'ခွဲးဟဝ်ဒျာႏ') {
-                englishTranslation = 'Hello';
-            } else {
-                englishTranslation = 'Translation not found';
+            for (const [original, replacement] of Object.entries(mappings)) {
+                const regex = new RegExp(original, 'g');
+                outputText = outputText.replace(regex, replacement);
             }
 
-            document.getElementById('englishResult').textContent = englishTranslation;
+            document.getElementById('outputText').value = outputText;
         }
     </script>
+</head>
+<body>
+    <h1>Character Converter</h1>
+    <textarea id="inputText" rows="10" cols="50" placeholder="Enter text here..."></textarea>
+    <br>
+    <button onclick="convertText()">Convert</button>
+    <br>
+    <textarea id="outputText" rows="10" cols="50" placeholder="Converted text will appear here..."></textarea>
+    <h1>Convert to </h1>
+    <img src="backup/MunvanPA'O/A682147D-4CD0-4296-922B-C866155DDE4F.jpeg" alt="ပအိုဝ်းစာကူးပြောင်းရန်">
 </body>
 </html>
