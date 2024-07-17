@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Character Converter</title>
+    <title>Pa'O to English</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -31,7 +31,14 @@
     <script>
         function convertText() {
             const mappings = {
-                'Hello': 'ခွဲးဟဝ်ဒျာႏ'
+                'Hello': 'ခွဲးဟဝ်ဒျာႏ',
+                'ခွဲးဟဝ်ဒျာႏ': 'Hello',
+                'ခွေ': 'I',
+                'နာꩻ': 'you',
+                'ရက်': 'love',
+                'တမုဲင်ꩻ': 'what?',
+                'ခွေရက်ငါႏနာꩻ': 'I love you',
+                
             };
             
             let inputText = document.getElementById('inputText').value;
@@ -50,13 +57,13 @@
     </script>
 </head>
 <body>
-    <h1>Character ဿConverter</h1>
+    <h1>Pa'O to English Translate</h1>
     <textarea id="inputText" rows="10" cols="50" placeholder="Enter text here..."></textarea>
     <br>
     <textarea id="outputText" rows="10" cols="50" placeholder="Converted text will appear here..."></textarea>
     <br>
-    <button onclick="convertText()">Convert</button>
+    <button onclick="convertText()">Translate</button>
     <br>
-    <img src="backup/MunvanPA'O/A682147D-4CD0-4296-922B-C866155DDE4F.jpeg" alt="ပအိုဝ်းစာကူးပြောင်းရန်">
+    <img src="https://github.com/KhunPhanDuae/Pa-O Language/backup/MunvanPA'O/A682147D-4CD0-4296-922B-C866155DDE4F.jpeg" alt="ပအိုဝ်းစာကူးပြောင်းရန်">
 </body>
 </html>
