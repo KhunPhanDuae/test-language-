@@ -9,18 +9,25 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
+            background-color: #f4f4f4;
         }
         .container {
             max-width: 600px;
-            margin: 0 auto;
+            margin: 50px auto;
             padding: 20px;
-            border: 1px solid #ccc;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
             border-radius: 10px;
         }
         input, button {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
+            font-size: 16px;
+        }
+        p {
+            font-size: 18px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -35,24 +42,32 @@
     <script>
         const pa_o_to_english = {
             "ခွဲးဟဝ်ဒျာႏ": "Hello",
+            "မွူးရောဝ်ꩻခွဲးဝင်ꩻ": "See you tomorrow",
+            "ယိုကိုအီႏလွေꩻဗာႏနုဲင်းမုဲင်ꩻ": "How do I get here?",
+            "ခွေအဝ်ႏလိုႏယိုခါနဝ်ꩻ": "I want this now",
+            "မော့ꩻခွဲးဗာႏသꩻရေꩻငါႏ": "Nice to meet you",
+            "မင်္ဂလာပါ": "Greetings"
             // Add more translations here
         };
 
         const english_to_pa_o = {
             "Hello": "ခွဲးဟဝ်ဒျာႏ",
+            "See you tomorrow": "မွူးရောဝ်ꩻခွဲးဝင်ꩻ",
+            "How do I get here?": "ယိုကိုအီႏလွေꩻဗာႏနုဲင်းမုဲင်ꩻ",
+            "I want this now": "ခွေအဝ်ႏလိုႏယိုခါနဝ်ꩻ",
+            "Nice to meet you": "မော့ꩻခွဲးဗာႏသꩻရေꩻငါႏ",
+            "Greetings": "မင်္ဂလာပါ"
             // Add more translations here
         };
 
         function translate() {
-            const inputText = document.getElementById("inputText").value;
-            let outputText = "";
+            const inputText = document.getElementById("inputText").value.trim();
+            let outputText = "Translation not found";
 
             if (pa_o_to_english[inputText]) {
                 outputText = pa_o_to_english[inputText];
             } else if (english_to_pa_o[inputText]) {
                 outputText = english_to_pa_o[inputText];
-            } else {
-                outputText = "Translation not found";
             }
 
             document.getElementById("outputText").innerText = outputText;
