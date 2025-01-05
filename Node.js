@@ -3,7 +3,7 @@ const fs = require('fs');
 
 // Authenticate using the credentials
 const auth = new google.auth.GoogleAuth({
-  keyFile: './credentials.json',  // JSON ဖိုင်ကို project folder ထဲတွင်ထည့်ပါ
+  keyFile: './khunderan-22ec7-d7c5c60e0d25.json',  // JSON ဖိုင်ကို project folder ထဲတွင်ထည့်ပါ
   scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
 });
 
