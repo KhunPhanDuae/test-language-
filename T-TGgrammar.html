@@ -82,6 +82,12 @@
                         if (example.text_en && rule.lang_code !== 'en') { // Always show English if available and not English rule
                             exampleText += exampleText ? `\n(En: ${example.text_en})` : `En: ${example.text_en}`;
                         }
+                        if (example.text_blk && rule.lang_code !== 'blk') { // Always show Pa'O if available and not Pa'O rule
+                            exampleText += exampleText ? `\n(Blk: ${example.text_blk})` : `Blk: ${example.text_blk}`;
+                        }
+                        if (example.text_my && rule.lang_code !== 'my') { // Always show myanmar  if available and not myanmar rule
+                            exampleText += exampleText ? `\n(my: ${example.text_my})` : `My: ${example.text_my}`;
+                        }
                         // Add more conditions for other languages as needed
 
                         exampleBox.textContent = exampleText;
