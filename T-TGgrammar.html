@@ -3,21 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grammar Comparison</title>
-    <link rel="stylesheet" href="style.css"> <style>
-        /* Basic CSS - you can move this to style.css */
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh; }
-        header { background-color: #333; color: white; padding: 1em 0; text-align: center; }
-        nav { background-color: #444; padding: 0.5em 0; text-align: center; }
-        nav a { color: white; text-decoration: none; padding: 0.5em 1em; margin: 0 0.5em; border-radius: 5px; transition: background-color 0.3s ease; }
-        nav a:hover { background-color: #555; }
-        .container { flex: 1; padding: 20px; max-width: 800px; margin: 20px auto; background-color: #f9f9f9; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
-        h1, h2 { color: #333; text-align: center; margin-bottom: 20px; }
-        .grammar-section { margin-bottom: 30px; border: 1px solid #ddd; padding: 15px; border-radius: 8px; background-color: #fff; }
-        .grammar-section h3 { color: #0056b3; margin-top: 0; }
-        .grammar-rule { font-weight: bold; color: #28a745; margin-bottom: 10px; }
-        .example-box { background-color: #e9e9e9; padding: 10px 15px; border-left: 4px solid #007bff; margin-top: 10px; font-family: monospace; white-space: pre-wrap; word-break: break-word; }
-        footer { background-color: #333; color: white; text-align: center; padding: 1em 0; margin-top: auto; }
+    <title>Pa'O vs. Burmese Grammar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 1em 0;
+            text-align: center;
+        }
+        nav {
+            background-color: #444;
+            padding: 0.5em 0;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5em 1em;
+            margin: 0 0.5em;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        nav a:hover {
+            background-color: #555;
+        }
+        .container {
+            flex: 1;
+            padding: 20px;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .grammar-section {
+            margin-bottom: 30px;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+        .grammar-section h3 {
+            color: #0056b3;
+            margin-top: 0;
+        }
+        .grammar-rule {
+            font-weight: bold;
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+        .example-box {
+            background-color: #e9e9e9;
+            padding: 10px 15px;
+            border-left: 4px solid #007bff;
+            margin-top: 10px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .input-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        textarea {
+            width: 100%;
+            height: 80px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        button:hover {
+            background-color: #4cae4c;
+        }
+        .result-box {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #d4edda;
+            border: 1px solid #28a745;
+            border-radius: 4px;
+            min-height: 50px;
+        }
+        .result-box.error {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+            margin-top: auto;
+        }
     </style>
 </head>
 <body>
@@ -26,84 +129,280 @@
     </header>
 
     <nav>
-        <a href="T-TG.html">Translation App</a>
-        <a href="T-TGgrammar.html">Grammar Guide</a>
+        <a href="index.html">Translation App</a>
+        <a href="grammar.html">Grammar Guide</a>
     </nav>
 
     <div class="container">
         <h2>Language Grammar Structures</h2>
-        <p>Explore the basic sentence structure differences across various languages.</p>
+        <p>This page helps you understand the basic sentence structure differences between various languages based on their Subject-Verb-Object (SVO) patterns.</p>
 
-        <div id="grammarContent">
+        <div id="grammarRulesDisplay">
             <p>Loading grammar rules...</p>
+        </div>
+
+        <hr>
+
+        <div class="input-section">
+            <h2>Sentence Builder</h2>
+            <p>Select a source language and a target language. Enter words from the source language to see their potential grammatical structure in both languages.</p>
+
+            <div class="language-selectors">
+                <label for="sentenceSourceLang">Analyze From:</label>
+                <select id="sentenceSourceLang" onchange="resetSentenceBuilder()">
+                    <option value="blk">ပအိုဝ်း (blk)</option>
+                    <option value="en">English (en)</option>
+                    <option value="my">ဗမာ (my)</option>
+                    </select>
+
+                <label for="sentenceTargetLang">Show Structure In:</label>
+                <select id="sentenceTargetLang" onchange="resetSentenceBuilder()">
+                    <option value="my">ဗမာ (my)</option>
+                    <option value="blk">ပအိုဝ်း (blk)</option>
+                    <option value="en">English (en)</option>
+                    </select>
+            </div>
+
+            <textarea id="sentenceInput" placeholder="ဥပမာ: ခွေ အံႏ ဒဲဉ် နဝ်ꩻသွူ"></textarea>
+            <button onclick="analyzeSentence()">Analyze Sentence</button>
+
+            <h3>Source Language (Pa'O) Structure:</h3>
+            <div class="result-box" id="sourceSentenceOutput"></div>
+
+            <h3>Target Language (Burmese) Structure:</h3>
+            <div class="result-box" id="targetSentenceOutput"></div>
         </div>
     </div>
 
     <footer>
-        <p>&copy; 2025 RYPAK Pa'O Grammar Guide</p>
+        <p>&copy; 2024 My Multi-Language App</p>
     </footer>
 
     <script>
-        async function loadGrammarRules() {
+        let allLanguageData = {}; // Stores all language JSON data (e.g., { 'blk': { ... }, 'en': { ... } })
+        let posDefinitions = {};  // Stores parts of speech definitions from vocab.json
+        let grammarRules = {};    // Stores grammar rules from grammar_rules.json
+
+        // Function to fetch a single JSON file
+        async function fetchJsonFile(filePath) {
             try {
-                const response = await fetch('data/grammar_rules.json');
+                const response = await fetch(filePath);
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    throw new Error(`HTTP error! status: ${response.status} from ${filePath}`);
                 }
-                const rules = await response.json();
-                const grammarContentDiv = document.getElementById('grammarContent');
-                grammarContentDiv.innerHTML = ''; // Clear loading message
-
-                rules.forEach(rule => {
-                    const section = document.createElement('div');
-                    section.classList.add('grammar-section');
-
-                    const title = document.createElement('h3');
-                    title.textContent = `${rule.lang_name} (${rule.lang_code.toUpperCase()}): ${rule.structure}`;
-                    section.appendChild(title);
-
-                    const description = document.createElement('p');
-                    description.textContent = rule.description;
-                    section.appendChild(description);
-
-                    const examplesHeader = document.createElement('p');
-                    examplesHeader.innerHTML = '<strong>Examples:</strong>';
-                    section.appendChild(examplesHeader);
-
-                    rule.examples.forEach(example => {
-                        const exampleBox = document.createElement('div');
-                        exampleBox.classList.add('example-box');
-                        
-                        // Display examples based on available language keys
-                        let exampleText = '';
-                        if (example[`text_${rule.lang_code}`]) { // Display in its own language first
-                             exampleText += `${example[`text_${rule.lang_code}`]}`;
-                        }
-                        if (example.text_en && rule.lang_code !== 'en') { // Always show English if available and not English rule
-                            exampleText += exampleText ? `\n(En: ${example.text_en})` : `En: ${example.text_en}`;
-                        }
-                        if (example.text_blk && rule.lang_code !== 'blk') { // Always show Pa'O if available and not Pa'O rule
-                            exampleText += exampleText ? `\n(Blk: ${example.text_blk})` : `Blk: ${example.text_blk}`;
-                        }
-                        if (example.text_my && rule.lang_code !== 'my') { // Always show myanmar  if available and not myanmar rule
-                            exampleText += exampleText ? `\n(my: ${example.text_my})` : `My: ${example.text_my}`;
-                        }
-                        // Add more conditions for other languages as needed
-
-                        exampleBox.textContent = exampleText;
-                        section.appendChild(exampleBox);
-                    });
-
-                    grammarContentDiv.appendChild(section);
-                });
-
+                return await response.json();
             } catch (error) {
-                console.error('Could not fetch grammar rules:', error);
-                document.getElementById('grammarContent').innerHTML = "<p style='color:red;'>Error loading grammar rules. Please try again later.</p>";
+                console.error(`Could not fetch ${filePath}:`, error);
+                document.getElementById('grammarRulesDisplay').innerHTML = `<p class="error">Error loading data from ${filePath}. Please try again later.</p>`;
+                return null;
             }
         }
 
-        document.addEventListener('DOMContentLoaded', loadGrammarRules);
+        // Load all necessary data when the page loads
+        async function loadAllDataForGrammar() {
+            // Load vocab.json and grammar_rules.json first
+            posDefinitions = await fetchJsonFile('data/pos/blk_pos.json');
+            grammarRules = await fetchJsonFile('data/grammar_rules.json');
+            if (!posDefinitions || !grammarRules) return; // Stop if core data failed
+
+            const languagesToLoad = ['blk', 'en', 'my']; // Add 'shn', 'ja', 'zh' if you create their JSON files
+            const fetchPromises = languagesToLoad.map(lang =>
+                fetchJsonFile(`data/${lang}.json`).then(data => {
+                    if (data) allLanguageData[lang] = data;
+                })
+            );
+            await Promise.all(fetchPromises);
+            console.log('All language data loaded for grammar:', allLanguageData);
+            console.log('POS definitions loaded for grammar:', posDefinitions);
+            console.log('Grammar rules loaded:', grammarRules);
+        }
+
+        function displayGrammarRules() {
+            const displayDiv = document.getElementById('grammarRulesDisplay');
+            displayDiv.innerHTML = ''; // Clear loading message
+
+            if (Object.keys(grammarRules).length === 0) {
+                displayDiv.innerHTML = '<p class="error">Grammar rules could not be loaded.</p>';
+                return;
+            }
+
+            for (const langCode in grammarRules) {
+                if (grammarRules.hasOwnProperty(langCode)) {
+                    const rule = grammarRules[langCode];
+                    const section = document.createElement('div');
+                    section.classList.add('grammar-section');
+                    section.innerHTML = `
+                        <h3>${rule.name} (${langCode.toUpperCase()}) Grammar: ${rule.display_order}</h3>
+                        <p class="grammar-rule">${rule.description}</p>
+                        <p><strong>Example (from blk_002, blk_004, blk_006):</strong></p>
+                        <div class="example-box">
+                            <span style="color:#007bff;">${allLanguageData['blk']?.  "101": "ခွဲးဟဝ်ဒျာႏ"}</span> (S) 
+                            <span style="color:#28a745;">${allLanguageData['blk']?.blk_004?.word || 'N/A'}</span> (V) 
+                            <span style="color:#dc3545;">${allLanguageData['blk']?.blk_006?.word || 'N/A'}</span> (O)
+                            <br>
+                            ${allLanguageData[langCode]?.blk_002?.word || 'N/A'} + ${allLanguageData[langCode]?.blk_004?.word || 'N/A'} + ${allLanguageData[langCode]?.blk_006?.word || 'N/A'} 
+                        </div>
+                    `;
+                    displayDiv.appendChild(section);
+                }
+            }
+        }
+
+        function resetSentenceBuilder() {
+            document.getElementById('sourceSentenceOutput').innerText = "";
+            document.getElementById('targetSentenceOutput').innerText = "";
+            document.getElementById('sourceSentenceOutput').classList.remove('error');
+            document.getElementById('targetSentenceOutput').classList.remove('error');
+        }
+
+        function analyzeSentence() {
+            const inputText = document.getElementById('sentenceInput').value.trim();
+            const sourceLangCode = document.getElementById('sentenceSourceLang').value;
+            const targetLangCode = document.getElementById('sentenceTargetLang').value;
+
+            const sourceOutputDiv = document.getElementById('sourceSentenceOutput');
+            const targetOutputDiv = document.getElementById('targetSentenceOutput');
+
+            // Clear previous results
+            sourceOutputDiv.innerHTML = '';
+            targetOutputDiv.innerHTML = '';
+            sourceOutputDiv.classList.remove('error');
+            targetOutputDiv.classList.remove('error');
+
+            if (inputText === "") {
+                sourceOutputDiv.innerText = "Please enter some words.";
+                targetOutputDiv.innerText = "Please enter some words.";
+                sourceOutputDiv.classList.add('error');
+                targetOutputDiv.classList.add('error');
+                return;
+            }
+
+            if (Object.keys(allLanguageData).length === 0 || Object.keys(posDefinitions).length === 0 || Object.keys(grammarRules).length === 0) {
+                sourceOutputDiv.innerText = "Data not fully loaded yet. Please wait or refresh the page.";
+                targetOutputDiv.innerText = "Data not fully loaded yet. Please wait or refresh the page.";
+                sourceOutputDiv.classList.add('error');
+                targetOutputDiv.classList.add('error');
+                return;
+            }
+
+            const sourceVocab = allLanguageData[sourceLangCode];
+            const targetVocab = allLanguageData[targetLangCode];
+            const sourceGrammar = grammarRules[sourceLangCode];
+            const targetGrammar = grammarRules[targetLangCode];
+
+            if (!sourceVocab || !targetVocab || !sourceGrammar || !targetGrammar) {
+                sourceOutputDiv.innerText = "Selected language data or grammar rules not available.";
+                targetOutputDiv.innerText = "Selected language data or grammar rules not available.";
+                sourceOutputDiv.classList.add('error');
+                targetOutputDiv.classList.add('error');
+                return;
+            }
+
+            const inputWords = inputText.split(/\s+/).filter(word => word.length > 0);
+
+            // 1. Map input words to their ID codes and POS types in the source language
+            const analyzedWords = []; // { id: 'blk_001', pos_id: '1', word: 'နာꩻ', pos_type: 'subject' }
+            let missingWord = false;
+
+            for (const word of inputWords) {
+                let found = false;
+                for (const id in sourceVocab) {
+                    if (sourceVocab.hasOwnProperty(id) && sourceVocab[id].word.toLowerCase() === word.toLowerCase()) {
+                        analyzedWords.push({
+                            id: id,
+                            word: sourceVocab[id].word,
+                            pos_id: sourceVocab[id].pos_id,
+                            pos_type: posDefinitions[sourceVocab[id].pos_id]
+                        });
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    analyzedWords.push({
+                        id: null,
+                        word: word, // original word
+                        pos_id: null,
+                        pos_type: "unknown"
+                    });
+                    missingWord = true;
+                }
+            }
+
+            if (missingWord) {
+                sourceOutputDiv.classList.add('error');
+                targetOutputDiv.classList.add('error');
+                sourceOutputDiv.innerText = `Warning: Some words are not recognized in ${langMap[sourceLangCode]} vocabulary. Recognized parts will be structured.`;
+                targetOutputDiv.innerText = `သတိ: အချို့စကားလုံးများကို ${langMap[sourceLangCode]} ဝေါဟာရတွင် မမှတ်မိပါ။ မှတ်မိသောအပိုင်းများကို ဖွဲ့စည်းပြပါမည်။`;
+            }
+
+
+            // 2. Structure words based on source language grammar
+            let sourceStructuredParts = {};
+            sourceGrammar.structure_order.forEach(type => sourceStructuredParts[type] = []);
+
+            analyzedWords.forEach(item => {
+                if (item.pos_type && sourceStructuredParts[item.pos_type]) {
+                    sourceStructuredParts[item.pos_type].push(item.word);
+                } else if (item.pos_type === "unknown") {
+                    // Add unknown words to a general "other" category or at the end
+                    if (!sourceStructuredParts['other']) sourceStructuredParts['other'] = [];
+                    sourceStructuredParts['other'].push(`[${item.word}]`);
+                }
+            });
+
+            let sourceSentenceOutput = [];
+            sourceGrammar.structure_order.forEach(type => {
+                if (sourceStructuredParts[type] && sourceStructuredParts[type].length > 0) {
+                    sourceSentenceOutput.push(sourceStructuredParts[type].join(' '));
+                }
+            });
+            if (sourceStructuredParts['other']) { // Add unknown words at the very end if any
+                 sourceSentenceOutput.push(sourceStructuredParts['other'].join(' '));
+            }
+            sourceOutputDiv.innerHTML = `<strong>${sourceSentenceOutput.join(' ')}</strong><br><small>(${langMap[sourceLangCode]}: ${sourceGrammar.display_order})</small>`;
+
+
+            // 3. Translate and structure words for the target language
+            let targetStructuredParts = {};
+            targetGrammar.structure_order.forEach(type => targetStructuredParts[type] = []);
+
+            analyzedWords.forEach(item => {
+                if (item.id && targetVocab[item.id]) { // Check if ID exists in target vocab
+                    const translatedWord = targetVocab[item.id].word;
+                    if (item.pos_type && targetStructuredParts[item.pos_type]) {
+                        targetStructuredParts[item.pos_type].push(translatedWord);
+                    } else { // Fallback for unmatched POS types, or unknown words
+                        if (!targetStructuredParts['other']) targetStructuredParts['other'] = [];
+                        targetStructuredParts['other'].push(translatedWord);
+                    }
+                } else if (item.pos_type === "unknown") { // Original unknown word
+                    if (!targetStructuredParts['other']) targetStructuredParts['other'] = [];
+                    targetStructuredParts['other'].push(`[${item.word}]`);
+                } else { // Word found in source but no ID in target
+                    if (!targetStructuredParts['other']) targetStructuredParts['other'] = [];
+                    targetStructuredParts['other'].push(`[${item.word}]`); // Use original word as fallback
+                }
+            });
+
+            let targetSentenceOutput = [];
+            targetGrammar.structure_order.forEach(type => {
+                if (targetStructuredParts[type] && targetStructuredParts[type].length > 0) {
+                    targetSentenceOutput.push(targetStructuredParts[type].join(' '));
+                }
+            });
+            if (targetStructuredParts['other']) { // Add any words not fitting the structure or unknown at the end
+                targetSentenceOutput.push(targetStructuredParts['other'].join(' '));
+            }
+            targetOutputDiv.innerHTML = `<strong>${targetSentenceOutput.join(' ')}</strong><br><small>(${langMap[targetLangCode]}: ${targetGrammar.display_order})</small>`;
+        }
+
+        // Load all data and set initial selections when the page loads
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadAllDataForGrammar(); // Load all data files
+            displayGrammarRules(); // Display grammar rules after loading
+            resetSentenceBuilder(); // Clear the sentence builder inputs
+        });
     </script>
 </body>
 </html>
