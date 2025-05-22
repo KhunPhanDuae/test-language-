@@ -1,0 +1,23 @@
+[
+  {
+    "lang_code": "my",
+    "lang_name": "Burmese",
+    "structure": "S + O + V (Subject + Object + Verb)",
+    "description": "Most Burmese sentences follow a Subject-Object-Verb order. The verb typically comes at the very end of the sentence.",
+    "examples": [
+      {"text_my": "ငါ ထမင်း စားတယ်", "text_en": "I eat rice"},
+      {"text_my": "မင်း ရေ သောက်လား?", "text_en": "Do you drink water?"}
+    ]
+  },
+  {
+    "lang_code": "blk",
+    "lang_name": "Pa'O",
+    "structure": "S + V + O (Subject + Verb + Object)",
+    "description": "Pa'O sentences often follow a Subject-Verb-Object order, which is similar to English. The verb comes after the subject and before the object.",
+    "examples": [
+      {"text_blk": "ခွေ အံႏ ဒဲဉ် နဝ်ꩻသွူ", "text_en": "I eat rice"},
+      {"text_blk": "နာꩻ အွꩻ ထီ နဲ့?", "text_en": "Do you drink water?"}
+    ]
+  }
+  // Add more languages here with their respective grammar rules
+]
