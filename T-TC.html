@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Translation Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 1em 0;
+            text-align: center;
+        }
+        nav {
+            background-color: #444;
+            padding: 0.5em 0;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5em 1em;
+            margin: 0 0.5em;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        nav a:hover {
+            background-color: #555;
+        }
+        .container {
+            flex: 1;
+            padding: 20px;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        select, button {
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button {
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+        }
+        button:hover {
+            background-color: #4cae4c;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+        .translation-output {
+            background-color: #e9e9e9;
+            padding: 15px;
+            border-radius: 4px;
+            min-height: 100px;
+            border: 1px solid #ccc;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+            margin-top: auto;
+        }
+        .language-selectors {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .language-selectors label {
+            margin-right: 10px;
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>RYPAK Translation Test</h1>
+    </header>
+
+    <nav>
+        <a href="?lang=en">English (en)</a>
+        <a href="?lang=my">ဗမာ (my)</a>
+        <a href="?lang=blk">ပအိုဝ်း (blk)</a>
+        <a href="?lang=shn">ရှမ်း (shn)</a>
+        <a href="?lang=ja">日本語 (ja)</a>
+        <a href="?lang=zh">中文 (zh)</a>
+    </nav>
+
+    <div class="container">
+        <h2 id="current-language-title"></h2>
+
+        <div class="language-selectors">
+            <label for="sourceLang">Translate From:</label>
+            <select id="sourceLang">
+                <option value="blk">ပအိုဝ်း (blk)</option>
+                <option value="en">English (en)</option>
+                <option value="my">ဗမာ (my)</option>
+                <option value="shn">ရှမ်း (shn)</option>
+                <option value="ja">日本語 (ja)</option>
+                <option value="zh">中文 (zh)</option>
+            </select>
+
+            <label for="targetLang">Translate To:</label>
+            <select id="targetLang">
+                <option value="en">English (en)</option>
+                <option value="my">ဗမာ (my)</option>
+                <option value="blk">ပအိုဝ်း (blk)</option>
+                <option value="shn">ရှမ်း (shn)</option>
+                <option value="ja">日本語 (ja)</option>
+                <option value="zh">中文 (zh)</option>
+            </select>
+        </div>
+
+        <p>Enter text to translate:</p>
+        <textarea id="inputText" placeholder="Type or paste your text here..."></textarea>
+        <button onclick="translateText()">Translate</button>
+
+        <h3>Translation:</h3>
+        <div class="translation-output" id="translationOutput">
+            Your translated text will appear here.
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 My Translation App</p>
+    </footer>
+
+    <script>
+        let translationData = []; // This will hold the data fetched from data.json
+
+        const langMap = {
+            'en': 'English',
+            'my': 'ဗမာ',
+            'blk': 'ပအိုဝ်း',
+            'shn': 'ရှမ်း',
+            'ja': '日本語',
+            'zh': '中文'
+        };
+
+        // Function to fetch data from data.json
+        async function fetchTranslationData() {
+            try {
+                const response = await fetch('TTCdata.json'); // Fetch the JSON file
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                translationData = await response.json(); // Parse the JSON data
+                console.log('Translation data loaded:', translationData);
+            } catch (error) {
+                console.error('Could not fetch translation data:', error);
+                document.getElementById('translationOutput').innerText = "Error loading translation data. Please try again later.";
+            }
+        }
+
+        function getQueryParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        function setLanguageDisplay() {
+            const currentLangCode = getQueryParam('lang') || 'en';
+            const currentLangName = langMap[currentLangCode] || 'Unknown Language';
+            document.getElementById('current-language-title').innerText = `Current Language: ${currentLangName}`;
+
+            document.getElementById('sourceLang').value = 'blk';
+            if (currentLangCode && langMap[currentLangCode]) {
+                document.getElementById('targetLang').value = currentLangCode;
+            } else {
+                document.getElementById('targetLang').value = 'en';
+            }
+        }
+
+        function translateText() {
+            const inputText = document.getElementById('inputText').value.trim();
+            const sourceLang = document.getElementById('sourceLang').value;
+            const targetLang = document.getElementById('targetLang').value;
+            const outputDiv = document.getElementById('translationOutput');
+
+            if (inputText === "") {
+                outputDiv.innerText = "Please enter some text to translate.";
+                return;
+            }
+
+            if (translationData.length === 0) {
+                outputDiv.innerText = "Translation data is not loaded yet. Please wait a moment or refresh the page.";
+                return;
+            }
+
+            let foundTranslation = "Translation not found in our phrasebook.";
+            let translated = false;
+
+            for (const entry of translationData) {
+                // Check if the input text matches the source language in the 'blk' field
+                if (sourceLang === 'blk' && entry.blk && entry.blk.toLowerCase() === inputText.toLowerCase()) {
+                    if (entry.translations[targetLang]) {
+                        foundTranslation = entry.translations[targetLang];
+                        translated = true;
+                        break;
+                    } else if (targetLang === 'blk') { // If translating blk to blk
+                        foundTranslation = inputText;
+                        translated = true;
+                        break;
+                    }
+                }
+                // Check if the input text matches the source language in the 'translations' object
+                else if (entry.translations[sourceLang] && entry.translations[sourceLang].toLowerCase() === inputText.toLowerCase()) {
+                    if (targetLang === 'blk') {
+                        foundTranslation = entry.blk;
+                        translated = true;
+                        break;
+                    } else if (entry.translations[targetLang]) {
+                        foundTranslation = entry.translations[targetLang];
+                        translated = true;
+                        break;
+                    }
+                }
+            }
+
+            outputDiv.innerText = translated ? foundTranslation : "Translation not found in our phrasebook. Please try another phrase.";
+        }
+
+        // Load data and set language display when the page loads
+        document.addEventListener('DOMContentLoaded', async () => {
+            await fetchTranslationData(); // Fetch data first
+            setLanguageDisplay();        // Then set up display
+        });
+    </script>
+</body>
+</html>
