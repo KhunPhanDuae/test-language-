@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grammar Comparison</title>
+    <link rel="stylesheet" href="style.css"> <style>
+        /* Basic CSS - you can move this to style.css */
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh; }
+        header { background-color: #333; color: white; padding: 1em 0; text-align: center; }
+        nav { background-color: #444; padding: 0.5em 0; text-align: center; }
+        nav a { color: white; text-decoration: none; padding: 0.5em 1em; margin: 0 0.5em; border-radius: 5px; transition: background-color 0.3s ease; }
+        nav a:hover { background-color: #555; }
+        .container { flex: 1; padding: 20px; max-width: 800px; margin: 20px auto; background-color: #f9f9f9; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        h1, h2 { color: #333; text-align: center; margin-bottom: 20px; }
+        .grammar-section { margin-bottom: 30px; border: 1px solid #ddd; padding: 15px; border-radius: 8px; background-color: #fff; }
+        .grammar-section h3 { color: #0056b3; margin-top: 0; }
+        .grammar-rule { font-weight: bold; color: #28a745; margin-bottom: 10px; }
+        .example-box { background-color: #e9e9e9; padding: 10px 15px; border-left: 4px solid #007bff; margin-top: 10px; font-family: monospace; white-space: pre-wrap; word-break: break-word; }
+        footer { background-color: #333; color: white; text-align: center; padding: 1em 0; margin-top: auto; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Grammar Comparison</h1>
+    </header>
+
+    <nav>
+        <a href="T-TG.html">Translation App</a>
+        <a href="T-TGgrammar.html">Grammar Guide</a>
+    </nav>
+
+    <div class="container">
+        <h2>Language Grammar Structures</h2>
+        <p>Explore the basic sentence structure differences across various languages.</p>
+
+        <div id="grammarContent">
+            <p>Loading grammar rules...</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 RYPAK Pa'O Grammar Guide</p>
+    </footer>
+
+    <script>
+        async function loadGrammarRules() {
+            try {
+                const response = await fetch('data/grammar_rules.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const rules = await response.json();
+                const grammarContentDiv = document.getElementById('grammarContent');
+                grammarContentDiv.innerHTML = ''; // Clear loading message
+
+                rules.forEach(rule => {
+                    const section = document.createElement('div');
+                    section.classList.add('grammar-section');
+
+                    const title = document.createElement('h3');
+                    title.textContent = `${rule.lang_name} (${rule.lang_code.toUpperCase()}): ${rule.structure}`;
+                    section.appendChild(title);
+
+                    const description = document.createElement('p');
+                    description.textContent = rule.description;
+                    section.appendChild(description);
+
+                    const examplesHeader = document.createElement('p');
+                    examplesHeader.innerHTML = '<strong>Examples:</strong>';
+                    section.appendChild(examplesHeader);
+
+                    rule.examples.forEach(example => {
+                        const exampleBox = document.createElement('div');
+                        exampleBox.classList.add('example-box');
+                        
+                        // Display examples based on available language keys
+                        let exampleText = '';
+                        if (example[`text_${rule.lang_code}`]) { // Display in its own language first
+                             exampleText += `${example[`text_${rule.lang_code}`]}`;
+                        }
+                        if (example.text_en && rule.lang_code !== 'en') { // Always show English if available and not English rule
+                            exampleText += exampleText ? `\n(En: ${example.text_en})` : `En: ${example.text_en}`;
+                        }
+                        // Add more conditions for other languages as needed
+
+                        exampleBox.textContent = exampleText;
+                        section.appendChild(exampleBox);
+                    });
+
+                    grammarContentDiv.appendChild(section);
+                });
+
+            } catch (error) {
+                console.error('Could not fetch grammar rules:', error);
+                document.getElementById('grammarContent').innerHTML = "<p style='color:red;'>Error loading grammar rules. Please try again later.</p>";
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadGrammarRules);
+    </script>
+</body>
+</html>
