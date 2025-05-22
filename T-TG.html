@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pa'O Multi-Language Translator</title>
+    <link rel="stylesheet" href="style.css"> <style>
+        /* Basic CSS - you can move this to style.css */
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh; }
+        header { background-color: #333; color: white; padding: 1em 0; text-align: center; }
+        nav { background-color: #444; padding: 0.5em 0; text-align: center; }
+        nav a { color: white; text-decoration: none; padding: 0.5em 1em; margin: 0 0.5em; border-radius: 5px; transition: background-color 0.3s ease; }
+        nav a:hover { background-color: #555; }
+        .container { flex: 1; padding: 20px; max-width: 800px; margin: 20px auto; background-color: #f9f9f9; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        h1, h2 { color: #333; text-align: center; margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        select, button { padding: 10px; margin-right: 10px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; }
+        button { background-color: #5cb85c; color: white; border: none; }
+        button:hover { background-color: #4cae4c; }
+        textarea { width: 100%; height: 150px; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; resize: vertical; }
+        .translation-output { background-color: #e9e9e9; padding: 15px; border-radius: 4px; min-height: 100px; border: 1px solid #ccc; }
+        footer { background-color: #333; color: white; text-align: center; padding: 1em 0; margin-top: auto; }
+        .language-selectors { display: flex; align-items: center; margin-bottom: 15px; }
+        .language-selectors label { margin-right: 10px; margin-bottom: 0; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Pa'O Multi-Language Translator</h1>
+    </header>
+
+    <nav>
+        <a href="T-TG.html">Translation App</a>
+        <a href="T-TGgrammar.html">Grammar Guide</a>
+    </nav>
+
+    <div class="container">
+        <h2>Language Translation</h2>
+
+        <div class="language-selectors">
+            <label for="sourceLang">Translate From:</label>
+            <select id="sourceLang" onchange="loadSourceLanguageData()">
+                <option value="blk">ပအိုဝ်း (blk)</option>
+                <option value="en">English (en)</option>
+                <option value="my">ဗမာ (my)</option>
+                <option value="shn">ရှမ်း (shn)</option>
+                <option value="ja">日本語 (ja)</option>
+                <option value="zh">中文 (zh)</option>
+            </select>
+
+            <label for="targetLang">Translate To:</label>
+            <select id="targetLang" onchange="loadTargetLanguageData()">
+                <option value="en">English (en)</option>
+                <option value="my">ဗမာ (my)</option>
+                <option value="blk">ပအိုဝ်း (blk)</option>
+                <option value="shn">ရှမ်း (shn)</option>
+                <option value="ja">日本語 (ja)</option>
+                <option value="zh">中文 (zh)</option>
+            </select>
+        </div>
+
+        <p>Enter text to translate:</p>
+        <textarea id="inputText" placeholder="Type or paste your text here..."></textarea>
+        <button onclick="translateText()">Translate</button>
+
+        <h3>Translation:</h3>
+        <div class="translation-output" id="translationOutput">
+            Your translated text will appear here.
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 RYPAK Pa'O Translator</p>
+    </footer>
+
+    <script>
+        let translationData = {}; // Stores loaded translation data by language (e.g., translationData.en)
+        let posData = {};         // Stores loaded POS data by language (e.g., posData.blk)
+
+        const langMap = {
+            'en': 'English',
+            'my': 'ဗမာ',
+            'blk': 'ပအိုဝ်း',
+            'shn': 'ရှမ်း',
+            'ja': '日本語',
+            'zh': '中文'
+        };
+
+        // Function to fetch translation data for a specific language
+        async function fetchTranslationData(langCode) {
+            try {
+                const response = await fetch(`data/translations/${langCode}.json`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                translationData[langCode] = data;
+                console.log(`Loaded ${langCode} translation data:`, data);
+            } catch (error) {
+                console.error(`Could not fetch ${langCode} translation data:`, error);
+                document.getElementById('translationOutput').innerText = `Error loading ${langCode} translation data.`;
+            }
+        }
+
+        // Function to fetch POS data for a specific language
+        async function fetchPosData(langCode) {
+            try {
+                const response = await fetch(`data/pos/${langCode}_pos.json`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                posData[langCode] = data;
+                console.log(`Loaded ${langCode} POS data:`, data);
+            } catch (error) {
+                console.error(`Could not fetch ${langCode} POS data:`, error);
+            }
+        }
+
+        // Function to load data for the selected source language
+        async function loadSourceLanguageData() {
+            const sourceLang = document.getElementById('sourceLang').value;
+            await fetchTranslationData(sourceLang);
+            await fetchPosData(sourceLang);
+        }
+
+        // Function to load data for the selected target language
+        async function loadTargetLanguageData() {
+            const targetLang = document.getElementById('targetLang').value;
+            await fetchTranslationData(targetLang);
+            // POS data is primarily needed for the source language for analysis,
+            // but can be loaded for target if needed for specific grammatical operations.
+        }
+
+        function setInitialLanguageSelections() {
+            // Default selections (Pa'O to English)
+            document.getElementById('sourceLang').value = 'blk';
+            document.getElementById('targetLang').value = 'en';
+
+            // Or use URL parameters if desired (e.g., ?source=blk&target=en)
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('source') && langMap[urlParams.get('source')]) {
+                document.getElementById('sourceLang').value = urlParams.get('source');
+            }
+            if (urlParams.get('target') && langMap[urlParams.get('target')]) {
+                document.getElementById('targetLang').value = urlParams.get('target');
+            }
+        }
+
+        async function translateText() {
+            const inputText = document.getElementById('inputText').value.trim();
+            const sourceLang = document.getElementById('sourceLang').value;
+            const targetLang = document.getElementById('targetLang').value;
+            const outputDiv = document.getElementById('translationOutput');
+
+            if (inputText === "") {
+                outputDiv.innerText = "Please enter some text to translate.";
+                return;
+            }
+
+            // Ensure source and target language data are loaded
+            if (!translationData[sourceLang] || !translationData[targetLang] || !posData[sourceLang]) {
+                outputDiv.innerText = "Language data not fully loaded yet. Please wait a moment or refresh.";
+                // Attempt to load missing data
+                await Promise.all([
+                    !translationData[sourceLang] ? fetchTranslationData(sourceLang) : Promise.resolve(),
+                    !translationData[targetLang] ? fetchTranslationData(targetLang) : Promise.resolve(),
+                    !posData[sourceLang] ? fetchPosData(sourceLang) : Promise.resolve()
+                ]);
+                // Retry if data is still not available after fetching
+                if (!translationData[sourceLang] || !translationData[targetLang] || !posData[sourceLang]) {
+                    outputDiv.innerText = "Failed to load necessary language data.";
+                    return;
+                }
+            }
+
+            const sourceTranslationMap = translationData[sourceLang]; // e.g., blk: {"101": "ခွဲးဟဝ်ဒျာႏ"}
+            const targetTranslationMap = translationData[targetLang]; // e.g., en: {"101": "Hello"}
+            const sourcePosMap = posData[sourceLang];                 // e.g., blk_pos: {"101": ["particle_end"]}
+
+            // Simple tokenization: split input text by spaces
+            const inputTokens = inputText.split(/\s+/).filter(token => token.length > 0);
+
+            let translatedTokens = [];
+            let foundMatch = false;
+
+            // Step 1: Find ID codes for each input token
+            let identifiedTokens = []; // { id: "101", originalWord: "ခွဲးဟဝ်ဒျာႏ", type: "phrase" }
+
+            for (const token of inputTokens) {
+                let currentId = null;
+                let currentType = null;
+                // Search for the token in the source language's translation map
+                for (const id in sourceTranslationMap) {
+                    if (sourceTranslationMap.hasOwnProperty(id) && sourceTranslationMap[id].toLowerCase() === token.toLowerCase()) {
+                        currentId = id;
+                        // Attempt to get POS type from source POS data
+                        currentType = sourcePosMap[id] ? sourcePosMap[id][0] : 'unknown'; // Take the first type if multiple
+                        break;
+                    }
+                }
+                if (currentId) {
+                    identifiedTokens.push({ id: currentId, originalWord: token, type: currentType });
+                    foundMatch = true;
+                } else {
+                    identifiedTokens.push({ id: null, originalWord: token, type: 'unknown' });
+                }
+            }
+
+            if (!foundMatch) {
+                outputDiv.innerText = "No exact phrase or word found in the source language phrasebook.";
+                return;
+            }
+
+            // Step 2: Reorder tokens based on target language grammar (simplified example)
+            // This is a very basic reordering. Real grammar engines are much more complex.
+            // For now, it will simply attempt to display words in target language.
+            // Full grammar reconstruction (SVO to SOV etc.) will require more advanced logic
+            // that understands sentence structure from POS types.
+
+            let reorderedAndTranslated = [];
+            let subjects = [];
+            let verbs = [];
+            let objects = [];
+            let particles = [];
+            let others = [];
+
+            // Categorize identified tokens
+            identifiedTokens.forEach(item => {
+                if (item.id) { // Only process recognized words
+                    switch(item.type) {
+                        case 'subject': subjects.push(targetTranslationMap[item.id]); break;
+                        case 'verb': verbs.push(targetTranslationMap[item.id]); break;
+                        case 'object': objects.push(targetTranslationMap[item.id]); break;
+                        case 'particle_end': particles.push(targetTranslationMap[item.id]); break;
+                        case 'particle': particles.push(targetTranslationMap[item.id]); break;
+                        case 'verb_modifier': verbs.push(targetTranslationMap[item.id]); break; // For simple reordering, treat as verb part
+                        case 'adjective': objects.push(targetTranslationMap[item.id]); break; // Adjectives usually attach to nouns (objects)
+                        case 'phrase': reorderedAndTranslated.push(targetTranslationMap[item.id]); break; // For fixed phrases
+                        default: others.push(targetTranslationMap[item.id] || item.originalWord); break;
+                    }
+                } else {
+                    others.push(item.originalWord); // Unrecognized words remain as original
+                }
+            });
+
+            // Basic reordering based on assumed SVO/SOV patterns:
+            // This part needs to be very dynamic for a real grammar engine.
+            // For now, it's just a general attempt.
+            if (targetLang === 'blk' || targetLang === 'en' || targetLang === 'shn') { // Assume SVO-like for Pa'O, English, Shan
+                reorderedAndTranslated = [
+                    ...subjects,
+                    ...verbs,
+                    ...objects,
+                    ...particles,
+                    ...others
+                ].filter(Boolean); // remove undefined/null
+            } else if (targetLang === 'my' || targetLang === 'ja' || targetLang === 'zh') { // Assume SOV-like for Burmese, Japanese, Chinese
+                reorderedAndTranslated = [
+                    ...subjects,
+                    ...objects,
+                    ...verbs,
+                    ...particles,
+                    ...others
+                ].filter(Boolean); // remove undefined/null
+            } else {
+                // Fallback to simple concatenation for unknown grammar
+                reorderedAndTranslated = identifiedTokens.map(item => targetTranslationMap[item.id] || item.originalWord);
+            }
+
+            const finalTranslatedSentence = reorderedAndTranslated.join(' ');
+            outputDiv.innerText = finalTranslatedSentence;
+        }
+
+        // Initial loading of default language data (blk and en)
+        document.addEventListener('DOMContentLoaded', async () => {
+            setInitialLanguageSelections();
+            await Promise.all([
+                loadSourceLanguageData(), // Load default source (blk)
+                loadTargetLanguageData()  // Load default target (en)
+            ]);
+        });
+    </script>
+</body>
+</html>
