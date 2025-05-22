@@ -71,8 +71,8 @@
             border-left: 4px solid #007bff;
             margin-top: 10px;
             font-family: monospace;
-            white-space: pre-wrap;
-            word-break: break-word;
+            white-space: pre-wrap; /* Preserve whitespace and wrap text */
+            word-break: break-word; /* Break long words */
         }
         .input-section {
             margin-top: 20px;
@@ -134,275 +134,202 @@
     </nav>
 
     <div class="container">
-        <h2>Language Grammar Structures</h2>
-        <p>This page helps you understand the basic sentence structure differences between various languages based on their Subject-Verb-Object (SVO) patterns.</p>
+        <h2>Pa'O (ပအိုဝ်း) vs. Burmese (ဗမာ) Grammar Structure</h2>
+        <p>This page helps you understand the basic sentence structure differences between Pa'O and Burmese, especially in word order (Subject-Verb-Object).</p>
 
-        <div id="grammarRulesDisplay">
-            <p>Loading grammar rules...</p>
+        <div class="grammar-section">
+            <h3>Burmese (ဗမာ) Grammar: S + O + V (Subject + Object + Verb)</h3>
+            <p class="grammar-rule">Most Burmese sentences follow a Subject-Object-Verb order. The verb typically comes at the very end of the sentence.</p>
+            <p><strong>Examples:</strong></p>
+            <div class="example-box">
+                ငါ (S) ထမင်း (O) စားတယ် (V)။
+                I (S) rice (O) eat (V).
+            </div>
+            <div class="example-box">
+                မင်း (S) ရေ (O) သောက်လား (V)?
+                You (S) water (O) drink (V)?
+            </div>
+        </div>
+
+        <div class="grammar-section">
+            <h3>Pa'O (ပအိုဝ်း) Grammar: S + V + O (Subject + Verb + Object)</h3>
+            <p class="grammar-rule">Pa'O sentences often follow a Subject-Verb-Object order, which is similar to English. The verb comes after the subject and before the object.</p>
+            <p><strong>Examples:</strong></p>
+            <div class="example-box">
+                ခွေ (S) အံႏ (V) ဒဲဉ် (O) နဝ်ꩻသွူ။
+                I (S) eat (V) rice (O) particle.
+            </div>
+            <div class="example-box">
+                နာꩻ (S) အွꩻ (V) ထီ (O) ဟွေး?
+                You (S) drink (V) water (O) particle?
+            </div>
         </div>
 
         <hr>
 
         <div class="input-section">
             <h2>Sentence Builder</h2>
-            <p>Select a source language and a target language. Enter words from the source language to see their potential grammatical structure in both languages.</p>
+            <p>Enter Pa'O words separated by spaces below. We will try to build a grammatically structured sentence in both Pa'O (SVO) and Burmese (SOV).</p>
 
-            <div class="language-selectors">
-                <label for="sentenceSourceLang">Analyze From:</label>
-                <select id="sentenceSourceLang" onchange="resetSentenceBuilder()">
-                    <option value="blk">ပအိုဝ်း (blk)</option>
-                    <option value="en">English (en)</option>
-                    <option value="my">ဗမာ (my)</option>
-                    </select>
-
-                <label for="sentenceTargetLang">Show Structure In:</label>
-                <select id="sentenceTargetLang" onchange="resetSentenceBuilder()">
-                    <option value="my">ဗမာ (my)</option>
-                    <option value="blk">ပအိုဝ်း (blk)</option>
-                    <option value="en">English (en)</option>
-                    </select>
-            </div>
-
-            <textarea id="sentenceInput" placeholder="ဥပမာ: ခွေ အံႏ ဒဲဉ် နဝ်ꩻသွူ"></textarea>
+            <textarea id="paOInput" placeholder="ဥပမာ: ခွေ အံႏ ဒဲဉ် နဝ်ꩻသွူ"></textarea>
             <button onclick="analyzeSentence()">Analyze Sentence</button>
 
-            <h3>Source Language (Pa'O) Structure:</h3>
-            <div class="result-box" id="sourceSentenceOutput"></div>
+            <h3>Pa'O (SVO) Structure:</h3>
+            <div class="result-box" id="paOOutput"></div>
 
-            <h3>Target Language (Burmese) Structure:</h3>
-            <div class="result-box" id="targetSentenceOutput"></div>
+            <h3>Burmese (SOV) Structure:</h3>
+            <div class="result-box" id="burmeseOutput"></div>
         </div>
     </div>
 
     <footer>
-        <p>&copy; 2024 My Multi-Language App</p>
+        <p>&copy; 2024 Pa'O Grammar Guide</p>
     </footer>
 
     <script>
-        let allLanguageData = {}; // Stores all language JSON data (e.g., { 'blk': { ... }, 'en': { ... } })
-        let posDefinitions = {};  // Stores parts of speech definitions from vocab.json
-        let grammarRules = {};    // Stores grammar rules from grammar_rules.json
+        // Define your vocabulary
+        const vocabulary = {
+            "နာꩻ": { "type": "subject", "my": "မင်း", "en": "You" },
+            "ခွေ": { "type": "subject", "my": "ငါ", "en": "I" },
+            "ခွေသွဉ်း": { "type": "subject", "my": "ကျွန်တော်", "en": "I" },
+            "အံႏ": { "type": "verb", "my": "စား", "en": "eat" },
+            "လွေꩻ": { "type": "verb", "my": "သွား", "en": "go" },
+            "ဒဲဉ်": { "type": "object", "my": "ထမင်း", "en": "rice" },
+            "တခိုး": { "type": "object", "my": "မုန့်", "en": "snack" },
+            "အွꩻ": { "type": "verb", "my": "သောက်", "en": "drink" },
+            "ထီ": { "type": "object", "my": "ရေ", "en": "water" },
+            "လမ်း": { "type": "object", "my": "အိမ်", "en": "home" },
+            "တဖူꩻ": { "type": "object", "my": "လမ်း", "en": "road" },
+            "သဲင်ꩻ": { "type": "verb", "my": "ပြန်", "en": "return" },
+            "လွဉ်": { "type": "verb", "my": "လာ", "en": "come" },
+            "ထွူလဲဉ်း": { "type": "verb_modifier", "my": "ပြီးပြီ", "en": "finished/already" }, // particle for verb completion
+            "လူးထီ": { "type": "verb", "my": "ရေချိုး", "en": "bathe" },
+            "ပေႏ": { "type": "adjective", "my": "ငယ်/သေး", "en": "small" },
+            "တန်": { "type": "adjective", "my": "ကြီး", "en": "big" },
 
-        // Function to fetch a single JSON file
-        async function fetchJsonFile(filePath) {
-            try {
-                const response = await fetch(filePath);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status} from ${filePath}`);
-                }
-                return await response.json();
-            } catch (error) {
-                console.error(`Could not fetch ${filePath}:`, error);
-                document.getElementById('grammarRulesDisplay').innerHTML = `<p class="error">Error loading data from ${filePath}. Please try again later.</p>`;
-                return null;
-            }
-        }
-
-        // Load all necessary data when the page loads
-        async function loadAllDataForGrammar() {
-            // Load vocab.json and grammar_rules.json first
-            posDefinitions = await fetchJsonFile('data/pos/blk_pos.json');
-            grammarRules = await fetchJsonFile('data/grammar_rules.json');
-            if (!posDefinitions || !grammarRules) return; // Stop if core data failed
-
-            const languagesToLoad = ['blk', 'en', 'my']; // Add 'shn', 'ja', 'zh' if you create their JSON files
-            const fetchPromises = languagesToLoad.map(lang =>
-                fetchJsonFile(`data/${lang}.json`).then(data => {
-                    if (data) allLanguageData[lang] = data;
-                })
-            );
-            await Promise.all(fetchPromises);
-            console.log('All language data loaded for grammar:', allLanguageData);
-            console.log('POS definitions loaded for grammar:', posDefinitions);
-            console.log('Grammar rules loaded:', grammarRules);
-        }
-
-        function displayGrammarRules() {
-            const displayDiv = document.getElementById('grammarRulesDisplay');
-            displayDiv.innerHTML = ''; // Clear loading message
-
-            if (Object.keys(grammarRules).length === 0) {
-                displayDiv.innerHTML = '<p class="error">Grammar rules could not be loaded.</p>';
-                return;
-            }
-
-            for (const langCode in grammarRules) {
-                if (grammarRules.hasOwnProperty(langCode)) {
-                    const rule = grammarRules[langCode];
-                    const section = document.createElement('div');
-                    section.classList.add('grammar-section');
-                    section.innerHTML = `
-                        <h3>${rule.name} (${langCode.toUpperCase()}) Grammar: ${rule.display_order}</h3>
-                        <p class="grammar-rule">${rule.description}</p>
-                        <p><strong>Example (from blk_002, blk_004, blk_006):</strong></p>
-                        <div class="example-box">
-                            <span style="color:#007bff;">${allLanguageData['blk']?.  "101": "ခွဲးဟဝ်ဒျာႏ"}</span> (S) 
-                            <span style="color:#28a745;">${allLanguageData['blk']?.blk_004?.word || 'N/A'}</span> (V) 
-                            <span style="color:#dc3545;">${allLanguageData['blk']?.blk_006?.word || 'N/A'}</span> (O)
-                            <br>
-                            ${allLanguageData[langCode]?.blk_002?.word || 'N/A'} + ${allLanguageData[langCode]?.blk_004?.word || 'N/A'} + ${allLanguageData[langCode]?.blk_006?.word || 'N/A'} 
-                        </div>
-                    `;
-                    displayDiv.appendChild(section);
-                }
-            }
-        }
-
-        function resetSentenceBuilder() {
-            document.getElementById('sourceSentenceOutput').innerText = "";
-            document.getElementById('targetSentenceOutput').innerText = "";
-            document.getElementById('sourceSentenceOutput').classList.remove('error');
-            document.getElementById('targetSentenceOutput').classList.remove('error');
-        }
+            // Particles/Suffixes
+            "နဝ်ꩻသွူ": { "type": "particle_end", "my": "ပါတယ်/ပါသည်", "en": "particle" },
+            "ဟွေး": { "type": "particle_end", "my": "ဗျ/ဗျာ", "en": "particle" },
+            "သြ": { "type": "particle_end", "my": "ရှင့်", "en": "particle" },
+            "မွေးသြ": { "type": "particle_end", "my": "ဟုတ်ကဲ့ဗျ/ဟုတ်ကဲ့ရှင့်", "en": "yes particle" },
+            "ဒျာႏ": { "type": "particle_end", "my": "တယ်", "en": "particle" },
+            "သွူ": { "type": "particle_end", "my": "သည်", "en": "particle" }
+        };
 
         function analyzeSentence() {
-            const inputText = document.getElementById('sentenceInput').value.trim();
-            const sourceLangCode = document.getElementById('sentenceSourceLang').value;
-            const targetLangCode = document.getElementById('sentenceTargetLang').value;
+            const paOInput = document.getElementById('paOInput').value.trim();
+            const paOWords = paOInput.split(/\s+/).filter(word => word.length > 0); // Split by space and remove empty strings
 
-            const sourceOutputDiv = document.getElementById('sourceSentenceOutput');
-            const targetOutputDiv = document.getElementById('targetSentenceOutput');
+            const paOOutputDiv = document.getElementById('paOOutput');
+            const burmeseOutputDiv = document.getElementById('burmeseOutput');
 
             // Clear previous results
-            sourceOutputDiv.innerHTML = '';
-            targetOutputDiv.innerHTML = '';
-            sourceOutputDiv.classList.remove('error');
-            targetOutputDiv.classList.remove('error');
+            paOOutputDiv.innerHTML = '';
+            burmeseOutputDiv.innerHTML = '';
+            paOOutputDiv.classList.remove('error');
+            burmeseOutputDiv.classList.remove('error');
 
-            if (inputText === "") {
-                sourceOutputDiv.innerText = "Please enter some words.";
-                targetOutputDiv.innerText = "Please enter some words.";
-                sourceOutputDiv.classList.add('error');
-                targetOutputDiv.classList.add('error');
+            if (paOWords.length === 0) {
+                paOOutputDiv.innerText = "Please enter some Pa'O words.";
+                burmeseOutputDiv.innerText = "Please enter some Pa'O words.";
+                paOOutputDiv.classList.add('error');
+                burmeseOutputDiv.classList.add('error');
                 return;
             }
 
-            if (Object.keys(allLanguageData).length === 0 || Object.keys(posDefinitions).length === 0 || Object.keys(grammarRules).length === 0) {
-                sourceOutputDiv.innerText = "Data not fully loaded yet. Please wait or refresh the page.";
-                targetOutputDiv.innerText = "Data not fully loaded yet. Please wait or refresh the page.";
-                sourceOutputDiv.classList.add('error');
-                targetOutputDiv.classList.add('error');
-                return;
-            }
+            let subject = '';
+            let verb = '';
+            let object = '';
+            let particle = '';
 
-            const sourceVocab = allLanguageData[sourceLangCode];
-            const targetVocab = allLanguageData[targetLangCode];
-            const sourceGrammar = grammarRules[sourceLangCode];
-            const targetGrammar = grammarRules[targetLangCode];
+            let paoSentenceParts = { s: [], v: [], o: [], p: [] }; // To hold actual Pa'O words
+            let myanmarSentenceParts = { s: [], o: [], v: [], p: [] }; // To hold Burmese equivalents
 
-            if (!sourceVocab || !targetVocab || !sourceGrammar || !targetGrammar) {
-                sourceOutputDiv.innerText = "Selected language data or grammar rules not available.";
-                targetOutputDiv.innerText = "Selected language data or grammar rules not available.";
-                sourceOutputDiv.classList.add('error');
-                targetOutputDiv.classList.add('error');
-                return;
-            }
+            let hasSubject = false;
+            let hasVerb = false;
+            let hasObject = false;
 
-            const inputWords = inputText.split(/\s+/).filter(word => word.length > 0);
-
-            // 1. Map input words to their ID codes and POS types in the source language
-            const analyzedWords = []; // { id: 'blk_001', pos_id: '1', word: 'နာꩻ', pos_type: 'subject' }
-            let missingWord = false;
-
-            for (const word of inputWords) {
-                let found = false;
-                for (const id in sourceVocab) {
-                    if (sourceVocab.hasOwnProperty(id) && sourceVocab[id].word.toLowerCase() === word.toLowerCase()) {
-                        analyzedWords.push({
-                            id: id,
-                            word: sourceVocab[id].word,
-                            pos_id: sourceVocab[id].pos_id,
-                            pos_type: posDefinitions[sourceVocab[id].pos_id]
-                        });
-                        found = true;
-                        break;
+            for (const word of paOWords) {
+                const vocabEntry = vocabulary[word];
+                if (vocabEntry) {
+                    switch (vocabEntry.type) {
+                        case 'subject':
+                            paoSentenceParts.s.push(word);
+                            myanmarSentenceParts.s.push(vocabEntry.my);
+                            hasSubject = true;
+                            break;
+                        case 'verb':
+                            paoSentenceParts.v.push(word);
+                            myanmarSentenceParts.v.push(vocabEntry.my);
+                            hasVerb = true;
+                            break;
+                        case 'object':
+                            paoSentenceParts.o.push(word);
+                            myanmarSentenceParts.o.push(vocabEntry.my);
+                            hasObject = true;
+                            break;
+                        case 'particle_end':
+                            paoSentenceParts.p.push(word);
+                            myanmarSentenceParts.p.push(vocabEntry.my);
+                            break;
+                        case 'verb_modifier': // e.g., 'ထွူလဲဉ်း'
+                            paoSentenceParts.v.push(word); // Treat as part of verb for now
+                            myanmarSentenceParts.v.push(vocabEntry.my);
+                            break;
+                        case 'adjective': // Adjectives typically go before nouns (objects) or after subjects/verbs
+                            // For simplicity, we'll just add them to the Pa'O phrase.
+                            // More complex grammar would be needed for exact placement.
+                            if (paoSentenceParts.o.length === 0) { // If no object yet, treat as part of subject/verb phrase
+                                paoSentenceParts.s.push(word); // Or could be verb modifier
+                                myanmarSentenceParts.s.push(vocabEntry.my);
+                            } else {
+                                paoSentenceParts.o.push(word);
+                                myanmarSentenceParts.o.push(vocabEntry.my);
+                            }
+                            break;
+                        default:
+                            // Handle unknown words or non-grammatical elements
+                            paoSentenceParts.p.push(`[${word}]`); // Indicate unknown word
+                            myanmarSentenceParts.p.push(`[${word}]`);
+                            break;
                     }
-                }
-                if (!found) {
-                    analyzedWords.push({
-                        id: null,
-                        word: word, // original word
-                        pos_id: null,
-                        pos_type: "unknown"
-                    });
-                    missingWord = true;
+                } else {
+                    // If word is not in vocabulary, add it as-is or flag it
+                    paoSentenceParts.p.push(`[${word}?]`);
+                    myanmarSentenceParts.p.push(`[${word}?]`);
                 }
             }
 
-            if (missingWord) {
-                sourceOutputDiv.classList.add('error');
-                targetOutputDiv.classList.add('error');
-                sourceOutputDiv.innerText = `Warning: Some words are not recognized in ${langMap[sourceLangCode]} vocabulary. Recognized parts will be structured.`;
-                targetOutputDiv.innerText = `သတိ: အချို့စကားလုံးများကို ${langMap[sourceLangCode]} ဝေါဟာရတွင် မမှတ်မိပါ။ မှတ်မိသောအပိုင်းများကို ဖွဲ့စည်းပြပါမည်။`;
+            // --- Construct Pa'O Sentence (SVO) ---
+            let paoSentence = [];
+            if (paoSentenceParts.s.length > 0) paoSentence.push(paoSentenceParts.s.join(' '));
+            if (paoSentenceParts.v.length > 0) paoSentence.push(paoSentenceParts.v.join(' '));
+            if (paoSentenceParts.o.length > 0) paoSentence.push(paoSentenceParts.o.join(' '));
+            if (paoSentenceParts.p.length > 0) paoSentence.push(paoSentenceParts.p.join(' ')); // Particles at the end
+
+            const finalPaoSentence = paoSentence.join(' ');
+            paOOutputDiv.innerHTML = `<strong>${finalPaoSentence}</strong>`;
+            paOOutputDiv.innerHTML += `<br> <small>(Pa'O: Subject + Verb + Object)</small>`;
+
+
+            // --- Construct Burmese Sentence (SOV) ---
+            let myanmarSentence = [];
+            if (myanmarSentenceParts.s.length > 0) myanmarSentence.push(myanmarSentenceParts.s.join(' '));
+            if (myanmarSentenceParts.o.length > 0) myanmarSentence.push(myanmarSentenceParts.o.join(' '));
+            if (myanmarSentenceParts.v.length > 0) myanmarSentence.push(myanmarSentenceParts.v.join(' '));
+            if (myanmarSentenceParts.p.length > 0) myanmarSentence.push(myanmarSentenceParts.p.join(' ')); // Particles at the end
+
+            const finalMyanmarSentence = myanmarSentence.join(' ');
+            burmeseOutputDiv.innerHTML = `<strong>${finalMyanmarSentence}</strong>`;
+            burmeseOutputDiv.innerHTML += `<br> <small>(Burmese: Subject + Object + Verb)</small>`;
+
+            if (!hasSubject || !hasVerb) {
+                paOOutputDiv.classList.add('error');
+                burmeseOutputDiv.classList.add('error');
+                paOOutputDiv.innerHTML += "<br><small style='color:red;'>Warning: Sentence might be incomplete (missing Subject or Verb).</small>";
+                burmeseOutputDiv.innerHTML += "<br><small style='color:red;'>သတိ: ဝါကျမပြည့်စုံနိုင်ပါ (ကတ္တား သို့မဟုတ် ကြိယာ ပျောက်ဆုံးနေပါသည်)။</small>";
             }
-
-
-            // 2. Structure words based on source language grammar
-            let sourceStructuredParts = {};
-            sourceGrammar.structure_order.forEach(type => sourceStructuredParts[type] = []);
-
-            analyzedWords.forEach(item => {
-                if (item.pos_type && sourceStructuredParts[item.pos_type]) {
-                    sourceStructuredParts[item.pos_type].push(item.word);
-                } else if (item.pos_type === "unknown") {
-                    // Add unknown words to a general "other" category or at the end
-                    if (!sourceStructuredParts['other']) sourceStructuredParts['other'] = [];
-                    sourceStructuredParts['other'].push(`[${item.word}]`);
-                }
-            });
-
-            let sourceSentenceOutput = [];
-            sourceGrammar.structure_order.forEach(type => {
-                if (sourceStructuredParts[type] && sourceStructuredParts[type].length > 0) {
-                    sourceSentenceOutput.push(sourceStructuredParts[type].join(' '));
-                }
-            });
-            if (sourceStructuredParts['other']) { // Add unknown words at the very end if any
-                 sourceSentenceOutput.push(sourceStructuredParts['other'].join(' '));
-            }
-            sourceOutputDiv.innerHTML = `<strong>${sourceSentenceOutput.join(' ')}</strong><br><small>(${langMap[sourceLangCode]}: ${sourceGrammar.display_order})</small>`;
-
-
-            // 3. Translate and structure words for the target language
-            let targetStructuredParts = {};
-            targetGrammar.structure_order.forEach(type => targetStructuredParts[type] = []);
-
-            analyzedWords.forEach(item => {
-                if (item.id && targetVocab[item.id]) { // Check if ID exists in target vocab
-                    const translatedWord = targetVocab[item.id].word;
-                    if (item.pos_type && targetStructuredParts[item.pos_type]) {
-                        targetStructuredParts[item.pos_type].push(translatedWord);
-                    } else { // Fallback for unmatched POS types, or unknown words
-                        if (!targetStructuredParts['other']) targetStructuredParts['other'] = [];
-                        targetStructuredParts['other'].push(translatedWord);
-                    }
-                } else if (item.pos_type === "unknown") { // Original unknown word
-                    if (!targetStructuredParts['other']) targetStructuredParts['other'] = [];
-                    targetStructuredParts['other'].push(`[${item.word}]`);
-                } else { // Word found in source but no ID in target
-                    if (!targetStructuredParts['other']) targetStructuredParts['other'] = [];
-                    targetStructuredParts['other'].push(`[${item.word}]`); // Use original word as fallback
-                }
-            });
-
-            let targetSentenceOutput = [];
-            targetGrammar.structure_order.forEach(type => {
-                if (targetStructuredParts[type] && targetStructuredParts[type].length > 0) {
-                    targetSentenceOutput.push(targetStructuredParts[type].join(' '));
-                }
-            });
-            if (targetStructuredParts['other']) { // Add any words not fitting the structure or unknown at the end
-                targetSentenceOutput.push(targetStructuredParts['other'].join(' '));
-            }
-            targetOutputDiv.innerHTML = `<strong>${targetSentenceOutput.join(' ')}</strong><br><small>(${langMap[targetLangCode]}: ${targetGrammar.display_order})</small>`;
         }
-
-        // Load all data and set initial selections when the page loads
-        document.addEventListener('DOMContentLoaded', async () => {
-            await loadAllDataForGrammar(); // Load all data files
-            displayGrammarRules(); // Display grammar rules after loading
-            resetSentenceBuilder(); // Clear the sentence builder inputs
-        });
     </script>
 </body>
 </html>
