@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ပအိုဝ်းစာ အခြေခံများ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>ပအိုဝ်းစာ အခြေခံများ</h1>
+
+        <section>
+            <h2>ပါဠိသရ (၈) ဖြုံႏ</h2>
+            <table id="pali-vowels-table">
+                <thead>
+                    <tr>
+                        <th>ပအိုဝ်းစာ</th>
+                        <th>Romanization</th>
+                        <th>IPA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>ပအိုဝ်ႏသရ (၁၆) ဖြုံႏ</h2>
+            <table id="paoh-vowels-table">
+                <thead>
+                    <tr>
+                        <th>ပအိုဝ်းစာ</th>
+                        <th>Romanization</th>
+                        <th>IPA (အကြံပြု)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>ပအိုဝ်ႏဗျည်း (၃၃) ဖြုံႏ</h2>
+            <table id="paoh-consonants-table">
+                <thead>
+                    <tr>
+                        <th>ပအိုဝ်းစာ</th>
+                        <th>Romanization</th>
+                        <th>IPA (အကြံပြု)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>ပအိုဝ်ႏဂဏန်ꩻ (၁၀) ဖြုံႏ</h2>
+            <table id="paoh-numbers-table">
+                <thead>
+                    <tr>
+                        <th>ပအိုဝ်းစာ</th>
+                        <th>Romanization</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>ဗီးပစ္စည်း (၂၀) ဖြုံႏ (Romanization အကြံပြုချက်)</h2>
+            <table id="paoh-diacritics-table">
+                <thead>
+                    <tr>
+                        <th>ပအိုဝ်းစာ</th>
+                        <th>Romanization</th>
+                        <th>ဖော်ပြချက်</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </section>
+        
+        <section>
+            <h2>လိတ်မွူး အတွယ်ꩻ (Tone ဇယားများ)</h2>
+            <h3>လိတ်မွူး အတွယ်ꩻ (၁)</h3>
+            <table id="tones-set1-table"></table>
+            <h3>လိတ်မွူး အတွယ်ꩻ (၂)</h3>
+            <table id="tones-set2-table"></table>
+            <h3>လိတ်မွူး အတွယ်ꩻ (၃)</h3>
+            <table id="tones-set3-table"></table>
+            <h3>လိတ်မွူး အတွယ်ꩻ (၄)</h3>
+            <table id="tones-set4-table"></table>
+            <h3>လိတ်မွူး အတွယ်ꩻ (၅)</h3>
+            <table id="tones-set5-table"></table>
+            <h3>လိတ်မွူး အတွယ်ꩻ (၆)</h3>
+            <table id="tones-set6-table"></table>
+        </section>
+
+    </div>
+
+    <script src="paohData.js"></script>
+    <script>// script.js
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Function to create and populate a generic table
+    function createTable(data, tableId, headers) {
+        const tableElement = document.getElementById(tableId);
+        if (!tableElement) return; // Exit if table element not found
+
+        const tbody = tableElement.querySelector('tbody') || document.createElement('tbody');
+        if (!tableElement.querySelector('thead')) { // Create header only if it doesn't exist
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            headers.forEach(headerText => {
+                const th = document.createElement('th');
+                th.textContent = headerText;
+                headerRow.appendChild(th);
+            });
+            thead.appendChild(headerRow);
+            tableElement.appendChild(thead);
+        }
+        
+        tbody.innerHTML = ''; // Clear existing rows
+
+        data.forEach(item => {
+            const row = document.createElement('tr');
+            Object.values(item).forEach(value => {
+                const td = document.createElement('td');
+                td.textContent = value;
+                row.appendChild(td);
+            });
+            tbody.appendChild(row);
+        });
+        if (!tableElement.querySelector('tbody')) {
+            tableElement.appendChild(tbody);
+        }
+    }
+
+    // Function to create and populate tone tables (6 columns per row)
+    function createToneTable(data, tableId) {
+        const tableElement = document.getElementById(tableId);
+        if (!tableElement) return;
+
+        tableElement.innerHTML = ''; // Clear existing content
+
+        const thead = document.createElement('thead');
+        const headerRow = document.createElement('tr');
+        ['ပအိုဝ်းစာ', 'Romanization', 'ပအိုဝ်းစာ', 'Romanization', 'ပအိုဝ်းစာ', 'Romanization'].forEach(headerText => {
+            const th = document.createElement('th');
+            th.textContent = headerText;
+            headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        tableElement.appendChild(thead);
+
+        const tbody = document.createElement('tbody');
+        for (let i = 0; i < data.length; i += 6) {
+            const row = document.createElement('tr');
+            for (let j = 0; j < 6; j++) {
+                const item = data[i + j];
+                if (item) {
+                    const paohTd = document.createElement('td');
+                    paohTd.textContent = item.paoh;
+                    row.appendChild(paohTd);
+
+                    const romanTd = document.createElement('td');
+                    romanTd.textContent = item.roman;
+                    row.appendChild(romanTd);
+                } else {
+                    // Fill empty cells if the last row doesn't have 6 pairs
+                    row.appendChild(document.createElement('td'));
+                    row.appendChild(document.createElement('td'));
+                }
+            }
+            tbody.appendChild(row);
+        }
+        tableElement.appendChild(tbody);
+    }
+
+    // Populate tables using the data from paohData.js
+    createTable(paohBasicData.paliVowels, 'pali-vowels-table', ['ပအိုဝ်းစာ', 'Romanization', 'IPA']);
+    createTable(paohBasicData.paohVowels, 'paoh-vowels-table', ['ပအိုဝ်းစာ', 'Romanization', 'IPA (အကြံပြု)']);
+    createTable(paohBasicData.paohConsonants, 'paoh-consonants-table', ['ပအိုဝ်းစာ', 'Romanization', 'IPA (အကြံပြု)']);
+    createTable(paohBasicData.paohNumbers, 'paoh-numbers-table', ['ပအိုဝ်းစာ', 'Romanization']);
+    createTable(paohBasicData.paohDiacritics, 'paoh-diacritics-table', ['ပအိုဝ်းစာ', 'Romanization', 'ဖော်ပြချက်']);
+
+    // Populate tone sets
+    createToneTable(paohBasicData.toneSets.set1, 'tones-set1-table');
+    createToneTable(paohBasicData.toneSets.set2, 'tones-set2-table');
+    createToneTable(paohBasicData.toneSets.set3, 'tones-set3-table');
+    createToneTable(paohBasicData.toneSets.set4, 'tones-set4-table');
+    createToneTable(paohBasicData.toneSets.set5, 'tones-set5-table');
+    createToneTable(paohBasicData.toneSets.set6, 'tones-set6-table');
+
+});
+</script>
+</body>
+</html>
