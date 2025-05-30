@@ -103,16 +103,27 @@
     </div>
 
     <script src="paohData.js"></script>
-    <script>// script.js
+    <script>// **အသံဖွင့်ရန် Function အသစ်ထည့်သွင်းခြင်း**
+function playPaohSound(romanizedName) {
+    // အသံဖိုင်များရှိရာ လမ်းကြောင်းကို ညွှန်းဆိုပါ
+    // ဥပမာ: audio/a1.mp3
+    const audioPath = `audio/${romanizedName}.mp3`; 
+    const audio = new Audio(audioPath);
+
+    // အသံဖွင့်ပြီး အမှားရှိရင် console မှာ ပြသခြင်း
+    audio.play().catch(e => {
+        console.error(`အသံဖွင့်ရာတွင် အမှားအယွင်းရှိပါသည်: ${audioPath}`, e);
+    });
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     // Function to create and populate a generic table
     function createTable(data, tableId, headers) {
         const tableElement = document.getElementById(tableId);
-        if (!tableElement) return; // Exit if table element not found
+        if (!tableElement) return;
 
         const tbody = tableElement.querySelector('tbody') || document.createElement('tbody');
-        if (!tableElement.querySelector('thead')) { // Create header only if it doesn't exist
+        if (!tableElement.querySelector('thead')) {
             const thead = document.createElement('thead');
             const headerRow = document.createElement('tr');
             headers.forEach(headerText => {
@@ -124,13 +135,27 @@ document.addEventListener('DOMContentLoaded', () => {
             tableElement.appendChild(thead);
         }
         
-        tbody.innerHTML = ''; // Clear existing rows
+        tbody.innerHTML = ''; 
 
         data.forEach(item => {
             const row = document.createElement('tr');
-            Object.values(item).forEach(value => {
+            // Object.values(item) အစား item.paoh, item.roman, item.ipa စသည်ဖြင့် တိုက်ရိုက်ယူခြင်း
+            // ၎င်းတို့ကို အသံဖွင့်ရန်အတွက် click event listener ထည့်သွင်းနိုင်ရန်ဖြစ်သည်။
+            // ဥပမာ: paoh, roman, ipa တို့ကို အသုံးပြု
+            const keys = Object.keys(item); // item ရဲ့ key တွေကို ရယူ
+            keys.forEach(key => {
                 const td = document.createElement('td');
-                td.textContent = value;
+                td.textContent = item[key];
+                
+                // **ပအိုဝ်းစာလုံးများအတွက် click event listener ထည့်သွင်းခြင်း**
+                // ဇယားထဲက ပအိုဝ်းစာလုံးပါတဲ့ column ကို နှိပ်ရင် အသံထွက်စေချင်ရင်
+                // 'paoh' key ကို သေချာစစ်ဆေးပါ။
+                if (key === 'paoh' && item.roman) { // romanization ရှိမှသာ အသံဖွင့်နိုင်မည်
+                    td.classList.add('clickable-paoh-char'); // CSS ပုံစံအတွက် class ထည့်
+                    td.addEventListener('click', () => {
+                        playPaohSound(item.roman);
+                    });
+                }
                 row.appendChild(td);
             });
             tbody.appendChild(row);
@@ -141,11 +166,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Function to create and populate tone tables (6 columns per row)
+    // **ဒီ Function မှာလည်း အသံထွက်စနစ် ထည့်သွင်းရပါမယ်**
     function createToneTable(data, tableId) {
         const tableElement = document.getElementById(tableId);
         if (!tableElement) return;
 
-        tableElement.innerHTML = ''; // Clear existing content
+        tableElement.innerHTML = ''; 
 
         const thead = document.createElement('thead');
         const headerRow = document.createElement('tr');
@@ -165,6 +191,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (item) {
                     const paohTd = document.createElement('td');
                     paohTd.textContent = item.paoh;
+                    // ** Tone ဇယားက ပအိုဝ်းစာလုံးတွေအတွက် click event listener ထည့်သွင်းခြင်း **
+                    if (item.roman) { // romanization ရှိမှသာ အသံဖွင့်နိုင်မည်
+                        paohTd.classList.add('clickable-paoh-char'); // CSS ပုံစံအတွက် class ထည့်
+                        paohTd.addEventListener('click', () => {
+                            playPaohSound(item.roman);
+                        });
+                    }
                     row.appendChild(paohTd);
 
                     const romanTd = document.createElement('td');
@@ -182,20 +215,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Populate tables using the data from paohData.js
-    createTable(paohBasicData.paliVowels, 'pali-vowels-table', ['ပအိုဝ်းစာ', 'Romanization', 'IPA']);
-    createTable(paohBasicData.paohVowels, 'paoh-vowels-table', ['ပအိုဝ်းစာ', 'Romanization', 'IPA (အကြံပြု)']);
-    createTable(paohBasicData.paohConsonants, 'paoh-consonants-table', ['ပအိုဝ်းစာ', 'Romanization', 'IPA (အကြံပြု)']);
-    createTable(paohBasicData.paohNumbers, 'paoh-numbers-table', ['ပအိုဝ်းစာ', 'Romanization']);
-    createTable(paohBasicData.paohDiacritics, 'paoh-diacritics-table', ['ပအိုဝ်းစာ', 'Romanization', 'ဖော်ပြချက်']);
+    // **ဤနေရာတွင် data.js မှ paohBasicData ကို ရယူသည်ဟု ယူဆပါသည်။**
+    // ဥပမာ: if (typeof paohBasicData !== 'undefined') { ... }
+    // သို့မဟုတ် paohData.js ကို script.js မတိုင်မီ load ရန်သေချာပါစေ။
 
-    // Populate tone sets
-    createToneTable(paohBasicData.toneSets.set1, 'tones-set1-table');
-    createToneTable(paohBasicData.toneSets.set2, 'tones-set2-table');
-    createToneTable(paohBasicData.toneSets.set3, 'tones-set3-table');
-    createToneTable(paohBasicData.toneSets.set4, 'tones-set4-table');
-    createToneTable(paohBasicData.toneSets.set5, 'tones-set5-table');
-    createToneTable(paohBasicData.toneSets.set6, 'tones-set6-table');
+    if (typeof paohBasicData !== 'undefined') { // paohData.js က data ကို စစ်ဆေးခြင်း
+        createTable(paohBasicData.paliVowels, 'pali-vowels-table', ['ပအိုဝ်းစာ', 'Romanization', 'IPA']);
+        createTable(paohBasicData.paohVowels, 'paoh-vowels-table', ['ပအိုဝ်းစာ', 'Romanization', 'IPA (အကြံပြု)']);
+        createTable(paohBasicData.paohConsonants, 'paoh-consonants-table', ['ပအိုဝ်းစာ', 'Romanization', 'IPA (အကြံပြု)']);
+        createTable(paohBasicData.paohNumbers, 'paoh-numbers-table', ['ပအိုဝ်းစာ', 'Romanization']);
+        createTable(paohBasicData.paohDiacritics, 'paoh-diacritics-table', ['ပအိုဝ်းစာ', 'Romanization', 'ဖော်ပြချက်']);
 
+        // Populate tone sets
+        createToneTable(paohBasicData.toneSets.set1, 'tones-set1-table');
+        createToneTable(paohBasicData.toneSets.set2, 'tones-set2-table');
+        createToneTable(paohBasicData.toneSets.set3, 'tones-set3-table');
+        createToneTable(paohBasicData.toneSets.set4, 'tones-set4-table');
+        createToneTable(paohBasicData.toneSets.set5, 'tones-set5-table');
+        createToneTable(paohBasicData.toneSets.set6, 'tones-set6-table');
+    } else {
+        console.error("paohBasicData ကို ရှာမတွေ့ပါ။ paohData.js ဖိုင်ကို စစ်ဆေးပါ။");
+    }
 });
 </script>
 </body>
