@@ -129,3 +129,23 @@ table tr:hover {
         font-size: 1em;
     }
 }
+/* style.css */
+
+/* ... (သင့်ရဲ့ မူလ CSS ကုဒ်များ) ... */
+
+.clickable-paoh-char {
+    cursor: pointer; /* မောက်စ်တင်ရင် လက်ပုံစံပြောင်းလဲခြင်း */
+    color: #007bff; /* စာလုံးအရောင်ပြောင်းလဲခြင်း */
+    font-weight: bold; /* စာလုံးအထူပြောင်းလဲခြင်း */
+    transition: color 0.2s ease, background-color 0.2s ease; /* transition effect */
+}
+
+.clickable-paoh-char:hover {
+    color: #0056b3; /* မောက်စ်တင်ရင် အရောင်ပိုရင့်စေခြင်း */
+    background-color: #e6f2ff; /* နောက်ခံအနည်းငယ်ပြောင်းလဲခြင်း */
+}
+
+.clickable-paoh-char:active {
+    background-color: #cce0ff; /* နှိပ်လိုက်ရင် နောက်ခံအရောင်ပြောင်းလဲခြင်း */
+}
+
