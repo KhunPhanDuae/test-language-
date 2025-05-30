@@ -43,6 +43,23 @@
             border-left: 3px solid #0056b3;
             background-color: #e6f2ff;
         }
+        /* --- အသစ်ထည့်သွင်းမည့် CSS --- */
+        .clickable-paoh-char {
+            cursor: pointer; /* မောက်စ်တင်ရင် လက်ပုံစံပြောင်းလဲခြင်း */
+            color: #007bff; /* စာလုံးအရောင်ပြောင်းလဲခြင်း */
+            font-weight: bold; /* စာလုံးအထူပြောင်းလဲခြင်း */
+            transition: color 0.2s ease, background-color 0.2s ease; /* transition effect */
+        }
+
+        .clickable-paoh-char:hover {
+            color: #0056b3; /* မောက်စ်တင်ရင် အရောင်ပိုရင့်စေခြင်း */
+            background-color: #e6f2ff; /* နောက်ခံအနည်းငယ်ပြောင်းလဲခြင်း */
+        }
+
+        .clickable-paoh-char:active {
+            background-color: #cce0ff; /* နှိပ်လိုက်ရင် နောက်ခံအရောင်ပြောင်းလဲခြင်း */
+        }
+        /* --- အသစ်ထည့်သွင်းမည့် CSS ပြီးဆုံး --- */
     </style>
 </head>
 <body>
@@ -56,6 +73,24 @@
     <div id="content"></div>
 
     <script>
+        // --- အသစ်ထည့်သွင်းမည့် Function ---
+        /**
+         * romanizedName ကို အသုံးပြုပြီး သက်ဆိုင်ရာ အသံဖိုင်ကို ဖွင့်ပေးသော function
+         * @param {string} romanizedName - အသံဖွင့်လိုသော အက္ခရာ၏ Romanization (ဥပမာ: 'a', 'ka')
+         */
+        function playPaohSound(romanizedName) {
+            // အသံဖိုင်တွေရဲ့ Extension ကို .m4a (သို့မဟုတ် .mp3) လို့ သတ်မှတ်ပါ။
+            // သင့်ဖိုင်တွေ .m4a ဆိုရင် ဒီအတိုင်းထားပါ။ .mp3 ဆိုရင် .mp3 လို့ ပြောင်းပါ။
+            const audioPath = `audio/${romanizedName}.m4a`; 
+            const audio = new Audio(audioPath);
+
+            // အသံဖွင့်ပြီး အမှားရှိရင် console မှာ ပြသခြင်း
+            audio.play().catch(e => {
+                console.error(`အသံဖွင့်ရာတွင် အမှားအယွင်းရှိပါသည်: ${audioPath}`, e);
+            });
+        }
+        // --- Function အသစ် ပြီးဆုံး ---
+
         document.addEventListener('DOMContentLoaded', function() {
             fetch('pao_rypak.json')
                 .then(response => response.json())
@@ -70,7 +105,6 @@
                         const thead = document.createElement('thead');
                         const headerRow = document.createElement('tr');
                         
-                        // Define fixed headers for better consistency
                         ['PaO Script', 'Romanization', 'ရှင်းလင်းချက်'].forEach(headerText => {
                             const th = document.createElement('th');
                             th.textContent = headerText;
@@ -84,6 +118,18 @@
                             const row = document.createElement('tr');
                             const paohCell = document.createElement('td');
                             paohCell.textContent = item.paoh;
+                            
+                            // --- ဒီနေရာက အသံထည့်သွင်းဖို့ အဓိက အပြောင်းအလဲ ---
+                            // paohCell (ပအိုဝ်းစာလုံး) ကို နှိပ်လို့ရအောင် လုပ်ခြင်း
+                            // item.roman ရှိမှသာ အသံဖွင့်နိုင်မည်
+                            if (item.roman) {
+                                paohCell.classList.add('clickable-paoh-char'); // CSS ပုံစံအတွက် class ထည့်
+                                paohCell.addEventListener('click', () => {
+                                    playPaohSound(item.roman); // သက်ဆိုင်ရာ romanization ဖြင့် အသံဖွင့်ပါ
+                                });
+                            }
+                            // --- အသံထည့်သွင်းမှု ပြီးဆုံး ---
+
                             row.appendChild(paohCell);
 
                             const romanCell = document.createElement('td');
@@ -91,7 +137,7 @@
                             row.appendChild(romanCell);
 
                             const noteCell = document.createElement('td');
-                            noteCell.textContent = item.note || ''; // Display note if exists
+                            noteCell.textContent = item.note || ''; 
                             row.appendChild(noteCell);
 
                             tbody.appendChild(row);
