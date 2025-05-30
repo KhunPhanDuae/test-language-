@@ -78,77 +78,149 @@
          * romanizedName ကို အသုံးပြုပြီး သက်ဆိုင်ရာ အသံဖိုင်ကို ဖွင့်ပေးသော function
          * @param {string} romanizedName - အသံဖွင့်လိုသော အက္ခရာ၏ Romanization (ဥပမာ: 'a', 'ka')
          */
-        function playPaohSound(romanizedName) {
-            // အသံဖိုင်တွေရဲ့ Extension ကို .m4a (သို့မဟုတ် .mp3) လို့ သတ်မှတ်ပါ။
-            // သင့်ဖိုင်တွေ .m4a ဆိုရင် ဒီအတိုင်းထားပါ။ .mp3 ဆိုရင် .mp3 လို့ ပြောင်းပါ။
-            const audioPath = `audio/${romanizedName}.m4a`; 
-            const audio = new Audio(audioPath);
+        // ... (script tag ရဲ့ အစပိုင်း) ...
 
-            // အသံဖွင့်ပြီး အမှားရှိရင် console မှာ ပြသခြင်း
-            audio.play().catch(e => {
-                console.error(`အသံဖွင့်ရာတွင် အမှားအယွင်းရှိပါသည်: ${audioPath}`, e);
-            });
+function playPaohSound(romanizedName) {
+    const supportedExtensions = ['m4a', 'mp3', 'wav']; // ပံ့ပိုးပေးမယ့် Extension တွေ
+    let audioPlayed = false;
+
+    // Extension တစ်ခုချင်းစီကို စစ်ဆေးပြီး အသံဖွင့်ဖို့ ကြိုးစားမယ်
+    for (const ext of supportedExtensions) {
+        const audioPath = `audio/${romanizedName}.${ext}`;
+        const audio = new Audio(audioPath);
+
+        // canPlayType() ကိုသုံးပြီး browser က ဒီဖိုင်ကို ဖွင့်နိုင်မဖွင့်နိုင် စစ်မယ်
+        if (audio.canPlayType(`audio/${ext}`)) {
+            audio.play()
+                .then(() => {
+                    audioPlayed = true; // အောင်မြင်စွာ ဖွင့်နိုင်ရင် မှတ်သားမယ်
+                })
+                .catch(e => {
+                    // console.warn(`Could not play ${audioPath}:`, e); // ဖွင့်မရရင် warn ပြမယ်
+                });
+            
+            // တစ်ခုခု ဖွင့်လိုက်တာနဲ့ ကျန်တဲ့ extension တွေကို စစ်ဆေးတာ ရပ်မယ်
+            // ဒါမှမဟုတ် ပထမဆုံးရှိတဲ့ဖိုင်ကို ဖွင့်ပြီး ရပ်ချင်ရင် ဒီနေရာမှာ return; ထည့်ပါ။
+            // return; 
         }
+    }
+
+    // တကယ်လို့ ဘယ် Extension မှ ဖွင့်လို့မရဘူးဆိုရင် error ပြမယ်
+    // (အထက်ပါ catch() က console.warn ဖြစ်တာမို့ ဒီနေရာမှာ ထပ်စစ်တာက ပိုကောင်းပါတယ်)
+    // ပိုမိုကောင်းမွန်စေရန်:
+    // Browser က ပထမဆုံးတွေ့တဲ့ ဖိုင် Extension နဲ့ ဖွင့်မရရင် ကျန်တဲ့ဖိုင်တွေနဲ့ ဆက်စစ်သွားအောင် လုပ်နိုင်ပါတယ်။
+    // လက်ရှိကုဒ်ကတော့ Extension တစ်ခုချင်းစီနဲ့ အသံကို သီးခြားစီဖန်တီးပြီး ဖွင့်ခိုင်းမှာပါ။
+    // တကယ်လို့ သေချာချင်ရင် Promise.all နဲ့ စောင့်ပြီး ပထမဆုံး အောင်မြင်တဲ့တစ်ခုကိုပဲ ယူတာမျိုး လုပ်လို့ရပါတယ်။
+    // ဒါပေမယ့် ရိုးရှင်းအောင် အောက်ပါအတိုင်း ပိုကောင်းအောင် ပြင်ဆင်နိုင်ပါတယ်။
+
+    // ဥပမာ - ပထမဆုံးဖွင့်နိုင်တဲ့ ဖိုင်ကိုပဲ ဖွင့်ပြီး ရပ်ချင်ရင်:
+    for (const ext of supportedExtensions) {
+        const audioPath = `audio/${romanizedName}.${ext}`;
+        const audio = new Audio(audioPath);
+
+        if (audio.canPlayType(`audio/${ext}`)) {
+            audio.play()
+                .then(() => {
+                    console.log(`Successfully played: ${audioPath}`);
+                })
+                .catch(e => {
+                    console.warn(`Could not play ${audioPath}:`, e);
+                });
+            return; // တွေ့တာနဲ့ ဖွင့်ပြီး ကျန်တာတွေကို ဆက်မစစ်တော့ဘူး
+        }
+    }
+    console.error(`No playable audio file found for ${romanizedName} with supported extensions.`);
+}
+
+// ... (script tag ရဲ့ ကျန်တဲ့ code များ) ...
         // --- Function အသစ် ပြီးဆုံး ---
 
-        document.addEventListener('DOMContentLoaded', function() {
-            fetch('pao_rypak.json')
-                .then(response => response.json())
-                .then(data => {
-                    const contentDiv = document.getElementById('content');
-                    data.forEach(section => {
-                        const sectionTitle = document.createElement('h2');
-                        sectionTitle.textContent = section.series + (section.type ? ` (${section.type})` : '');
-                        contentDiv.appendChild(sectionTitle);
+    // ... (playPaohSound function အပေါ်က အတိုင်း) ...
 
-                        const table = document.createElement('table');
-                        const thead = document.createElement('thead');
-                        const headerRow = document.createElement('tr');
-                        
-                        ['PaO Script', 'Romanization', 'ရှင်းလင်းချက်'].forEach(headerText => {
-                            const th = document.createElement('th');
-                            th.textContent = headerText;
-                            headerRow.appendChild(th);
-                        });
-                        thead.appendChild(headerRow);
-                        table.appendChild(thead);
+    document.addEventListener('DOMContentLoaded', function() {
+        // အသုံးပြုမည့် JSON ဖိုင်များစာရင်း
+        const jsonFiles = [
+            'pao_rypak.json',
+            'pao_rypak2.json',
+            'pao_rypak3.json',
+            'pao_rypak4.json'
+        ];
 
-                        const tbody = document.createElement('tbody');
-                        section.data.forEach(item => {
-                            const row = document.createElement('tr');
-                            const paohCell = document.createElement('td');
-                            paohCell.textContent = item.paoh;
-                            
-                            // --- ဒီနေရာက အသံထည့်သွင်းဖို့ အဓိက အပြောင်းအလဲ ---
-                            // paohCell (ပအိုဝ်းစာလုံး) ကို နှိပ်လို့ရအောင် လုပ်ခြင်း
-                            // item.roman ရှိမှသာ အသံဖွင့်နိုင်မည်
-                            if (item.roman) {
-                                paohCell.classList.add('clickable-paoh-char'); // CSS ပုံစံအတွက် class ထည့်
-                                paohCell.addEventListener('click', () => {
-                                    playPaohSound(item.roman); // သက်ဆိုင်ရာ romanization ဖြင့် အသံဖွင့်ပါ
-                                });
-                            }
-                            // --- အသံထည့်သွင်းမှု ပြီးဆုံး ---
+        const contentDiv = document.getElementById('content');
+        let allData = []; // ဖိုင်အားလုံးက data တွေကို သိမ်းဖို့ array
 
-                            row.appendChild(paohCell);
-
-                            const romanCell = document.createElement('td');
-                            romanCell.textContent = item.roman;
-                            row.appendChild(romanCell);
-
-                            const noteCell = document.createElement('td');
-                            noteCell.textContent = item.note || ''; 
-                            row.appendChild(noteCell);
-
-                            tbody.appendChild(row);
-                        });
-                        table.appendChild(tbody);
-                        contentDiv.appendChild(table);
-                    });
+        // JSON ဖိုင်တစ်ခုချင်းစီကို fetch လုပ်ခြင်း
+        const fetchPromises = jsonFiles.map(file => 
+            fetch(file)
+                .then(response => {
+                    if (!response.ok) {
+                        // ဖိုင်မရှိရင် (သို့) error ရှိရင် warning ပြပြီး ဆက်လုပ်
+                        console.warn(`Warning: Could not load ${file}. Status: ${response.status}`);
+                        return null; // null ပြန်ပေးပြီး နောက်အဆင့်မှာ စစ်ထုတ်ပစ်မယ်
+                    }
+                    return response.json();
                 })
-                .catch(error => console.error('Error fetching RYPAK data:', error));
-        });
-    </script>
+        );
+
+        // Promise.all ကိုသုံးပြီး ဖိုင်အားလုံးကို fetch ပြီးတာကို စောင့်ခြင်း
+        Promise.all(fetchPromises)
+            .then(results => {
+                results.forEach(data => {
+                    if (data) { // fetch အောင်မြင်ခဲ့တဲ့ data တွေပဲ ပေါင်းထည့်မယ်
+                        allData = allData.concat(data);
+                    }
+                });
+                
+                // ပေါင်းစပ်ထားတဲ့ data တွေနဲ့ ဇယားတွေ ဖန်တီးခြင်း
+                allData.forEach(section => {
+                    const sectionTitle = document.createElement('h2');
+                    sectionTitle.textContent = section.series + (section.type ? ` (${section.type})` : '');
+                    contentDiv.appendChild(sectionTitle);
+
+                    const table = document.createElement('table');
+                    const thead = document.createElement('thead');
+                    const headerRow = document.createElement('tr');
+                    
+                    ['PaO Script', 'Romanization', 'ရှင်းလင်းချက်'].forEach(headerText => {
+                        const th = document.createElement('th');
+                        th.textContent = headerText;
+                        headerRow.appendChild(th);
+                    });
+                    thead.appendChild(headerRow);
+                    table.appendChild(thead);
+
+                    const tbody = document.createElement('tbody');
+                    section.data.forEach(item => {
+                        const row = document.createElement('tr');
+                        const paohCell = document.createElement('td');
+                        paohCell.textContent = item.paoh;
+                        
+                        if (item.roman) {
+                            paohCell.classList.add('clickable-paoh-char');
+                            paohCell.addEventListener('click', () => {
+                                playPaohSound(item.roman); // ဒီနေရာမှာ playPaohSound ကိုခေါ်မယ်
+                            });
+                        }
+                        row.appendChild(paohCell);
+
+                        const romanCell = document.createElement('td');
+                        romanCell.textContent = item.roman;
+                        row.appendChild(romanCell);
+
+                        const noteCell = document.createElement('td');
+                        noteCell.textContent = item.note || ''; 
+                        row.appendChild(noteCell);
+
+                        tbody.appendChild(row);
+                    });
+                    table.appendChild(tbody);
+                    contentDiv.appendChild(table);
+                });
+            })
+            .catch(error => console.error('Error fetching one or more JSON files:', error));
+    });
+</script>
+
 
 </body>
 </html>
