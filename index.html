@@ -1,72 +1,57 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="my">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pa'O Language</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ပအိုဝ်းဂဏန်းများ (တစ်ခုတည်းသော ကုဒ်)</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Noto Sans Myanmar', sans-serif; /* Noto Sans Myanmar ကို အဓိကသုံးရန် */
+            font-size: 1.2em; /* စာလုံးအရွယ်အစား */
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        h1 {
+            color: #0056b3;
+            text-align: center;
+        }
+
+        .pao-digits {
+            font-size: 3.5em; /* ပအိုဝ်းဂဏန်းများကို ပိုကြီးအောင်လုပ်ရန် */
+            font-weight: bold; /* ပိုထူအောင်လုပ်ရန် */
+            display: block; /* တစ်ကြောင်းချင်းစီ ပေါ်စေရန် */
+            text-align: center;
+            margin: 30px 0;
+            color: #e67e22; /* ဂဏန်းအရောင် */
+        }
+
+        p {
+            text-align: center;
+            font-size: 1em;
+            color: #555;
+        }
+    </style>
 </head>
-<style>@font-face {
-    font-family: 'NotoSansMyanmar-ExtraLight.ttf'; /* သင်ပေးချင်တဲ့ နာမည်။ ကြိုက်ရာပေးနိုင်ပါတယ်။ */
-    src: url('./NotoSansMyanmar-ExtraLight.ttf') format('truetype'); /* သင့်ဖိုင်ရဲ့ လမ်းကြောင်း */
-    font-weight: 200; /* ExtraLight အတွက် font-weight ကို 200 လို့ သတ်မှတ်ပါ */
-    font-style: normal;
-    /* ပအိုဝ်းဂဏန်းများအတွက်ပဲ ဒီ Font ကို သုံးပါလို့ သတ်မှတ်ခြင်း (optional but good practice) */
-    unicode-range: U+160D0-160D9;
-}
-
-/* ဝက်ဘ်ဆိုက်တစ်ခုလုံးအတွက် ဒါမှမဟုတ် လိုတဲ့နေရာမှာ ဒီ Font ကို ခေါ်သုံးပါ */
-body {
-    font-family: 'NotoSansMyanmar-ExtraLight.ttf', sans-serif;
-    font-size: 5.2em;
-}
-
-/* ပအိုဝ်းဂဏန်းတွေအတွက် သီးသန့် styling (ပိုကြီးချင်ရင်) */
-.pao-digits {
-    font-family: 'NotoSansMyanmar-ExtraLight.ttf', sans-serif; /* သေချာအောင် ထပ်ထည့်ပေးတာပါ */
-    font-size: 9em;
-    font-weight: bold; /* ဒါပေမယ့် ExtraLight ဖြစ်နေတာမို့ ဒီ bold က အလုပ်လုပ်မှာမဟုတ်ပါဘူး */
-}
-</style>
 <body>
-  <table id="data-table">
-    <thead>
-      <tr>
-        <th>Word</th>
-        <th>Translation</th>
-      </tr>
-    </thead>
-    <tbody>
-   <p>   
-𑛐 MYANMAR PAO DIGIT ZERO
-𑛑 MYANMAR PAO DIGIT ONE
-𑛒 MYANMAR PAO DIGIT TWO
-𑛓 MYANMAR PAO DIGIT THREE
-𑛔 MYANMAR PAO DIGIT FOUR
-𑛕 MYANMAR PAO DIGIT FIVE
-𑛖 MYANMAR PAO DIGIT SIX
-𑛗 MYANMAR PAO DIGIT SEVEN
-𑛘 MYANMAR PAO DIGIT EIGHT
-𑛙 MYANMAR PAO DIGIT NINE here --></p>
-    </tbody>
-  </table>
+    <h1>ပအိုဝ်းဂဏန်းများ (Pa'O Digits)</h1>
+    
+    <p>
+        အောက်ပါတို့သည် ပအိုဝ်းဘာသာစကား၏ ဂဏန်းများ ဖြစ်ပြီး Unicode Entity များကို အသုံးပြုထားပါသည်။
+    </p>
 
-  <script>
-    // Fetch data from backend API
-    fetch('http://localhost:3000/data')
-      .then(response => response.json())
-      .then(data => {
-        const tableBody = document.querySelector('#data-table tbody');
-        data.forEach(row => {
-          const tr = document.createElement('tr');
-          row.forEach(cell => {
-            const td = document.createElement('td');
-            td.textContent = cell;
-            tr.appendChild(td);
-          });
-          tableBody.appendChild(tr);
-        });
-      })
-      .catch(error => console.error('Error fetching data:', error));
-  </script>
+    <div class="pao-digits">
+        &#x160D0; &#x160D1; &#x160D2; &#x160D3; &#x160D4; &#x160D5; &#x160D6; &#x160D7; &#x160D8; &#x160D9; </div>
+
+    <p>
+        ဤစာမျက်နှာကို GitHub Pages တွင် တိုက်ရိုက်တင်ကာ စမ်းသပ်ကြည့်နိုင်ပါသည်။
+    </p>
 </body>
 </html>
