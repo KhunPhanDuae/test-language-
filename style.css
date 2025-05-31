@@ -148,4 +148,26 @@ table tr:hover {
 .clickable-paoh-char:active {
     background-color: #cce0ff; /* နှိပ်လိုက်ရင် နောက်ခံအရောင်ပြောင်းလဲခြင်း */
 }
+ /* Styles for the main container div */
+div {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Choose a clear, readable font */
+    line-height: 1.6; /* Improve readability with good line spacing */
+    color: #333; /* Dark gray for good contrast */
+    max-width: 800px; /* Limit width for comfortable reading on larger screens */
+    margin: 20px auto; /* Center the div on the page with some top/bottom margin */
+    padding: 25px; /* Add internal spacing */
+    background-color: #f9f9f9; /* Light background for the content area */
+    border: 1px solid #ddd; /* Subtle border */
+    border-radius: 8px; /* Slightly rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+}
 
+/* Styles for h2 headings (e.g., "မြန်မာဘာသာဖြင့်", "English Version") */
+hk {
+            border-bottom: 2px solid #3498db;
+            color: #3498db;
+            font-size: 1.8em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            text-align: left;     
+}
