@@ -5,6 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pa'O Language</title>
 </head>
+<style>@font-face {
+    font-family: 'MyPaoFont'; /* သင်ပေးချင်တဲ့ နာမည်။ ကြိုက်ရာပေးနိုင်ပါတယ်။ */
+    src: url('./fonts/NotoSansMyanmar-ExtraLight.ttf') format('truetype'); /* သင့်ဖိုင်ရဲ့ လမ်းကြောင်း */
+    font-weight: 200; /* ExtraLight အတွက် font-weight ကို 200 လို့ သတ်မှတ်ပါ */
+    font-style: normal;
+    /* ပအိုဝ်းဂဏန်းများအတွက်ပဲ ဒီ Font ကို သုံးပါလို့ သတ်မှတ်ခြင်း (optional but good practice) */
+    unicode-range: U+160D0-160D9;
+}
+
+/* ဝက်ဘ်ဆိုက်တစ်ခုလုံးအတွက် ဒါမှမဟုတ် လိုတဲ့နေရာမှာ ဒီ Font ကို ခေါ်သုံးပါ */
+body {
+    font-family: 'MyPaoFont', sans-serif;
+    font-size: 1.2em;
+}
+
+/* ပအိုဝ်းဂဏန်းတွေအတွက် သီးသန့် styling (ပိုကြီးချင်ရင်) */
+.pao-digits {
+    font-family: 'MyPaoFont', sans-serif; /* သေချာအောင် ထပ်ထည့်ပေးတာပါ */
+    font-size: 3em;
+    font-weight: bold; /* ဒါပေမယ့် ExtraLight ဖြစ်နေတာမို့ ဒီ bold က အလုပ်လုပ်မှာမဟုတ်ပါဘူး */
+}
+</style>
 <body>
   <table id="data-table">
     <thead>
