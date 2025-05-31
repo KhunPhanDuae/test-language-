@@ -12,22 +12,22 @@ const paohBasicData = {
         { paoh: 'ဩ', roman: 'o', ipa: '/o/' },
     ],
     paohVowels: [
-        { paoh: 'အ', roman: 'a', ipa: '/a/' },
-        { paoh: 'အာ', roman: 'aa or ā', ipa: '/aː/' },
-        { paoh: 'အိ', roman: 'i', ipa: '/i/' },
-        { paoh: 'အီ', roman: 'ee or ī', ipa: '/iː/' },
-        { paoh: 'အု', roman: 'u', ipa: '/u/' },
-        { paoh: 'အူ', roman: 'oo or ū', ipa: '/uː/' },
-        { paoh: 'အေ့', roman: 'e', ipa: '/e/' },
-        { paoh: 'အေ', roman: 'ei or ae', ipa: '/eɪ/ or /ɛ/' },
-        { paoh: 'အဲ့', roman: 'ai', ipa: '/ɛ/ or /æ/' },
-        { paoh: 'အဲ', roman: 'ae or ê', ipa: '/ɛː/' },
-        { paoh: 'အုဲင့်', roman: 'oing', ipa: '/oiɲ/' },
-        { paoh: 'အုဲင်', roman: 'oeng', ipa: '/ɔɪŋ/ or /oɪŋ/' },
-        { paoh: 'အော့', roman: 'aw or o', ipa: '/ɔ/' },
-        { paoh: 'အော်', roman: 'aaw or ô', ipa: '/ɔː/' },
-        { paoh: 'အို့', roman: 'oe or o', ipa: '/o/' },
-        { paoh: 'အို', roman: 'o or ou', ipa: '/oː/ or /ou/' },
+        { paoh: 'အ', roman: 'a1', ipa: '/a/' },     // Short 'a'
+        { paoh: 'အာ', roman: 'aa3', ipa: '/aː/' },   // Long 'a'
+        { paoh: 'အိ', roman: 'i1', ipa: '/i/' },     // Short 'i'
+        { paoh: 'အီ', roman: 'ee3', ipa: '/iː/' },   // Long 'i'
+        { paoh: 'အု', roman: 'u1', ipa: '/u/' },     // Short 'u'
+        { paoh: 'အူ', roman: 'oo3', ipa: '/uː/' },   // Long 'u'
+        { paoh: 'အေ့', roman: 'e1', ipa: '/e/' },     // Mid-front unrounded vowel
+        { paoh: 'အေ', roman: 'ay3', ipa: '/ei/' },   // Diphthong 'ei'
+        { paoh: 'အဲ့', roman: 'ae1', ipa: '/ɛ/' },    // Open-mid front unrounded vowel
+        { paoh: 'အဲ', roman: 'ae3', ipa: '/ɛː/' },  // Longer version of 'ae'
+        { paoh: 'အုဲင့်', roman: 'aik1', ipa: '/eɪŋ/' }, // Nasalized diphthong, similar to 'aing' with an 'e' start
+        { paoh: 'အုဲင်', roman: 'aing3', ipa: '/aʊŋ/' }, // Nasalized diphthong, similar to 'ow' in "cow" + ng
+        { paoh: 'အော့', roman: 'aw1', ipa: '/ɔ/' },   // Open-mid back rounded vowel
+        { paoh: 'အော်', roman: 'aw3', ipa: '/o/' },    // Close-mid back rounded vowel
+        { paoh: 'အို့', roman: 'o1', ipa: '/oː/' },   // Longer 'o' sound
+        { paoh: 'အို', roman: 'o3', ipa: '/ou/' },   // Diphthong 'ou'
     ],
     paohConsonants: [
         { paoh: 'က', roman: 'k', ipa: '/k/' },
