@@ -138,7 +138,7 @@ const paohBasicData = {
             { paoh: 'အိပ်', roman: 'eip1' }, { paoh: 'အိပ်ꩻ', roman: 'eip2' }, { paoh: 'အိမ်', roman: 'eim1' }, { paoh: 'အိမ်ꩻ', roman: 'eim2' }, { paoh: 'အိမ်း', roman: 'eim4' }, { paoh: 'အိမ်ႏ', roman: 'eim3' },
             { paoh: 'အုတ်', roman: 'ok1' }, { paoh: 'အုတ်ꩻ', roman: 'ok2' }, { paoh: 'အုန်', roman: 'on1' }, { paoh: 'အုန်ꩻ', roman: 'on2' }, { paoh: 'အုန်း', roman: 'on4' }, { paoh: 'အုန်ႏ', roman: 'on3' },
             { paoh: 'အုပ်', roman: 'op1' }, { paoh: 'အုပ်ꩻ', roman: 'op2' }, { paoh: 'အုမ်', roman: 'om1' }, { paoh: 'အုမ်ꩻ', roman: 'om2' }, { paoh: 'အုမ်း', roman: 'om4' }, { paoh: 'အုမ်ႏ', roman: 'om3' },
-            { paoh: 'အေက်', roman: 'eik1' }, { paoh: 'အေက်ꩻ', roman: 'eik2' }, { paoh: 'အေင်', roman: 'eing1' }, { paoh: 'အေင်ꩻ', roman: 'eing2' }, { paoh: 'အေင်း', roman: 'eing4' }, { paoh: 'အေင်ႏ', roman: 'eing3' },
+            { paoh: 'အေက်', roman: 'eit1' }, { paoh: 'အေက်ꩻ', roman: 'eit2' }, { paoh: 'အေင်', roman: 'ein3' }, { paoh: 'အေင်ꩻ', roman: 'ein4' }, { paoh: 'အေင်း', roman: 'ein5' }, { paoh: 'အေင်ႏ', roman: 'ein6' },
             { paoh: 'အေပ်', roman: 'eip1' }, { paoh: 'အေပ်ꩻ', roman: 'eip2' }, { paoh: 'အေမ်', roman: 'eim1' }, { paoh: 'အေမ်ꩻ', roman: 'eim2' }, { paoh: 'အေမ်း', roman: 'eim4' }, { paoh: 'အေမ်ႏ', roman: 'eim3' },
             { paoh: 'အိုတ်', roman: 'oit1' }, { paoh: 'အိုတ်ꩻ', roman: 'oit2' }, { paoh: 'အိုန်', roman: 'oin1' }, { paoh: 'အိုန်ꩻ', roman: 'oin2' }, { paoh: 'အိုန်း', roman: 'oin4' }, { paoh: 'အိုန်ႏ', roman: 'oin3' },
             { paoh: 'အောက်', roman: 'auk1' }, { paoh: 'အောက်ꩻ', roman: 'auk2' }, { paoh: 'အောင်', roman: 'aung3' }, { paoh: 'အောင်ꩻ', roman: 'aung4' }, { paoh: 'အောင်း', roman: 'aung5' }, { paoh: 'အောင်ႏ', roman: 'aung6' },
