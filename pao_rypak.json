@@ -20,21 +20,15 @@
             {"paoh": "အျီ", "roman": "yee"},
             {"paoh": "လဗဲဉ်/ရဗဲဉ်ခန်ꩻ", "roman": "La-Ben/Ra-Ben Series", "note": "'l' သို့မဟုတ် 'r' အသံအကူ"},
             {"paoh": "အြ", "roman": "hla (or hra)", "note": "(အ+လ = hla ကဲ့သို့)"},
-            {"paoh": "အြာ", "roman": "hlaa (or hraa)"},
             {"paoh": "အြိ", "roman": "hli (or hri)"},
-            {"paoh": "အြီ", "roman": "hlee (or hree)"},
             {"paoh": "ဖြ", "roman": "phra"},
-            {"paoh": "ဖြာ", "roman": "phraa"},
             {"paoh": "ဖြိ", "roman": "phri"},
-            {"paoh": "ဖြီ", "roman": "phree"},
             {"paoh": "ခြ", "roman": "khra"},
-            {"paoh": "ခြာ", "roman": "khraa"},
             {"paoh": "ခြိ", "roman": "khri"},
-            {"paoh": "ခြီ", "roman": "khree"},
             {"paoh": "ဝဟွဲးခန်ꩻ", "roman": "Wa-Hwae Series", "note": "'w' အသံအကူ"},
             {"paoh": "အွ", "roman": "wa1"},
             {"paoh": "အွာ", "roman": "waa3"},
-            {"paoh": "အွိ", "roman": "wi2"},
+            {"paoh": "အွိ", "roman": "wi1"},
             {"paoh": "အွီ", "roman": "wee3"},
             {"paoh": "ဗီးသွတ်ꩻခန်ꩻ", "roman": "Final Consonants", "note": ""},
             {"paoh": "အက်", "roman": "-ak"},
@@ -119,7 +113,7 @@
     },
     {
         "series": "လိတ်မွူး အတွယ်ꩻ (၂) - ဗျည်း 'အွ' ဖြင့် Tones ၆ မျိုး",
-        "type": "Vowel Series 2 (with 'Aw' consonant)",
+        "type": "Vowel Series 2 (with 'Awa' consonant)",
         "data": [
             {"paoh": "အွ", "roman": "wa1"},
             {"paoh": "အွꩻ", "roman": "wa2"},
@@ -139,8 +133,8 @@
             {"paoh": "အွူꩻ", "roman": "woo4"},
             {"paoh": "အွူး", "roman": "woo5"},
             {"paoh": "အွူႏ", "roman": "woo6"},
-            {"paoh": "အွေ့", "roman": "we1"},
-            {"paoh": "အွေ့ꩻ", "roman": "we2"},
+            {"paoh": "အွေ့", "roman": "way1"},
+            {"paoh": "အွေ့ꩻ", "roman": "way2"},
             {"paoh": "အွေ", "roman": "way3"},
             {"paoh": "အွေꩻ", "roman": "way4"},
             {"paoh": "အွေး", "roman": "way5"},
@@ -178,8 +172,8 @@
         ]
     },
     {
-        "series": "လိတ်မွူး အတွယ်ꩻ (၃) - ဗျည်း 'အ' ဖြင့် အပိတ်ဗျည်းသရတွဲများ",
-        "type": "Vowel Series 3 (A-closed consonants)",
+        "series": "လိတ်မွူး အတွယ်ꩻ (၃) - ဗျည်း 'က်' ဖြင့် အပိတ်ဗျည်းသရတွဲများ",
+        "type": "Vowel Series 3 (-ak-closed consonants)",
         "data": [
             {"paoh": "အက်", "roman": "ak1"},
             {"paoh": "အက်ꩻ", "roman": "ak2"},
@@ -199,8 +193,8 @@
             {"paoh": "အဉ်ꩻ", "roman": "ain4"},
             {"paoh": "အဉ်း", "roman": "ain5"},
             {"paoh": "အဉ်ႏ", "roman": "ain6"},
-            {"paoh": "အဲစ်", "roman": "aet1"},
-            {"paoh": "အဲစ်ꩻ", "roman": "aet2"},
+            {"paoh": "အဲစ်", "roman": "et1"},
+            {"paoh": "အဲစ်ꩻ", "roman": "et2"},
             {"paoh": "အဲဉ်", "roman": "en3"},
             {"paoh": "အဲဉ်ꩻ", "roman": "en4"},
             {"paoh": "အဲဉ်း", "roman": "en5"},
@@ -244,8 +238,8 @@
         ]
     },
     {
-        "series": "လိတ်မွူး အတွယ်ꩻ (၄) - ဗျည်း 'အွ' ဖြင့် အပိတ်ဗျည်းသရတွဲများ",
-        "type": "Vowel Series 4 (Aw-closed consonants)",
+        "series": "လိတ်မွူး အတွယ်ꩻ (၄) - ဗျည်း 'အွက်' ဖြင့် အပိတ်ဗျည်းသရတွဲများ",
+        "type": "Vowel Series 4 (Awak-closed consonants)",
         "data": [
             {"paoh": "အွက်", "roman": "wak1"},
             {"paoh": "အွက်ꩻ", "roman": "wak2"},
@@ -286,8 +280,8 @@
         ]
     },
     {
-        "series": "လိတ်မွူး အတွယ်ꩻ (၅) - ဗျည်း 'အ' ဖြင့် အပိတ်ဗျည်းသရတွဲများ (အပိုင်း ၂)",
-        "type": "Vowel Series 5 (A-closed consonants 2)",
+        "series": "လိတ်မွူး အတွယ်ꩻ (၅) - ဗျည်း 'အိတ်' ဖြင့် အပိတ်ဗျည်းသရတွဲများ (အပိုင်း ၂)",
+        "type": "Vowel Series 5 (eik-closed consonants 2)",
         "data": [
             {"paoh": "အိတ်", "roman": "eik1"},
             {"paoh": "အိတ်ꩻ", "roman": "eik2"},
@@ -340,8 +334,8 @@
         ]
     },
     {
-        "series": "လိတ်မွူး အတွယ်ꩻ (၆) - ဗျည်း 'အွ' ဖြင့် အပိတ်ဗျည်းသရတွဲများ (အပိုင်း ၂)",
-        "type": "Vowel Series 6 (Awa-closed consonants 2)",
+        "series": "လိတ်မွူး အတွယ်ꩻ (၆) - ဗျည်း 'အွုက်' ဖြင့် အပိတ်ဗျည်းသရတွဲများ (အပိုင်း ၂)",
+        "type": "Vowel Series 6 (Awuk-closed consonants 2)",
         "data": [
             {"paoh": "အွုက်", "roman": "wuk1"},
             {"paoh": "အွုက်ꩻ", "roman": "wuk2"},
