@@ -142,7 +142,44 @@ function playPaohSound(romanizedName) {
         console.error(`အသံဖွင့်ရာတွင် အမှားအယွင်းရှိပါသည်: ${audioPath}`, e);
     });
 }
+function loadPaOhDigitSVG(element, unicodeValue) {
+    let svgFileName = '';
 
+    switch (unicodeValue) {
+        case '116D0': svgFileName = 'pa-o-digit-0.svg'; break;
+        case '116D1': svgFileName = 'pa-o-digit-1.svg'; break;
+        case '116D2': svgFileName = 'pa-o-digit-2.svg'; break;
+        case '116D3': svgFileName = 'pa-o-digit-3.svg'; break;
+        case '116D4': svgFileName = 'pa-o-digit-4.svg'; break;
+        case '116D5': svgFileName = 'pa-o-digit-5.svg'; break;
+        case '116D6': svgFileName = 'pa-o-digit-6.svg'; break;
+        case '116D7': svgFileName = 'pa-o-digit-7.svg'; break;
+        case '116D8': svgFileName = 'pa-o-digit-8.svg'; break;
+        case '116D9': svgFileName = 'pa-o-digit-9.svg'; break;
+        default:
+            console.warn('Unknown Pa\'O Unicode for SVG replacement:', unicodeValue);
+            return;
+    }
+
+    if (svgFileName) {
+        // *** ဒီနေရာမှာ SVG ဖိုင်တွေရှိတဲ့ 'font1/' လမ်းကြောင်းကို မှန်ကန်စွာ ညွှန်ဖို့ အရေးကြီးပါတယ်။
+        // 'PaB1.html' ဖိုင်နဲ့ 'font1' folder က တစ်နေရာတည်းမှာ ရှိတယ်လို့ ယူဆပါတယ်။
+        const pathToSvg = 'data/' + svgFileName;
+
+        fetch(pathToSvg)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Failed to load ${pathToSvg}: ${response.statusText}`);
+                }
+                return response.text();
+            })
+            .then(svgText => {
+                element.innerHTML = svgText;
+                element.classList.add('pa-o-digit-svg'); // SVG အတွက် styling class
+            })
+            .catch(error => console.error('Error loading SVG for ' + unicodeValue + ':', error));
+    }
+}
 document.addEventListener('DOMContentLoaded', () => {
     // Function to create and populate a generic table
     function createTable(data, tableId, headers) {
