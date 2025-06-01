@@ -176,7 +176,29 @@ function loadPaOhDigitSVG(element, unicodeValue) {
             .then(svgText => {
                 element.innerHTML = svgText;
                 element.classList.add('pa-o-digit-svg'); // SVG အတွက် styling class
-            })
+          
+                // *** ဒီနေရာက အဓိကပြင်ဆင်ရမယ့်နေရာပါ ***
+                // SVG ပုံကို နှိပ်ရင် အသံထွက်စေဖို့ click event listener ကို ဒီမှာ ထပ်ချိတ်ပါ
+                // `element` ဟာ <td> element ဖြစ်ပြီး `data-unicode` ဒါမှမဟုတ် `item.roman` ကို ယူနိုင်ဖို့ လိုအပ်ပါတယ်။
+                // ဒါကြောင့် `loadPaOhDigitSVG` function ကို `item.roman` ပါ ထပ်ပို့ပေးဖို့လိုပါလိမ့်မယ်။
+
+                // အခုတော့ ဒီနေရာမှာ စမ်းသပ်ဖို့အတွက် Hardcode ထားပြီး အောက်မှာ ဘယ်လိုပြင်ရမလဲ ရှင်းပြပါမယ်။
+                // ယာယီအားဖြင့် ဒီလိုလုပ်ကြည့်နိုင်ပါတယ်။
+                // **နောက်တစ်ဆင့်မှာ ဒီနေရာကို ပြန်ပြင်ပါမယ်။**
+
+                // 
+                     element.addEventListener('click', () => {
+                //     
+                   const romanizedName = element.dataset.roman; // ဥပမာ - data-roman="0" လို ထပ်ထည့်ပေးရမည်။
+                //     
+                 if (romanizedName) {
+                //         
+                playPaohSound(romanizedName);
+                //   
+                  }
+                // 
+                });
+              })
             .catch(error => console.error('Error loading SVG for ' + unicodeValue + ':', error));
     }
 }
