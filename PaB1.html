@@ -209,7 +209,24 @@ document.addEventListener('DOMContentLoaded', () => {
             const keys = Object.keys(item); // item ရဲ့ key တွေကို ရယူ
             keys.forEach(key => {
                 const td = document.createElement('td');
+                if (key === 'paoh') {
+                // ပအိုဝ်းဂဏန်း ဇယား (paoh-numbers-table) ဖြစ်ပြီး unicode property ပါဝင်ရင်
+                if (tableId === 'paoh-numbers-table' && item.unicode) {
+                    // **ဒီနေရာမှာ td.textContent အစား td.innerHTML ကို သုံးပါ**
+                    // ဒါမှ &#x116D0; လို HTML entity တွေကို browser က HTML အဖြစ် နားလည်ပြီး render လုပ်မှာပါ။
+                    td.innerHTML = item.paoh; // paohData.js က &#x116D0; က ဒီနေရာကို ရောက်လာတာ။
+
+                    td.classList.add('pa-o-unicode'); // SVG fallback အတွက် class ထည့်
+                    // ထို့နောက် SVG ကို load လုပ်ရန် loadPaOhDigitSVG function ကို ခေါ်ပါ
+                    loadPaOhDigitSVG(td, item.unicode);
+                } else {
+                    // အခြား ပအိုဝ်းစာလုံးများအတွက် ပုံမှန်အတိုင်း textContent အနေနဲ့ ထည့်ပါ
+                    td.textContent = item[key];
+                }
+            } else {
+                // အခြား column များအတွက် ပုံမှန်အတိုင်း textContent အနေနဲ့ ထည့်ပါ
                 td.textContent = item[key];
+            }
                 
                 // **ပအိုဝ်းစာလုံးများအတွက် click event listener ထည့်သွင်းခြင်း**
                 // ဇယားထဲက ပအိုဝ်းစာလုံးပါတဲ့ column ကို နှိပ်ရင် အသံထွက်စေချင်ရင်
