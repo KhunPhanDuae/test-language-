@@ -162,6 +162,19 @@ div {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
 }
 
+    /* Optional: Basic styling for your SVG digits */
+    .pa-o-digit-svg svg {
+        width: 1.2em; /* စာသားအရွယ်အစားနဲ့ ချိန်ညှိပါ */
+        height: auto;
+        vertical-align: middle; /* စာသားရဲ့ baseline နဲ့ ချိန်ညှိပါ */
+    }
+
+    /* အသံထွက်နိုင်သော စာလုံးများအတွက် mouse cursor ပြောင်းလဲမှု */
+    .clickable-paoh-char {
+        cursor: pointer;
+        /* text-decoration: underline;  လိုချင်ရင် ထည့်နိုင်ပါတယ် */
+    }
+
 /* Styles for h2 headings (e.g., "မြန်မာဘာသာဖြင့်", "English Version") */
 hk {
             border-bottom: 2px solid #3498db;
