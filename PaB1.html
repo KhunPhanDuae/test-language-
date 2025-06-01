@@ -243,25 +243,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     // *** ဒီနေရာမှာ ပြင်ဆင်ရမယ့် အဓိကနေရာပါ။ item.roman ကို ထပ်ပို့ပါ ***
                     loadPaOhDigitSVG(td, item.unicode, item.roman); // item.roman ကို ပို့ပေးလိုက်ပါ
-                    // ထို့နောက် SVG ကို load လုပ်ရန် loadPaOhDigitSVG function ကို ခေါ်ပါ
-                    loadPaOhDigitSVG(td, item.unicode);
+                
+                    // အရင်က ဒီနေရာမှာ ချိတ်ထားတဲ့ click listener ကို ဖယ်ရှားလိုက်ပါ
+                    // (SVG နဲ့ အစားထိုးပြီးရင် ဒီ listener က အလုပ်မလုပ်တော့လို့ပါ)
+                    // td.addEventListener('click', () => { playPaohSound(item.roman); });
                 } else {
-                    // အခြား ပအိုဝ်းစာလုံးများအတွက် ပုံမှန်အတိုင်း textContent အနေနဲ့ ထည့်ပါ
                     td.textContent = item[key];
+                    if (key === 'paoh' && item.roman) { // နဂိုကတည်းက ရှိနေတဲ့ အခြားစာလုံးများအတွက် listener
+                        td.classList.add('clickable-paoh-char');
+                        td.addEventListener('click', () => {
+                            playPaohSound(item.roman);
+                        });
+                    }
                 }
             } else {
-                // အခြား column များအတွက် ပုံမှန်အတိုင်း textContent အနေနဲ့ ထည့်ပါ
                 td.textContent = item[key];
-            }
-                
-                // **ပအိုဝ်းစာလုံးများအတွက် click event listener ထည့်သွင်းခြင်း**
-                // ဇယားထဲက ပအိုဝ်းစာလုံးပါတဲ့ column ကို နှိပ်ရင် အသံထွက်စေချင်ရင်
-                // 'paoh' key ကို သေချာစစ်ဆေးပါ။
-                if (key === 'paoh' && item.roman) { // romanization ရှိမှသာ အသံဖွင့်နိုင်မည်
-                    td.classList.add('clickable-paoh-char'); // CSS ပုံစံအတွက် class ထည့်
-                    td.addEventListener('click', () => {
-                        playPaohSound(item.roman);
-                    });
                 }
                 row.appendChild(td);
             });
