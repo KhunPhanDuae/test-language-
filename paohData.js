@@ -65,16 +65,16 @@ const paohBasicData = {
         { paoh: 'အ', roman: 'a.', ipa: '/ʔ/' } // Glottal Stop (often considered a consonant in Pa'O at the beginning of words)
     ],
     paohNumbers: [
-        { paoh: '၀', roman: '0' },
-        { paoh: '၁', roman: '1' },
-        { paoh: '၂', roman: '2' },
-        { paoh: '၃', roman: '3' },
-        { paoh: '၄', roman: '4' },
-        { paoh: '၅', roman: '5' },
-        { paoh: '၆', roman: '6' },
-        { paoh: '၇', roman: '7' },
-        { paoh: '၈', roman: '8' },
-        { paoh: '၉', roman: '9' },
+        { paoh: '&#x116D0;', roman: '0', unicode: '116D0' }, // ပအိုဝ်းဂဏန်း ၀
+        { paoh: '&#x116D1;', roman: '1', unicode: '116D1' }, // ပအိုဝ်းဂဏန်း ၁
+        { paoh: '&#x116D2;', roman: '2', unicode: '116D2' }, // ပအိုဝ်းဂဏန်း ၂
+        { paoh: '&#x116D3;', roman: '3', unicode: '116D3' }, // ပအိုဝ်းဂဏန်း ၃
+        { paoh: '&#x116D4;', roman: '4', unicode: '116D4' },
+        { paoh: '&#x116D5;', roman: '5', unicode: '116D5' },
+        { paoh: '&#x116D6;', roman: '6', unicode: '116D6' },
+        { paoh: '&#x116D7;', roman: '7', unicode: '116D7' },
+        { paoh: '&#x116D8;', roman: '8', unicode: '116D8' },
+        { paoh: '&#x116D9;', roman: '9', unicode: '116D9' },
     ],
     paohDiacritics: [
         { paoh: 'ာ ါ', roman: 'ā / ā', description: 'Long A sound' },
