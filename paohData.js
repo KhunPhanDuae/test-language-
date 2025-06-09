@@ -77,16 +77,16 @@ const paohBasicData = {
         { paoh: '&#x116D9;', roman: '9', unicode: '116D9' },
     ],
     paohDiacritics: [
-        { paoh: 'ာ ါ', roman: 'ā / ā', description: 'Long A sound' },
-        { paoh: 'ိ ီ', roman: 'i / ī', description: 'Short/Long I sound' },
-        { paoh: 'ု ူ', roman: 'u / ū', description: 'Short/Long U sound' },
-        { paoh: 'ေ ဲ', roman: 'e / aē', description: 'Various E sounds' },
-        { paoh: 'ံ ့', roman: 'ṁ / .', description: 'Nasalization / Tone marker' },
+        { paoh: 'ာ'' ါ', roman: 'à', description: 'Long A sound' },
+        { paoh: 'ိ'' ီ', roman: 'i' / 'ī', description: 'Short/Long I sound' },
+        { paoh: 'ု'' ူ', roman: 'u' /' ū', description: 'Short/Long U sound' },
+        { paoh: 'ေ'' ဲ', roman: 'e' / 'aē', description: 'Various E sounds' },
+        { paoh: 'ံ'' ့', roman: 'ṁ' / '.', description: 'Nasalization / Tone marker' },
         { paoh: 'း', roman: 'h (creaky/glottalized tone)', description: 'Tone marker' },
-        { paoh: 'ꩻ ႏ', roman: '(Tone markers)', description: 'Specific Paoh tone markers' },
-        { paoh: 'ျ ြ', roman: 'y / r,l', description: 'Medial Y and R' },
-        { paoh: 'ွ ်', roman: 'wa / athet', description: 'Medial W and final consonant marker' },
-        { paoh: 'က် င်', roman: '-ak / -ng', description: 'Final K and NG sounds' },
+        { paoh: 'ꩻ'' ႏ', roman: '(Tone markers)', description: 'Specific Paoh tone markers' },
+        { paoh: 'ျ'' ြ', roman: 'y' / 'r,l', description: 'Medial Y and R' },
+        { paoh: 'ွ'' ်', roman: 'wa' / 'athet', description: 'Medial W and final consonant marker' },
+        { paoh: 'က်' 'င်', roman: '-ak' / '-ng', description: 'Final K and NG sounds' },
     ],
     toneSets: {
         set1: [
@@ -94,7 +94,7 @@ const paohBasicData = {
                         { paoh: 'အိ', roman: 'i1' }, { paoh: 'အိꩻ', roman: 'i2' }, { paoh: 'အီ', roman: 'ee3' }, { paoh: 'အီꩻ', roman: 'ee4' }, { paoh: 'အီး', roman: 'ee5' }, { paoh: 'အီႏ', roman: 'ee6' },
             { paoh: 'အု', roman: 'u1' }, { paoh: 'အုꩻ', roman: 'u2' }, { paoh: 'အူ', roman: 'oo3' }, { paoh: 'အူꩻ', roman: 'oo4' }, { paoh: 'အူး', roman: 'oo5' }, { paoh: 'အူႏ', roman: 'oo6' },
             { paoh: 'အေ့', roman: 'e1' }, { paoh: 'အေ့ꩻ', roman: 'e2' }, { paoh: 'အေ', roman: 'ay3' }, { paoh: 'အေꩻ', roman: 'ay4' }, { paoh: 'အေး', roman: 'ay5' }, { paoh: 'အေႏ', roman: 'ay6' },
-            { paoh: 'အဲ့', roman: 'ar1' }, { paoh: 'အဲ့ꩻ', roman: 'ae2' }, { paoh: 'အဲ', roman: 'ae3' }, { paoh: 'အဲꩻ', roman: 'ae4' }, { paoh: 'အဲး', roman: 'ae5' }, { paoh: 'အဲႏ', roman: 'ae6' },
+            { paoh: 'အဲ့', roman: 'ae1' }, { paoh: 'အဲ့ꩻ', roman: 'ae2' }, { paoh: 'အဲ', roman: 'ae3' }, { paoh: 'အဲꩻ', roman: 'ae4' }, { paoh: 'အဲး', roman: 'ae5' }, { paoh: 'အဲႏ', roman: 'ae6' },
             { paoh: 'အုဲင့်', roman: 'aik1' },//oik 
             { paoh: 'အုဲင့်ꩻ', roman: 'aik2' }, { paoh: 'အုဲင်', roman: 'aing3' }, { paoh: 'အုဲင်ꩻ', roman: 'aing4' }, { paoh: 'အုဲင်း', roman: 'aing5' }, { paoh: 'အုဲင်ႏ', roman: 'aing6' },//oing
             { paoh: 'အော့', roman: 'aw1' }, { paoh: 'အော့ꩻ', roman: 'aw2' }, { paoh: 'အော်', roman: 'aaw3' }, { paoh: 'အော်ꩻ', roman: 'aaw4' }, { paoh: 'အေား', roman: 'aaw5' }, { paoh: 'အောႏ', roman: 'aaw6' },
@@ -110,7 +110,7 @@ const paohBasicData = {
             { paoh: 'အွဲ့', roman: 'wea1' }, { paoh: 'အွဲ့ꩻ', roman: 'wea2' }, { paoh: 'အွဲ', roman: 'weā1' }, { paoh: 'အွဲꩻ', roman: 'weā2' }, { paoh: 'အွဲး', roman: 'weā4' }, { paoh: 'အွဲႏ', roman: 'weā3' },
             { paoh: 'အွော့', roman: 'waw1' }, { paoh: 'အွော့ꩻ', roman: 'waw2' }, { paoh: 'အွော်', roman: 'waaw1' }, { paoh: 'အွော်ꩻ', roman: 'waaw2' }, { paoh: 'အွေား', roman: 'waaw4' }, { paoh: 'အွောႏ', roman: 'waaw3' },
             { paoh: 'အွို့', roman: 'wo1' }, { paoh: 'အွို့ꩻ', roman: 'wo2' }, { paoh: 'အွို', roman: 'wou1' }, { paoh: 'အွိုꩻ', roman: 'wou2' }, { paoh: 'အွိုး', roman: 'wou4' }, { paoh: 'အွိုႏ', roman: 'wou3' },
-            { paoh: 'အွံ့', roman: 'wam1' }, { paoh: 'အွံ့ꩻ', roman: 'wam2' }, { paoh: 'အွံ', roman: 'wan1' }, { paoh: 'အွံꩻ', roman: 'wan2' }, { paoh: 'အွံး', roman: 'wan4' }, { paoh: 'အွံႏ', roman: 'wan3' },
+            { paoh: 'အွံ့', roman: 'wom1' }, { paoh: 'အွံ့ꩻ', roman: 'wom2' }, { paoh: 'အွံ', roman: 'wom3' }, { paoh: 'အွံꩻ', roman: 'wom4' }, { paoh: 'အွံး', roman: 'wom5' }, { paoh: 'အွံႏ', roman: 'wom6' },
             { paoh: 'အွုံ့', roman: 'wum1' }, { paoh: 'အွုံ့ꩻ', roman: 'wum2' }, { paoh: 'အွုံ', roman: 'wun1' }, { paoh: 'အွုံꩻ', roman: 'wun2' }, { paoh: 'အွုံး', roman: 'wun4' }, { paoh: 'အွုံႏ', roman: 'wun3' },
         ],
         set3: [
@@ -147,7 +147,7 @@ const paohBasicData = {
             { paoh: 'အွုက်', roman: 'wuk1' }, { paoh: 'အွုက်ꩻ', roman: 'wuk2' }, { paoh: 'အွုင်', roman: 'wung1' }, { paoh: 'အွုင်ꩻ', roman: 'wung2' }, { paoh: 'အွုင်း', roman: 'wung4' }, { paoh: 'အွုင်ႏ', roman: 'wung3' },
             { paoh: 'အွုတ်', roman: 'wot1' }, { paoh: 'အွုတ်ꩻ', roman: 'wot2' }, { paoh: 'အွုန်', roman: 'won1' }, { paoh: 'အွုန်ꩻ', roman: 'won2' }, { paoh: 'အွုန်း', roman: 'won4' }, { paoh: 'အွုန်ႏ', roman: 'won3' },
             { paoh: 'အွုပ်', roman: 'wop1' }, { paoh: 'အွုပ်ꩻ', roman: 'wop2' }, { paoh: 'အွုမ်', roman: 'wom1' }, { paoh: 'အွုမ်ꩻ', roman: 'wom2' }, { paoh: 'အွုမ်း', roman: 'wom4' }, { paoh: 'အွုမ်ႏ', roman: 'wom3' },
-            { paoh: 'အွိုက်', roman: 'waik1' }, { paoh: 'အွိုက်ꩻ', roman: 'waik2' }, { paoh: 'အွိုင်', roman: 'wain1' }, { paoh: 'အွိုင်ꩻ', roman: 'wain2' }, { paoh: 'အွိုင်း', roman: 'wain4' }, { paoh: 'အွိုင်ႏ', roman: 'wain3' },
+            { paoh: 'အွိုက်', roman: 'wok1' }, { paoh: 'အွိုက်ꩻ', roman: 'wok2' }, { paoh: 'အွိုင်', roman: 'wong3' }, { paoh: 'အွိုင်ꩻ', roman: 'wong4' }, { paoh: 'အွိုင်း', roman: 'wong5' }, { paoh: 'အွိုင်ႏ', roman: 'wong6' },
             { paoh: 'အွိုတ်', roman: 'woit1' }, { paoh: 'အွိုတ်ꩻ', roman: 'woit2' }, { paoh: 'အွိုန်', roman: 'woin1' }, { paoh: 'အွိုန်ꩻ', roman: 'woin2' }, { paoh: 'အွိုန်း', roman: 'woin4' }, { paoh: 'အွိုန်ႏ', roman: 'woin3' },
             { paoh: 'အွိုပ်', roman: 'woip1' }, { paoh: 'အွိုပ်ꩻ', roman: 'woip2' }, { paoh: 'အွိုမ်', roman: 'woim1' }, { paoh: 'အွိုမ်ꩻ', roman: 'woim2' }, { paoh: 'အွိုမ်း', roman: 'woim4' }, { paoh: 'အွိုမ်ႏ', roman: 'woim3' },
             { paoh: 'အွောက်', roman: 'wauk1' }, { paoh: 'အွောက်ꩻ', roman: 'wauk2' }, { paoh: 'အွောင်', roman: 'waung1' }, { paoh: 'အွောင်ꩻ', roman: 'waung2' }, { paoh: 'အွောင်း', roman: 'waung4' }, { paoh: 'အွောင်ႏ', roman: 'waung3' },
