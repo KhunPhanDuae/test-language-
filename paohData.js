@@ -85,7 +85,7 @@ const paohBasicData = {
         { paoh: 'ူ', roman: 'ū' },
         { paoh: 'ေ', roman: 'e', description: 'Various E sounds' },
         { paoh: 'ဲ', roman: 'ae' },
-        { paoh: 'ံ', roman: 'ṁ' / '.', description: 'Nasalization / Tone marker' },
+        { paoh: 'ံ', roman: 'ṁ', description: 'Nasalization / Tone marker' },
         { paoh: '့', roman: '.' },
         { paoh: 'း', roman: 'h (creaky/glottalized tone)', description: 'Tone marker' },
         { paoh: 'ꩻ', roman: '(Tone markers)', description: 'Specific Paoh tone markers' },
@@ -100,7 +100,7 @@ const paohBasicData = {
     toneSets: {
         set1: [
             { paoh: 'အ', roman: 'a1' }, { paoh: 'အꩻ', roman: 'a2' }, { paoh: 'အာ', roman: 'aa3' }, { paoh: 'အာꩻ', roman: 'aa4' }, { paoh: 'အား', roman: 'aa5' }, { paoh: 'အာႏ', roman: 'aa6' },
-                        { paoh: 'အိ', roman: 'i1' }, { paoh: 'အိꩻ', roman: 'i2' }, { paoh: 'အီ', roman: 'ee3' }, { paoh: 'အီꩻ', roman: 'ee4' }, { paoh: 'အီး', roman: 'ee5' }, { paoh: 'အီႏ', roman: 'ee6' },
+            { paoh: 'အိ', roman: 'i1' }, { paoh: 'အိꩻ', roman: 'i2' }, { paoh: 'အီ', roman: 'ee3' }, { paoh: 'အီꩻ', roman: 'ee4' }, { paoh: 'အီး', roman: 'ee5' }, { paoh: 'အီႏ', roman: 'ee6' },
             { paoh: 'အု', roman: 'u1' }, { paoh: 'အုꩻ', roman: 'u2' }, { paoh: 'အူ', roman: 'oo3' }, { paoh: 'အူꩻ', roman: 'oo4' }, { paoh: 'အူး', roman: 'oo5' }, { paoh: 'အူႏ', roman: 'oo6' },
             { paoh: 'အေ့', roman: 'e1' }, { paoh: 'အေ့ꩻ', roman: 'e2' }, { paoh: 'အေ', roman: 'ay3' }, { paoh: 'အေꩻ', roman: 'ay4' }, { paoh: 'အေး', roman: 'ay5' }, { paoh: 'အေႏ', roman: 'ay6' },
             { paoh: 'အဲ့', roman: 'ae1' }, { paoh: 'အဲ့ꩻ', roman: 'ae2' }, { paoh: 'အဲ', roman: 'ae3' }, { paoh: 'အဲꩻ', roman: 'ae4' }, { paoh: 'အဲး', roman: 'ae5' }, { paoh: 'အဲႏ', roman: 'ae6' },
