@@ -1,24 +1,320 @@
 <!DOCTYPE html>
-<html lang="my">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ပအိုဝ်းဂဏန်းများ</title>
+    <title>လုဲင်ႏရွဉ်တောင်ꩻ</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@400;700&display=swap');
+
+        :root {
+            --primary-green: #28a745;
+            --dark-green: #005000;
+            --light-green: #e6ffe6;
+            --accent-green: #6aa84f;
+            --shadow-light: rgba(0, 128, 0, 0.2);
+            --shadow-dark: rgba(0, 0, 0, 0.4);
+            --bg-gradient-start: #f0fff0;
+            --bg-gradient-end: #d4edda;
+        }
+
         body {
-            font-family: 'Segoe UI Historic', 'Myanmar Text', sans-serif; /* ပအိုဝ်း font ကို ထည့်သွင်းပါ */
-            font-size: 1.3em;
+            font-family: 'Montserrat', sans-serif; /* Modern font */
+            margin: 0;
+            padding: 2.5vw; /* Scalable padding for 4K */
+            background: linear-gradient(135deg, #e0ffe0, #c8ffd8); /* Soft green gradient background */
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+            overflow: auto; /* Allow scrolling if content overflows */
+        }
+        .container {
+            background: linear-gradient(145deg, #ffffff, #f0f0f0); /* Subtle gradient for container */
+            padding: 3vw; /* Scalable padding */
+            border-radius: 1.5vw; /* Scalable border-radius */
+            box-shadow: 
+                0 1.2vw 2.4vw var(--shadow-dark), /* Deeper, more prominent shadow */
+                0 0.6vw 1.2vw var(--shadow-light); /* Lighter, closer shadow */
+            max-width: 50vw; /* Scalable max-width for 4K screens */
+            width: 100%; /* Ensures responsiveness */
+            margin: auto;
+            border: 0.15vw solid var(--accent-green); /* Thin, scalable border */
+            transform: perspective(1000px) rotateX(2deg); /* Slight 3D tilt */
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .container:hover {
+            transform: perspective(1000px) rotateX(0deg) scale(1.01); /* Straighten and slightly enlarge on hover */
+            box-shadow: 
+                0 1.5vw 3vw var(--shadow-dark), 
+                0 0.8vw 1.6vw var(--shadow-light);
+        }
+        h1 {
+            font-family: 'Roboto', sans-serif; /* Different font for heading */
+            color: var(--dark-green);
+            text-align: center;
+            margin-bottom: 3vw; /* Scalable margin */
+            font-size: 3vw; /* Scalable font size for 4K */
+            text-shadow: 0.15vw 0.15vw 0.25vw var(--shadow-light); /* Text shadow for depth */
+        }
+        .converter-section {
+            margin-bottom: 2vw; /* Scalable margin */
+            padding: 2vw; /* Scalable padding */
+            border: 0.1vw solid var(--accent-green);
+            border-radius: 1vw; /* Scalable border-radius */
+            background: linear-gradient(160deg, var(--bg-gradient-start), var(--bg-gradient-end)); /* Section gradient */
+            box-shadow: inset 0 0.2vw 0.4vw rgba(0, 0, 0, 0.1), 0 0.1vw 0.2vw rgba(0, 0, 0, 0.05); /* Inner shadow for depth */
+        }
+        label {
+            display: block;
+            margin-bottom: 0.8vw; /* Scalable margin */
+            font-weight: bold;
+            color: var(--dark-green);
+            font-size: 1.2vw; /* Scalable font size */
+        }
+        input[type="number"], select {
+            width: calc(100% - 0.5vw); /* Adjusted width */
+            padding: 1vw; /* Scalable padding */
+            margin-bottom: 1.5vw; /* Scalable margin */
+            border: 0.1vw solid var(--accent-green);
+            border-radius: 0.5vw; /* Scalable border-radius */
+            box-sizing: border-box;
+            font-size: 1.2vw; /* Scalable font size */
+            background-color: #f9fdf9; /* Very light green input background */
+            box-shadow: inset 0 0.1vw 0.2vw rgba(0, 0, 0, 0.1); /* Inner shadow for input fields */
+            transition: all 0.2s ease-in-out;
+        }
+        input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0.5vw rgba(40, 167, 69, 0.5), inset 0 0.1vw 0.2vw rgba(0, 0, 0, 0.15); /* Glow on focus */
+        }
+        button {
+            background-color: var(--primary-green);
+            color: white;
+            padding: 1vw 1.5vw; /* Scalable padding */
+            border: none;
+            border-radius: 0.5vw; /* Scalable border-radius */
+            cursor: pointer;
+            font-size: 1.4vw; /* Scalable font size */
+            width: 100%;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.2s ease-in-out;
+            box-shadow: 0 0.3vw 0.6vw rgba(0, 0, 0, 0.2); /* Button shadow */
+        }
+        button:hover {
+            background-color: #218838; /* Darker green on hover */
+            transform: translateY(-0.1vw); /* Slight lift on hover */
+            box-shadow: 0 0.4vw 0.8vw rgba(0, 0, 0, 0.3);
+        }
+        button:active {
+            transform: translateY(0.05vw); /* Slight press effect */
+            box-shadow: 0 0.2vw 0.4vw rgba(0, 0, 0, 0.15);
+        }
+        .result {
+            margin-top: 1.5vw; /* Scalable margin */
+            padding: 1vw; /* Scalable padding */
+            background-color: #d4edda; /* Light success green */
+            border: 0.1vw solid #c3e6cb; /* Lighter success green border */
+            border-radius: 0.5vw; /* Scalable border-radius */
+            color: #155724; /* Dark success green text */
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.3vw; /* Scalable font size */
+            box-shadow: inset 0 0.1vw 0.2vw rgba(0, 0, 0, 0.1); /* Inner shadow for result */
+        }
+        .error {
+            color: #dc3545; /* Red for errors */
+            text-align: center;
+            margin-top: 1vw; /* Scalable margin */
+            font-size: 1.1vw; /* Scalable font size */
+        }
+
+        /* Responsive adjustments for smaller screens (e.g., mobile) */
+        @media (max-width: 768px) {
+            body {
+                padding: 5vw;
+            }
+            .container {
+                max-width: 95vw; /* Wider on smaller screens */
+                padding: 5vw;
+                border-radius: 3vw;
+                box-shadow: 
+                    0 3vw 6vw var(--shadow-dark), 
+                    0 1.5vw 3vw var(--shadow-light);
+                transform: none; /* Remove 3D tilt on mobile */
+            }
+            .container:hover {
+                transform: none; /* Remove hover effect on mobile */
+                box-shadow: 
+                    0 3vw 6vw var(--shadow-dark), 
+                    0 1.5vw 3vw var(--shadow-light);
+            }
+            h1 {
+                font-size: 7vw; /* Larger font size for mobile */
+                margin-bottom: 5vw;
+            }
+            .converter-section {
+                padding: 4vw;
+                margin-bottom: 4vw;
+            }
+            label {
+                font-size: 3.5vw;
+                margin-bottom: 2vw;
+            }
+            input[type="number"], select {
+                padding: 3vw;
+                margin-bottom: 3.5vw;
+                font-size: 3.5vw;
+                border-radius: 1.5vw;
+            }
+            button {
+                padding: 3vw 4vw;
+                font-size: 4vw;
+                border-radius: 1.5vw;
+                box-shadow: 0 1vw 2vw rgba(0, 0, 0, 0.2);
+            }
+            .result {
+                margin-top: 4vw;
+                padding: 3vw;
+                font-size: 3.8vw;
+                border-radius: 1.5vw;
+            }
+            .error {
+                margin-top: 3vw;
+                font-size: 3.3vw;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>ပအိုဝ်းဂဏန်းများ (HTML)</h1>
-    <p>
-        &#x116D0; (Zero) - &#x116D1; (One) - &#x116D2; (Two) - &#x116D3; (Three) - &#x116D4; (Four) -
-        &#x116D5; (Five) - &#x116D6; (Six) - &#x116D7; (Seven) - &#x116D8; (Eight) - &#x116D9; (Nine)
-    </p>
-    <p>
-        𑛐 𑛑 𑛒 𑛓 𑛔 𑛕 𑛖 𑛗 𑛘 𑛙
-    </p>
+    <div class="container">
+        <h1>💲💱 စက်နပ်ဗာႏ လုဲင်ႏရွဉ်တောင်ꩻ 💲💱</h1>
+
+        <div class="converter-section">
+            <label for="amount">ပမာဏ:</label>
+            <input type="number" id="amount" value="1000" min="0">
+
+            <label for="fromCurrency">အဝ်ႏ (ရွဉ်တောင်ꩻ):</label>
+            <select id="fromCurrency"></select>
+
+            <label for="toCurrency">လုဲင်ႏလွေꩻ (ရွဉ်တောင်ꩻ):</label>
+            <select id="toCurrency"></select>
+
+            <button onclick="convertCurrency()">နပ်တွက်ဗာႏခန်း</button>
+            <div id="result" class="result"></div>
+            <div id="error" class="error"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_KEY = 'unuwgl15jxmdf'; // Your SheetDB.io API Key
+        const API_URL = `https://sheetdb.io/api/v1/${API_KEY}`;
+
+        let exchangeRates = {};
+
+        async function fetchExchangeRatesAndPopulate() {
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                
+                const fromCurrencySelect = document.getElementById('fromCurrency');
+                const toCurrencySelect = document.getElementById('toCurrency');
+
+                fromCurrencySelect.innerHTML = ''; 
+                toCurrencySelect.innerHTML = ''; 
+
+                let defaultFrom = '';
+                let defaultTo = '';
+
+                data.forEach(row => {
+                    const currencyCode = row.currency; 
+                    const currencyName = row.m_name;   
+                    const rate = parseFloat(row.rate); 
+
+                    if (currencyCode && currencyName && !isNaN(rate)) {
+                        exchangeRates[currencyCode] = rate;
+
+                        const optionText = `${currencyCode} - ${currencyName}`;
+
+                        const option1 = document.createElement('option');
+                        option1.value = currencyCode;
+                        option1.textContent = optionText;
+                        fromCurrencySelect.appendChild(option1);
+
+                        const option2 = document.createElement('option');
+                        option2.value = currencyCode;
+                        option2.textContent = optionText;
+                        toCurrencySelect.appendChild(option2);
+
+                        if (currencyCode === 'MMK') defaultFrom = 'MMK';
+                        if (currencyCode === 'THB') defaultTo = 'THB';
+                    }
+                });
+
+                if (defaultFrom) {
+                    fromCurrencySelect.value = defaultFrom;
+                } else if (data.length > 0) {
+                    fromCurrencySelect.value = data[0].currency; 
+                }
+
+                if (defaultTo) {
+                    toCurrencySelect.value = defaultTo;
+                } else if (data.length > 1) { 
+                    toCurrencySelect.value = data[1].currency; 
+                } else if (data.length > 0) {
+                     toCurrencySelect.value = data[0].currency; 
+                }
+
+                console.log("Exchange Rates:", exchangeRates);
+                convertCurrency();
+
+            } catch (error) {
+                console.error("Error fetching exchange rates:", error);
+                document.getElementById('error').innerText = 'ကထူႏဒါႏ လုဲင်ႏရွဉ်တောင်ꩻဖုံႏအကိုနဝ်ꩻ အမာႏအဝ်ႏပါသော့ꩻနဝ်ꩻသွူ ။ မွေးတဝ်းလဲ့ စဲစ်ထွားသွော့ သွုပ်ဆွိုင်ꩻ အဲန်တာနဲစ် တွမ်ႏ လိတ်ရွမ်စေးလာႏဖုံႏ သနယ်သြ ။';
+            }
+        }
+
+        function convertCurrency() {
+            const amountInput = document.getElementById('amount');
+            const fromCurrencySelect = document.getElementById('fromCurrency');
+            const toCurrencySelect = document.getElementById('toCurrency');
+            const resultDiv = document.getElementById('result');
+            const errorDiv = document.getElementById('error');
+
+            resultDiv.innerText = '';
+            errorDiv.innerText = '';
+
+            const amount = parseFloat(amountInput.value);
+            const fromCurrency = fromCurrencySelect.value;
+            const toCurrency = toCurrencySelect.value;
+
+            if (isNaN(amount) || amount <= 0) {
+                errorDiv.innerText = 'တဲမ်းသော့ꩻ မဲန်ႏမဲန်ႏဖေႏသွော့ ရွဉ် ပမာႏဏ သြ ။';
+                return;
+            }
+
+            if (!exchangeRates[fromCurrency] || !exchangeRates[toCurrency]) {
+                errorDiv.innerText = 'ကလွိုက်ထူႏခါꩻဒါႏ အီႏလုဲင်ႏရွဉ်ဖုံႏအတာႏ ရွဉ်တောင်ꩻ တလꩻခုဲင်ႏအဝ်ႏဒွုန်းသွူ ။ စဲစ်ထွားသွော့ လိတ်ရွမ်စေးလာႏကိုသြ ။';
+                return;
+            }
+
+            let convertedAmount;
+            if (fromCurrency === toCurrency) {
+                 convertedAmount = amount;
+            } else {
+                const amountInUSD = amount / exchangeRates[fromCurrency];
+                convertedAmount = amountInUSD * exchangeRates[toCurrency];
+            }
+
+            resultDiv.innerText = `${amount.toLocaleString()} ${fromCurrency} = ${convertedAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })} ${toCurrency}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchExchangeRatesAndPopulate);
+    </script>
 </body>
 </html>
