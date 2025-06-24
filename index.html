@@ -285,6 +285,13 @@
                      toCurrencySelect.value = data[0].currency; 
                 }
 
+                // Display the latest update date
+                if (latestUpdateDate) {
+                    lastUpdatedDiv.innerText = `အဆုဲင်ꩻသွတ်ꩻ မွဉ်းဖျင်ခါꩻ အခိန်ႏ: ${latestUpdateDate.toLocaleString()}`;
+                } else {
+                    lastUpdatedDiv.innerText = 'ထိုမ်ႏထွား အဆုဲင်ꩻသွတ်ꩻ မွဉ်းဖျင်ခါꩻ အခိန်ႏ ယို တထီႏတဝ်းသွူ ။';
+                }
+                
                 console.log("Exchange Rates:", exchangeRates);
                 convertCurrency();
 
