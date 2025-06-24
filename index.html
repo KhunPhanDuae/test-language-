@@ -17,20 +17,6 @@
             --bg-gradient-start: #f0fff0;
             --bg-gradient-end: #d4edda;
         }
-    .last-updated { /* New style for LastUpdated info */
-    text-align: right;
-    font-size: 0.9vw;
-    color: #666;
-    margin-top: 1vw;
-}
-
-/* Mobile style for LastUpdated info */
-@media (max-width: 768px) {
-    .last-updated { 
-        font-size: 2.8vw;
-        margin-top: 3vw;
-    }
-}
 
         body {
             font-family: 'Montserrat', sans-serif; /* Modern font */
@@ -144,6 +130,12 @@
             margin-top: 1vw; /* Scalable margin */
             font-size: 1.1vw; /* Scalable font size */
         }
+        .last-updated { /* New style for LastUpdated info */
+            text-align: right;
+            font-size: 0.9vw;
+            color: #666;
+            margin-top: 1vw;
+        }
 
         /* Responsive adjustments for smaller screens (e.g., mobile) */
         @media (max-width: 768px) {
@@ -199,6 +191,10 @@
                 margin-top: 3vw;
                 font-size: 3.3vw;
             }
+            .last-updated { /* Mobile style for LastUpdated info */
+                font-size: 2.8vw;
+                margin-top: 3vw;
+            }
         }
     </style>
 </head>
@@ -219,8 +215,7 @@
             <button onclick="convertCurrency()">နပ်တွက်ဗာႏခန်း</button>
             <div id="result" class="result"></div>
             <div id="error" class="error"></div>
-            <div id="lastUpdated" class="last-updated"></div>
-        </div>
+            <div id="lastUpdated" class="last-updated"></div> </div>
     </div>
 
     <script>
@@ -239,17 +234,21 @@
                 
                 const fromCurrencySelect = document.getElementById('fromCurrency');
                 const toCurrencySelect = document.getElementById('toCurrency');
+                const lastUpdatedDiv = document.getElementById('lastUpdated'); // Get the new div
 
                 fromCurrencySelect.innerHTML = ''; 
                 toCurrencySelect.innerHTML = ''; 
+                lastUpdatedDiv.innerText = ''; // Clear previous content
 
                 let defaultFrom = '';
                 let defaultTo = '';
+                let latestUpdateDate = null; // To store the latest update date
 
                 data.forEach(row => {
                     const currencyCode = row.currency; 
                     const currencyName = row.m_name;   
                     const rate = parseFloat(row.rate); 
+                    const lastUpdated = row.LastUpdated; // Get LastUpdated from the row
 
                     if (currencyCode && currencyName && !isNaN(rate)) {
                         exchangeRates[currencyCode] = rate;
@@ -268,6 +267,14 @@
 
                         if (currencyCode === 'MMK') defaultFrom = 'MMK';
                         if (currencyCode === 'THB') defaultTo = 'THB';
+
+                        // Check and update the latest update date
+                        if (lastUpdated) {
+                            const rowDate = new Date(lastUpdated);
+                            if (!latestUpdateDate || rowDate > latestUpdateDate) {
+                                latestUpdateDate = rowDate;
+                            }
+                        }
                     }
                 });
 
@@ -285,13 +292,14 @@
                      toCurrencySelect.value = data[0].currency; 
                 }
 
-                // Display the latest update date
+               // Display the latest update date
                 if (latestUpdateDate) {
                     lastUpdatedDiv.innerText = `အဆုဲင်ꩻသွတ်ꩻ မွဉ်းဖျင်ခါꩻ အခိန်ႏ: ${latestUpdateDate.toLocaleString()}`;
                 } else {
                     lastUpdatedDiv.innerText = 'ထိုမ်ႏထွား အဆုဲင်ꩻသွတ်ꩻ မွဉ်းဖျင်ခါꩻ အခိန်ႏ ယို တထီႏတဝ်းသွူ ။';
                 }
-                
+              
+
                 console.log("Exchange Rates:", exchangeRates);
                 convertCurrency();
 
