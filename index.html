@@ -17,6 +17,20 @@
             --bg-gradient-start: #f0fff0;
             --bg-gradient-end: #d4edda;
         }
+    .last-updated { /* New style for LastUpdated info */
+    text-align: right;
+    font-size: 0.9vw;
+    color: #666;
+    margin-top: 1vw;
+}
+
+/* Mobile style for LastUpdated info */
+@media (max-width: 768px) {
+    .last-updated { 
+        font-size: 2.8vw;
+        margin-top: 3vw;
+    }
+}
 
         body {
             font-family: 'Montserrat', sans-serif; /* Modern font */
@@ -205,6 +219,7 @@
             <button onclick="convertCurrency()">နပ်တွက်ဗာႏခန်း</button>
             <div id="result" class="result"></div>
             <div id="error" class="error"></div>
+            <div id="lastUpdated" class="last-updated"></div>
         </div>
     </div>
 
