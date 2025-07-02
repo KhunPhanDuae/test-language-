@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multi-Lingual Grammar-Aware Translator</title>
+    <title>Multi-Lingual POS-Aware Translator</title>
     <style>
         :root {
             --primary-color: #007bff; /* A vibrant blue */
@@ -185,7 +185,6 @@
             margin-top: 15px;
             text-align: center;
             font-weight: bold;
-            /* display: none; /* Hidden by default - managed by JS */
         }
 
         .icon {
@@ -224,7 +223,7 @@
 </head>
 <body>
     <header>
-        <h1>Multi-Lingual Grammar-Aware Translator <span class="icon" title="Grammar Enhanced Translation">✨</span></h1>
+        <h1>Multi-Lingual POS-Aware Translator <span class="icon" title="Part-of-Speech Enhanced Translation">✨</span></h1>
     </header>
 
     <nav>
@@ -257,7 +256,7 @@
     </div>
 
     <footer>
-        <p>&copy; 2025 Grammar-Aware Translator</p>
+        <p>&copy; 2025 POS-Aware Translator</p>
     </footer>
 
     <script>
@@ -265,11 +264,10 @@
         const SHEETDB_API_URL = 'https://sheetdb.io/api/v1/unuwgl15jxmdf'; 
 
         // This object will store our vocabulary fetched from SheetDB
-        // Structure: { "word_in_any_lang": { blk: "...", my: "...", en: "...", type: "subject" }, ... }
+        // Structure: { "word_in_any_lang": { blk: "...", my: "...", en: "...", type: "pronoun" }, ... }
         let vocabularyLookup = {};
 
         // This map will store the display names for language codes
-        // Populated dynamically from SheetDB data for flexibility
         let langMap = {}; 
 
         // --- Core Functions ---
@@ -295,16 +293,17 @@
                     const firstRowKeys = Object.keys(data[0]);
                     firstRowKeys.forEach(key => {
                         if (key !== 'id' && key !== 'type') {
-                            // Assign a placeholder name initially, if not found in a fixed map
-                            langMap[key] = key.toUpperCase(); // e.g., blk -> BLK, my -> MY
-                            // You might want to hardcode display names if needed (e.g., blk: 'ပအိုဝ်း')
-                            // Or add a separate sheet for language names. For now, using uppercase code.
-                            if (key === 'blk') langMap[key] = 'ပအိုဝ်း';
-                            if (key === 'my') langMap[key] = 'ဗမာ';
-                            if (key === 'en') langMap[key] = 'English';
-                            if (key === 'ja') langMap[key] = '日本語';
-                            if (key === 'zh') langMap[key] = '中文';
-                            if (key === 'shn') langMap[key] = 'ရှမ်း';
+                            // Assign friendly names for known language codes
+                            const friendlyName = {
+                                'blk': 'ပအိုဝ်း',
+                                'my': 'ဗမာ',
+                                'en': 'English',
+                                'ja': '日本語',
+                                'zh': '中文',
+                                'shn': 'ရှမ်း',
+                                // Add more as needed
+                            }[key] || key.toUpperCase(); // Fallback to uppercase code if not in map
+                            langMap[key] = friendlyName;
                         }
                     });
                 }
@@ -349,7 +348,6 @@
             const sourceLangSelect = document.getElementById('sourceLang');
             const targetLangSelect = document.getElementById('targetLang');
 
-            // Clear existing options
             sourceLangSelect.innerHTML = '';
             targetLangSelect.innerHTML = '';
 
@@ -366,8 +364,8 @@
             }
 
             // Set default selections after populating
-            sourceLangSelect.value = 'blk'; // Default source is Pa'O
-            targetLangSelect.value = 'my'; // Default target is Burmese
+            sourceLangSelect.value = 'blk'; 
+            targetLangSelect.value = 'my'; 
             document.getElementById('current-language-title').innerText = `Multi-Lingual Translation`;
         }
 
@@ -390,7 +388,6 @@
                 return;
             }
 
-            // Ensure vocabulary is loaded before attempting translation
             if (Object.keys(vocabularyLookup).length === 0) {
                 outputDiv.innerText = "Translation data not yet loaded. Please wait and try again.";
                 outputDiv.classList.add('error');
@@ -398,7 +395,6 @@
                 return;
             }
 
-            // Perform translation after a small delay to show loading message
             setTimeout(() => {
                 const result = translateTextWithGrammar(inputText, sourceLang, targetLang);
                 if (result.error) {
@@ -408,7 +404,7 @@
                     outputDiv.innerText = result.translatedText;
                 }
                 loadingMessage.style.display = 'none';
-            }, 500); // 0.5 second delay
+            }, 500); 
         }
 
         function translateTextWithGrammar(inputText, sourceLang, targetLang) {
@@ -417,76 +413,63 @@
             let unknownWords = [];
 
             // Step 1: Parse input and identify word types using vocabularyLookup
-            // We need to find the word in the source language in our lookup
             for (const word of words) {
                 let foundEntry = null;
-                // Search for the word in the source language column of our vocabularyLookup
-                // This assumes `vocabularyLookup` keys are words from ANY language,
-                // and the value contains translations for all languages + type.
-                // To be robust, we iterate through all entries to find the source word.
-                
-                // A more efficient lookup for source words:
-                // Create a reverse lookup or search all values for the source word.
-                // For simplicity here, we'll iterate `vocabularyLookup` values if direct key match fails.
-                
-                let entryByDirectKey = vocabularyLookup[word];
-                if (entryByDirectKey && entryByDirectKey[sourceLang] === word) {
-                    foundEntry = entryByDirectKey;
-                } else {
-                    // Fallback: search if this word exists as a translation in the sourceLang for any entry
-                    for (const vocabKey in vocabularyLookup) {
-                        if (vocabularyLookup[vocabKey][sourceLang] === word) {
-                            foundEntry = vocabularyLookup[vocabKey];
-                            break;
-                        }
+                // Search for the word in the source language in our lookup
+                for (const vocabKey in vocabularyLookup) {
+                    if (vocabularyLookup[vocabKey][sourceLang] === word) {
+                        foundEntry = vocabularyLookup[vocabKey];
+                        break;
                     }
                 }
 
                 if (foundEntry) {
                     parsedWords.push({
-                        word: word,
+                        originalWord: word, // Keep original word for debugging
                         type: foundEntry.type,
-                        // Get the translation for the *target* language from the found entry
-                        translation: foundEntry[targetLang] || `[${langMap[targetLang]}_${foundEntry.type}]` // Fallback if no specific translation for targetLang
+                        translation: foundEntry[targetLang] || `[${langMap[targetLang]}_${foundEntry.type}]`, // Fallback if no specific translation for targetLang
+                        allTranslations: foundEntry // Keep all translations for this entry
                     });
                 } else {
                     unknownWords.push(word);
                     parsedWords.push({
-                        word: word,
+                        originalWord: word,
                         type: "unknown",
-                        translation: `[${word}]` // Show original unknown word
+                        translation: `[${word}]` 
                     });
                 }
             }
 
             if (unknownWords.length > 0) {
                 const unknownStr = unknownWords.join(', ');
-                return { error: `Translation limited: Unknown words found: ${unknownStr}. Please ensure all words are in SheetDB with a 'type' defined.` };
+                return { error: `Translation limited: Unknown words found in source language: ${unknownStr}. Please ensure all words are in SheetDB with a 'type' defined.` };
             }
 
             // Group parts for structured sentence building
             let sentenceParts = {
-                subject: [], adverbTime: [], adverbPlace: [], adverbManner: [],
-                verb: [], object: [], adjective: [],
-                negative: [], tense: [], question: [], particle: []
+                pronoun: [], noun: [], verb: [], adjective: [], adverbTime: [], adverbPlace: [], adverbManner: [],
+                interrogativePronoun: [], // For "who, what, where"
+                negativePrefix: [], negativeSuffix: [],
+                tenseMarkerPast: [], tenseMarkerFuture: [],
+                particle: [] // General particles, including particle_end
             };
 
             parsedWords.forEach(pWord => {
                 switch (pWord.type) {
-                    case "subject": sentenceParts.subject.push(pWord); break;
+                    case "pronoun": sentenceParts.pronoun.push(pWord); break;
+                    case "noun": sentenceParts.noun.push(pWord); break;
                     case "verb": sentenceParts.verb.push(pWord); break;
-                    case "object": sentenceParts.object.push(pWord); break;
+                    case "adjective": sentenceParts.adjective.push(pWord); break;
                     case "adverb_time": sentenceParts.adverbTime.push(pWord); break;
                     case "adverb_place": sentenceParts.adverbPlace.push(pWord); break;
                     case "adverb_manner": sentenceParts.adverbManner.push(pWord); break;
-                    case "adjective": sentenceParts.adjective.push(pWord); break;
-                    case "negative_prefix": sentenceParts.negative.push(pWord); break;
-                    case "particle_verb_past": sentenceParts.tense.push(pWord); break;
-                    case "particle_end_future": sentenceParts.tense.push(pWord); break;
-                    case "question_word": sentenceParts.question.push(pWord); break;
-                    case "particle_end": sentenceParts.particle.push(pWord); break;
+                    case "interrogative_pronoun": sentenceParts.interrogativePronoun.push(pWord); break;
+                    case "negative_prefix": sentenceParts.negativePrefix.push(pWord); break;
+                    case "negative_suffix": sentenceParts.negativeSuffix.push(pWord); break;
+                    case "tense_marker_past": sentenceParts.tenseMarkerPast.push(pWord); break;
+                    case "tense_marker_future": sentenceParts.tenseMarkerFuture.push(pWord); break;
+                    case "particle_end": sentenceParts.particle.push(pWord); break; // "ဟွေး" (လား), "နဝ်ꩻသွူ" (ပါသည်)
                     case "particle_general": sentenceParts.particle.push(pWord); break;
-                    case "negative_suffix": sentenceParts.negative.push(pWord); break; // Add negative suffix handling
                     default: 
                         sentenceParts.particle.push(pWord); // Catch-all for other types or unknowns
                         break;
@@ -494,43 +477,60 @@
             });
 
             // Determine if it's a question or negative sentence
-            const isQuestion = sentenceParts.question.length > 0 || parsedWords.some(p => p.type === 'particle_end' && p.word === vocabularyLookup['ဟွေး']?.[sourceLang]); // Check if 'ဟွေး' equivalent exists
-            const isNegative = parsedWords.some(p => p.type === 'negative_prefix') || parsedWords.some(p => p.type === 'negative_suffix');
+            const isQuestion = sentenceParts.interrogativePronoun.length > 0 || parsedWords.some(p => p.type === 'particle_end' && p.allTranslations[sourceLang] === (vocabularyLookup['ဟွေး']?.[sourceLang] || '')); // Check for 'ဟွေး' or its translation
+            const isNegative = sentenceParts.negativePrefix.length > 0 || sentenceParts.negativeSuffix.length > 0;
+            const hasPastTense = sentenceParts.tenseMarkerPast.length > 0;
+            const hasFutureTense = sentenceParts.tenseMarkerFuture.length > 0;
 
             // --- Sentence Construction Logic based on Target Language ---
             let finalSentenceParts = [];
 
-            // Helper to get translated word and its original object
-            const getTranslatedWords = (partsArray) => partsArray.map(w => w.translation);
+            // Helper to get translated words
+            const getTranslatedWords = (partsArray) => partsArray.map(w => w.translation).filter(Boolean).join(' ');
 
-            const translatedSubject = getTranslatedWords(sentenceParts.subject).join(' ');
-            const translatedVerb = getTranslatedWords(sentenceParts.verb).join(' ');
-            const translatedObject = getTranslatedWords(sentenceParts.object).join(' ');
-            const translatedAdverbTime = getTranslatedWords(sentenceParts.adverbTime).join(' ');
-            const translatedAdverbPlace = getTranslatedWords(sentenceParts.adverbPlace).join(' ');
-            const translatedAdverbManner = getTranslatedWords(sentenceParts.adverbManner).join(' ');
-            const translatedAdjective = getTranslatedWords(sentenceParts.adjective).join(' ');
-            const translatedQuestionWord = getTranslatedWords(sentenceParts.question).join(' ');
-            const translatedTenseParticles = getTranslatedWords(sentenceParts.tense);
-            const translatedEndParticles = getTranslatedWords(sentenceParts.particle.filter(p => p.type === 'particle_end'));
+            const translatedPronoun = getTranslatedWords(sentenceParts.pronoun);
+            const translatedNoun = getTranslatedWords(sentenceParts.noun);
+            const translatedVerb = getTranslatedWords(sentenceParts.verb);
+            const translatedAdjective = getTranslatedWords(sentenceParts.adjective);
+            const translatedAdverbTime = getTranslatedWords(sentenceParts.adverbTime);
+            const translatedAdverbPlace = getTranslatedWords(sentenceParts.adverbPlace);
+            const translatedAdverbManner = getTranslatedWords(sentenceParts.adverbManner);
+            const translatedInterrogativePronoun = getTranslatedWords(sentenceParts.interrogativePronoun);
+            const translatedNegativePrefix = getTranslatedWords(sentenceParts.negativePrefix);
+            const translatedNegativeSuffix = getTranslatedWords(sentenceParts.negativeSuffix);
+            const translatedPastTenseMarker = getTranslatedWords(sentenceParts.tenseMarkerPast);
+            const translatedFutureTenseMarker = getTranslatedWords(sentenceParts.tenseMarkerFuture);
+            const translatedEndParticles = getTranslatedWords(sentenceParts.particle.filter(p => p.type === 'particle_end' && p.originalWord !== (vocabularyLookup['ဟွေး']?.[sourceLang] || ''))); // Exclude 'ဟွေး' if it's explicitly handled as question
+            const translatedQuestionParticle = parsedWords.find(p => p.type === 'particle_end' && p.originalWord === (vocabularyLookup['ဟွေး']?.[sourceLang] || ''))?.translation || '';
             const translatedGeneralParticles = getTranslatedWords(sentenceParts.particle.filter(p => p.type === 'particle_general'));
-            
-            // Negative markers (find their target language equivalent)
-            const targetNegativePrefix = sentenceParts.negative.find(n => n.type === 'negative_prefix')?.translation || '';
-            const targetNegativeSuffix = sentenceParts.negative.find(n => n.type === 'negative_suffix')?.translation || '';
 
+            // Determine the main subject (pronoun or noun) and main object (noun or pronoun acting as object)
+            let mainSubject = translatedPronoun || translatedNoun;
+            let mainObject = translatedNoun && !translatedPronoun ? translatedNoun : ''; // If a noun, and no pronoun is subject, it might be an object
 
-            // Burmese (SOV) Grammar Rules
+            // --- Burmese (SOV) Grammar Rules ---
+            // Order: (Time Adverb) + Subject + (Object + Adjective) + (Place/Manner Adverb) + (Negative) + Verb + (Tense) + (Question/Negative Particle)
             if (targetLang === 'my') {
                 if (translatedAdverbTime) finalSentenceParts.push(translatedAdverbTime);
-                if (translatedSubject) finalSentenceParts.push(translatedSubject);
+                if (mainSubject) finalSentenceParts.push(mainSubject);
 
-                let myanmarObject = translatedObject;
-                if (translatedAdjective && translatedObject) {
-                    myanmarObject = translatedAdjective + ' ' + translatedObject; // Adjective + Noun
-                } else if (translatedAdjective) {
+                let myanmarObjectNoun = translatedNoun;
+                // If subject is a pronoun, the noun is likely the object
+                if (translatedPronoun && translatedNoun) { // "ငါ ထမင်း စားသည်" (I rice eat)
+                    myanmarObjectNoun = translatedNoun;
+                } else if (!translatedPronoun && translatedNoun && !translatedVerb) { // "မိုး ကြီးသည်" (Rain big is) - Noun is subject
+                     myanmarObjectNoun = ''; // Noun is subject, not object
+                }
+                
+                let myanmarObject = myanmarObjectNoun;
+                if (translatedAdjective && myanmarObjectNoun) {
+                    myanmarObject = translatedAdjective + ' ' + myanmarObjectNoun; // Adjective + Noun
+                } else if (translatedAdjective && !myanmarObjectNoun) { // "လှပသည်" (Beautiful is)
+                    // If no object noun but adjective, it might describe the subject.
+                    // For simplicity, add it if it's describing an implicit object or subject property.
                     myanmarObject = translatedAdjective;
                 }
+                
                 if (myanmarObject) finalSentenceParts.push(myanmarObject);
 
                 if (translatedAdverbPlace) finalSentenceParts.push(translatedAdverbPlace);
@@ -538,158 +538,163 @@
 
                 let myanmarVerb = translatedVerb;
                 if (isNegative && translatedVerb) {
-                    myanmarVerb = (targetNegativePrefix || 'မ') + myanmarVerb; 
+                    myanmarVerb = translatedNegativePrefix + myanmarVerb; // မြန်မာ: မ + ကြိယာ
                 }
                 
-                // Tense handling for Burmese
-                if (translatedTenseParticles.includes(vocabularyLookup['ထွူလဲဉ်း']?.[targetLang])) { // Pa'O 'ထွူလဲဉ်း' -> မြန်မာ 'ခဲ့'
-                    if (myanmarVerb) myanmarVerb += 'ခဲ့'; 
-                } else if (translatedTenseParticles.includes(vocabularyLookup['လီသွူ']?.[targetLang])) { // Pa'O 'လီသွူ' -> မြန်မာ 'မယ်'
-                    if (myanmarVerb) myanmarVerb += 'မယ်'; 
+                // Tense handling for Burmese verb suffixes
+                if (hasPastTense && myanmarVerb) {
+                    myanmarVerb += 'ခဲ့'; 
+                } else if (hasFutureTense && myanmarVerb) {
+                    myanmarVerb += 'မယ်'; 
                 }
                 
                 if (myanmarVerb) finalSentenceParts.push(myanmarVerb);
-
-                if (translatedQuestionWord && translatedQuestionWord !== vocabularyLookup['ဟွေး']?.[targetLang]) { 
-                    finalSentenceParts.push(translatedQuestionWord);
+                
+                // Interrogative pronoun for Burmese (usually before final particle)
+                if (translatedInterrogativePronoun) { 
+                    finalSentenceParts.push(translatedInterrogativePronoun);
                 }
 
+                // Final particles based on type
                 if (isNegative) {
-                    finalSentenceParts.push(targetNegativeSuffix || 'ဘူး'); 
+                    finalSentenceParts.push(translatedNegativeSuffix || 'ဘူး'); 
                 } else if (isQuestion) {
-                    if (translatedEndParticles.includes(vocabularyLookup['ဟွေး']?.[targetLang])) {
-                        finalSentenceParts.push(vocabularyLookup['ဟွေး']?.[targetLang]); // Use the actual translated 'လား'
-                    } else {
-                        finalSentenceParts.push('လား'); // Default for other questions if 'လား' not explicitly found
-                    }
+                    finalSentenceParts.push(translatedQuestionParticle || 'လား'); 
                 } else {
-                    if (translatedEndParticles.length > 0) {
-                        finalSentenceParts.push(translatedEndParticles.join(' ')); 
-                    } else if (myanmarVerb && !myanmarVerb.endsWith('ခဲ့') && !myanmarVerb.endsWith('မယ်')) { 
+                    if (translatedEndParticles) {
+                        finalSentenceParts.push(translatedEndParticles); 
+                    } else if (myanmarVerb && !myanmarVerb.endsWith('ခဲ့') && !myanmarVerb.endsWith('မယ်') && !myanmarVerb.endsWith('လား')) { 
                         finalSentenceParts.push('တယ်');
                     }
                 }
-                if (translatedGeneralParticles.length > 0) finalSentenceParts.push(translatedGeneralParticles.join(' '));
+                if (translatedGeneralParticles) finalSentenceParts.push(translatedGeneralParticles);
 
             } 
-            // Pa'O (SVO) Grammar Rules (source could be Pa'O or others, but output structure is SVO)
+            // Pa'O (SVO) Grammar Rules
+            // Order: Subject + (Negative) + Verb + (Place/Manner Adverb) + (Noun + Adjective as Object) + (Time Adverb) + (Question/Tense/End Particle)
             else if (targetLang === 'blk') {
-                if (translatedSubject) finalSentenceParts.push(translatedSubject);
+                if (mainSubject) finalSentenceParts.push(mainSubject);
 
                 let paoVerb = translatedVerb;
                 if (isNegative && translatedVerb) {
-                    paoVerb = (targetNegativePrefix || 'နပ်') + paoVerb;
+                    paoVerb = translatedNegativePrefix + paoVerb; 
                 }
                 if (paoVerb) finalSentenceParts.push(paoVerb);
 
                 if (translatedAdverbManner) finalSentenceParts.push(translatedAdverbManner);
                 if (translatedAdverbPlace) finalSentenceParts.push(translatedAdverbPlace);
 
-                let paoObject = translatedObject;
-                if (translatedObject && translatedAdjective) {
-                    paoObject = translatedObject + ' ' + translatedAdjective; // Noun + Adjective
-                } else if (translatedAdjective) {
+                let paoObjectNoun = translatedNoun;
+                if (translatedPronoun && translatedNoun) { // If pronoun is subject, noun is object
+                    paoObjectNoun = translatedNoun;
+                } else if (!translatedPronoun && translatedNoun && !translatedVerb) { // Noun is subject, no object noun
+                    paoObjectNoun = '';
+                }
+
+                let paoObject = paoObjectNoun;
+                if (paoObjectNoun && translatedAdjective) {
+                    paoObject = paoObjectNoun + ' ' + translatedAdjective; // Noun + Adjective
+                } else if (translatedAdjective && !paoObjectNoun) {
                     paoObject = translatedAdjective;
                 }
                 if (paoObject) finalSentenceParts.push(paoObject);
 
                 if (translatedAdverbTime) finalSentenceParts.push(translatedAdverbTime);
 
-                if (translatedTenseParticles.includes(vocabularyLookup['လီသွူ']?.[targetLang])) { 
-                    finalSentenceParts.push(vocabularyLookup['လီသွူ']?.[targetLang]);
+                // Tense/Question/End particles for Pa'O
+                if (hasFutureTense) { 
+                    finalSentenceParts.push(translatedFutureTenseMarker);
                 }
-
-                if (translatedQuestionWord && translatedQuestionWord !== vocabularyLookup['ဟွေး']?.[targetLang]) {
-                    finalSentenceParts.push(translatedQuestionWord);
+                if (hasPastTense) { // Pa'O past tense marker often after verb, but can be at end too
+                    finalSentenceParts.push(translatedPastTenseMarker);
                 }
                 
-                if (translatedEndParticles.includes(vocabularyLookup['ဟွေး']?.[targetLang])) {
-                    finalSentenceParts.push(vocabularyLookup['ဟွေး']?.[targetLang]);
-                } else {
-                    if (translatedEndParticles.length > 0) finalSentenceParts.push(translatedEndParticles.join(' '));
+                if (translatedInterrogativePronoun) {
+                    finalSentenceParts.push(translatedInterrogativePronoun);
                 }
-                if (translatedGeneralParticles.length > 0) finalSentenceParts.push(translatedGeneralParticles.join(' '));
+                
+                if (isQuestion && translatedQuestionParticle) {
+                    finalSentenceParts.push(translatedQuestionParticle);
+                } else {
+                    if (translatedEndParticles) finalSentenceParts.push(translatedEndParticles);
+                }
+                if (translatedGeneralParticles) finalSentenceParts.push(translatedGeneralParticles);
+
 
             } 
             // English (SVO) Grammar Rules
+            // Order: (Time Adverb) + Subject + (Auxiliary + Negative) + Verb + (Manner/Place Adverb) + (Adjective + Object) + (Time Adverb) + (Question/Punctuation)
             else if (targetLang === 'en') {
                 // Time Adverb at beginning sometimes
-                if (translatedAdverbTime && (translatedAdverbTime === vocabularyLookup['မွိုးနီႏ']?.[targetLang] || translatedAdverbTime === vocabularyLookup['လမွိုးနီႏ']?.[targetLang])) {
-                    finalSentenceParts.push(translatedAdverbTime + ','); // e.g., Today, I eat rice.
-                }
-
-                if (translatedSubject) finalSentenceParts.push(translatedSubject);
-
-                // English 'do not' for negation
-                let englishVerb = translatedVerb;
-                if (isNegative && translatedVerb) {
-                    if (translatedSubject) finalSentenceParts.push('do not');
-                    englishVerb = translatedVerb; // Keep original verb form for simplicity
-                }
-                
-                // English Tense - simplified
-                if (translatedTenseParticles.includes(vocabularyLookup['လီသွူ']?.[targetLang])) { // Future
-                    if (translatedSubject && !isNegative) { // 'will' goes after subject, before verb
-                        const subjectIndex = finalSentenceParts.indexOf(translatedSubject);
-                        if (subjectIndex !== -1) {
-                            finalSentenceParts.splice(subjectIndex + 1, 0, 'will');
-                        }
-                    } else if (isNegative) {
-                        // If negative, assume "will not" or "won't"
-                        const doNotIndex = finalSentenceParts.indexOf('do not');
-                        if (doNotIndex !== -1) {
-                            finalSentenceParts[doNotIndex] = 'will not';
-                        }
+                if (translatedAdverbTime) {
+                    if (translatedAdverbTime === (vocabularyLookup['မွိုးနီႏ']?.[sourceLang] ? vocabularyLookup['မွိုးနီႏ'][targetLang] : '') ||
+                        translatedAdverbTime === (vocabularyLookup['လမွိုးနီႏ']?.[sourceLang] ? vocabularyLookup['လမွိုးနီႏ'][targetLang] : '')) {
+                        finalSentenceParts.push(translatedAdverbTime + ','); 
                     }
-                } else if (translatedTenseParticles.includes(vocabularyLookup['ထွူလဲဉ်း']?.[targetLang])) { // Past
-                    // For simplicity, just add 'already' at end or assume simple past verb form
+                }
+
+                // Interrogative Pronoun at beginning for questions
+                if (translatedInterrogativePronoun && isQuestion) {
+                    finalSentenceParts.push(translatedInterrogativePronoun);
+                }
+
+                if (mainSubject) finalSentenceParts.push(mainSubject);
+
+                let englishAuxiliary = '';
+                let englishVerb = translatedVerb;
+
+                // Handle negation and tense with auxiliaries
+                if (hasFutureTense) {
+                    englishAuxiliary = 'will';
+                    if (isNegative) englishAuxiliary += ' not';
+                } else if (isNegative && translatedVerb) {
+                    englishAuxiliary = 'do not'; // Simplified for general present tense negation
+                } else if (isQuestion && translatedVerb && !translatedInterrogativePronoun) {
+                    englishAuxiliary = 'Do'; // Simplified for yes/no questions
+                }
+
+                if (englishAuxiliary) {
+                    if (finalSentenceParts.includes(mainSubject)) {
+                        const subIdx = finalSentenceParts.indexOf(mainSubject);
+                        finalSentenceParts.splice(subIdx + 1, 0, englishAuxiliary);
+                    } else { // If no subject, prepend auxiliary
+                        finalSentenceParts.unshift(englishAuxiliary);
+                    }
                 }
 
                 if (englishVerb) finalSentenceParts.push(englishVerb);
                 
-                // Adverbs of Manner/Place can go after verb/object
+                // Past tense marker (simplified for English)
+                if (hasPastTense && englishVerb) {
+                    if (!englishAuxiliary.includes('do')) { // If not using 'did' as aux
+                        // This would need proper verb conjugation (e.g., eat -> ate).
+                        // For simplicity, we just add 'already' or a generic past indicator.
+                        if (translatedPastTenseMarker) finalSentenceParts.push(translatedPastTenseMarker); // e.g., already
+                    }
+                }
+                
                 if (translatedAdverbManner) finalSentenceParts.push(translatedAdverbManner);
                 if (translatedAdverbPlace) finalSentenceParts.push(translatedAdverbPlace);
 
-                // English Adjective before Noun
-                let englishObject = translatedObject;
-                if (translatedAdjective && translatedObject) {
-                    englishObject = translatedAdjective + ' ' + translatedObject;
-                } else if (translatedAdjective) {
+                let englishObject = translatedNoun;
+                if (translatedAdjective && translatedNoun) {
+                    englishObject = translatedAdjective + ' ' + translatedNoun;
+                } else if (translatedAdjective && !translatedNoun) {
                     englishObject = translatedAdjective;
                 }
                 if (englishObject) finalSentenceParts.push(englishObject);
 
                 // Time Adverb (if not placed at beginning)
-                if (translatedAdverbTime && !finalSentenceParts[0].includes(translatedAdverbTime)) {
+                if (translatedAdverbTime && !finalSentenceParts.includes(translatedAdverbTime + ',')) {
                      finalSentenceParts.push(translatedAdverbTime);
                 }
                 
-                // Question words and punctuation
+                // Punctuation
                 if (isQuestion) {
-                    if (translatedQuestionWord) {
-                        // Move question word to front if not already there
-                        const currentFirst = finalSentenceParts[0];
-                        if (currentFirst !== translatedQuestionWord && translatedSubject) { // Basic reordering for "What do you eat?"
-                             let questionPrefix = "Do"; // Default for yes/no
-                             if (translatedQuestionWord && !translatedQuestionWord.includes(vocabularyLookup['ဟွေး']?.[targetLang])) {
-                                 finalSentenceParts.unshift(translatedQuestionWord);
-                                 questionPrefix = ''; // No "Do" if already a question word
-                             }
-                             if (questionPrefix) {
-                                 finalSentenceParts.unshift(questionPrefix);
-                             }
-                        }
-                    } else { // Yes/No question
-                        finalSentenceParts.unshift("Do"); // Simplistic for 'Do you...?'
-                    }
                     finalSentenceParts.push("?");
                 } else {
                     finalSentenceParts.push(".");
                 }
-
-                // Remove the initial comma if it's the only element
-                if (finalSentenceParts[0] === ',') finalSentenceParts.shift();
             }
 
 
