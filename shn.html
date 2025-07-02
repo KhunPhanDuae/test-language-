@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="blk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Lingual Grammar-Aware Translator</title>
+    <style>
+        :root {
+            --primary-color: #007bff; /* A vibrant blue */
+            --secondary-color: #28a745; /* A lively green */
+            --dark-blue: #0056b3;
+            --dark-green: #218838;
+            --text-color: #333;
+            --background-light: #f0f8ff; /* Light sky blue */
+            --background-container: #ffffff;
+            --border-color: #a7d9ff; /* Lighter blue for borders */
+            --shadow-color: rgba(0, 123, 255, 0.15); /* Blue-tinted shadow */
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: var(--background-light);
+            color: var(--text-color);
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1.5em 0;
+            text-align: center;
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+
+        nav {
+            background-color: var(--dark-blue);
+            padding: 0.7em 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.7em 1.2em;
+            margin: 0 0.6em;
+            border-radius: 6px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            flex: 1;
+            padding: 30px;
+            max-width: 900px;
+            margin: 30px auto;
+            background-color: var(--background-container);
+            border-radius: 12px;
+            box-shadow: 0 6px 15px var(--shadow-color);
+            border: 1px solid var(--border-color);
+        }
+
+        h2, h3 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 25px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--dark-blue);
+        }
+
+        select, button, textarea {
+            padding: 12px;
+            margin-right: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1.05em;
+        }
+
+        select {
+            background-color: #e6f7ff;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+        }
+
+        button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        button:hover {
+            background-color: var(--dark-green);
+            transform: translateY(-2px);
+        }
+
+        textarea {
+            width: calc(100% - 24px);
+            height: 180px;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-sizing: border-box;
+            resize: vertical;
+            font-size: 1.1em;
+            transition: border-color 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+        }
+
+        .translation-output {
+            background-color: #e9f5ff;
+            padding: 20px;
+            border-radius: 8px;
+            min-height: 120px;
+            border: 1px solid var(--border-color);
+            font-size: 1.15em;
+            line-height: 1.6;
+            color: var(--dark-blue);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08);
+            margin-top: 15px;
+            white-space: pre-wrap; /* Ensure line breaks are preserved */
+        }
+
+        .translation-output.error {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 1.2em 0;
+            margin-top: auto;
+            box-shadow: 0 -4px 8px var(--shadow-color);
+        }
+
+        .language-selectors {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .language-selectors label {
+            margin-right: 5px;
+            margin-bottom: 0;
+        }
+
+        #loadingMessage {
+            color: var(--dark-blue);
+            font-style: italic;
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+            /* display: none; /* Hidden by default - managed by JS */
+        }
+
+        .icon {
+            display: inline-block;
+            vertical-align: middle;
+            width: 24px;
+            height: 24px;
+            margin-left: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px auto;
+                padding: 20px;
+            }
+            nav a {
+                padding: 0.6em 1em;
+                margin: 0 0.3em;
+            }
+            .language-selectors {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .language-selectors label,
+            .language-selectors select {
+                width: 100%;
+            }
+            button {
+                width: 100%;
+                margin-right: 0;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Multi-Lingual Grammar-Aware Translator <span class="icon" title="Grammar Enhanced Translation">✨</span></h1>
+    </header>
+
+    <nav>
+        <a href="#about">About</a>
+        <a href="#how-to-use">How To Use</a>
+    </nav>
+
+    <div class="container">
+        <h2 id="current-language-title"></h2>
+
+        <div class="language-selectors">
+            <label for="sourceLang">Translate From:</label>
+            <select id="sourceLang">
+                </select>
+
+            <label for="targetLang">Translate To:</label>
+            <select id="targetLang">
+                </select>
+        </div>
+
+        <p>Enter text to translate:</p>
+        <textarea id="inputText" placeholder="Type or paste your text here... (e.g., ခွေ အံႏ ဒဲဉ် နဝ်ꩻသွူ)"></textarea>
+        <button onclick="translateText()">Translate</button>
+        <div id="loadingMessage">Loading translation data...</div>
+
+        <h3>Translation:</h3>
+        <div class="translation-output" id="translationOutput">
+            Your translated text will appear here. The grammar structure will be adjusted based on the target language.
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Grammar-Aware Translator</p>
+    </footer>
+
+    <script>
+        // Your SheetDB API URL (Replace with your actual URL)
+        const SHEETDB_API_URL = 'https://sheetdb.io/api/v1/unuwgl15jxmdf'; 
+
+        // This object will store our vocabulary fetched from SheetDB
+        // Structure: { "word_in_any_lang": { blk: "...", my: "...", en: "...", type: "subject" }, ... }
+        let vocabularyLookup = {};
+
+        // This map will store the display names for language codes
+        // Populated dynamically from SheetDB data for flexibility
+        let langMap = {}; 
+
+        // --- Core Functions ---
+
+        async function fetchAllTranslationData() {
+            const loadingMessage = document.getElementById('loadingMessage');
+            loadingMessage.style.display = 'block';
+            loadingMessage.innerText = `Loading all translation data from SheetDB...`;
+
+            try {
+                const response = await fetch(SHEETDB_API_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                console.log('All data fetched from SheetDB:', data);
+
+                vocabularyLookup = {}; // Reset previous data
+                langMap = {}; // Reset language map
+
+                // Infer available languages from the first row's keys, excluding 'id' and 'type'
+                if (data.length > 0) {
+                    const firstRowKeys = Object.keys(data[0]);
+                    firstRowKeys.forEach(key => {
+                        if (key !== 'id' && key !== 'type') {
+                            // Assign a placeholder name initially, if not found in a fixed map
+                            langMap[key] = key.toUpperCase(); // e.g., blk -> BLK, my -> MY
+                            // You might want to hardcode display names if needed (e.g., blk: 'ပအိုဝ်း')
+                            // Or add a separate sheet for language names. For now, using uppercase code.
+                            if (key === 'blk') langMap[key] = 'ပအိုဝ်း';
+                            if (key === 'my') langMap[key] = 'ဗမာ';
+                            if (key === 'en') langMap[key] = 'English';
+                            if (key === 'ja') langMap[key] = '日本語';
+                            if (key === 'zh') langMap[key] = '中文';
+                            if (key === 'shn') langMap[key] = 'ရှမ်း';
+                        }
+                    });
+                }
+
+                // Process the fetched data into the vocabularyLookup
+                data.forEach(row => {
+                    const type = row.type;
+                    if (!type) {
+                        console.warn(`Row with ID ${row.id} has no 'type' defined. Skipping.`);
+                        return;
+                    }
+
+                    // For each language, add the word to vocabularyLookup with its type and all translations
+                    for (const langCode in langMap) {
+                        if (row[langCode]) {
+                            const word = row[langCode];
+                            vocabularyLookup[word] = { type: type };
+                            // Add all translations for this word
+                            for (const innerLangCode in langMap) {
+                                if (row[innerLangCode]) {
+                                    vocabularyLookup[word][innerLangCode] = row[innerLangCode];
+                                }
+                            }
+                        }
+                    }
+                });
+
+                console.log('Processed vocabularyLookup:', vocabularyLookup);
+                console.log('Inferred langMap:', langMap);
+
+                loadingMessage.style.display = 'none'; // Hide loading message on success
+                return true; // Indicate success
+            } catch (error) {
+                console.error('Could not fetch data from SheetDB:', error);
+                loadingMessage.innerText = `Error loading data from SheetDB. Please check API URL or network.`;
+                return false; // Indicate failure
+            }
+        }
+
+        // Populates the source and target language dropdowns
+        function populateLanguageSelectors() {
+            const sourceLangSelect = document.getElementById('sourceLang');
+            const targetLangSelect = document.getElementById('targetLang');
+
+            // Clear existing options
+            sourceLangSelect.innerHTML = '';
+            targetLangSelect.innerHTML = '';
+
+            for (const langCode in langMap) {
+                const option1 = document.createElement('option');
+                option1.value = langCode;
+                option1.textContent = `${langMap[langCode]} (${langCode})`;
+                sourceLangSelect.appendChild(option1);
+
+                const option2 = document.createElement('option');
+                option2.value = langCode;
+                option2.textContent = `${langMap[langCode]} (${langCode})`;
+                targetLangSelect.appendChild(option2);
+            }
+
+            // Set default selections after populating
+            sourceLangSelect.value = 'blk'; // Default source is Pa'O
+            targetLangSelect.value = 'my'; // Default target is Burmese
+            document.getElementById('current-language-title').innerText = `Multi-Lingual Translation`;
+        }
+
+        function translateText() {
+            const inputText = document.getElementById('inputText').value.trim();
+            const sourceLang = document.getElementById('sourceLang').value;
+            const targetLang = document.getElementById('targetLang').value;
+            const outputDiv = document.getElementById('translationOutput');
+            const loadingMessage = document.getElementById('loadingMessage');
+
+            outputDiv.innerText = "";
+            outputDiv.classList.remove('error');
+            loadingMessage.style.display = 'block';
+            loadingMessage.innerText = 'Translating...';
+
+            if (inputText === "") {
+                outputDiv.innerText = "Please enter some text to translate.";
+                outputDiv.classList.add('error');
+                loadingMessage.style.display = 'none';
+                return;
+            }
+
+            // Ensure vocabulary is loaded before attempting translation
+            if (Object.keys(vocabularyLookup).length === 0) {
+                outputDiv.innerText = "Translation data not yet loaded. Please wait and try again.";
+                outputDiv.classList.add('error');
+                loadingMessage.style.display = 'none';
+                return;
+            }
+
+            // Perform translation after a small delay to show loading message
+            setTimeout(() => {
+                const result = translateTextWithGrammar(inputText, sourceLang, targetLang);
+                if (result.error) {
+                    outputDiv.innerText = result.error;
+                    outputDiv.classList.add('error');
+                } else {
+                    outputDiv.innerText = result.translatedText;
+                }
+                loadingMessage.style.display = 'none';
+            }, 500); // 0.5 second delay
+        }
+
+        function translateTextWithGrammar(inputText, sourceLang, targetLang) {
+            const words = inputText.split(/\s+/).filter(word => word.length > 0);
+            let parsedWords = [];
+            let unknownWords = [];
+
+            // Step 1: Parse input and identify word types using vocabularyLookup
+            // We need to find the word in the source language in our lookup
+            for (const word of words) {
+                let foundEntry = null;
+                // Search for the word in the source language column of our vocabularyLookup
+                // This assumes `vocabularyLookup` keys are words from ANY language,
+                // and the value contains translations for all languages + type.
+                // To be robust, we iterate through all entries to find the source word.
+                
+                // A more efficient lookup for source words:
+                // Create a reverse lookup or search all values for the source word.
+                // For simplicity here, we'll iterate `vocabularyLookup` values if direct key match fails.
+                
+                let entryByDirectKey = vocabularyLookup[word];
+                if (entryByDirectKey && entryByDirectKey[sourceLang] === word) {
+                    foundEntry = entryByDirectKey;
+                } else {
+                    // Fallback: search if this word exists as a translation in the sourceLang for any entry
+                    for (const vocabKey in vocabularyLookup) {
+                        if (vocabularyLookup[vocabKey][sourceLang] === word) {
+                            foundEntry = vocabularyLookup[vocabKey];
+                            break;
+                        }
+                    }
+                }
+
+                if (foundEntry) {
+                    parsedWords.push({
+                        word: word,
+                        type: foundEntry.type,
+                        // Get the translation for the *target* language from the found entry
+                        translation: foundEntry[targetLang] || `[${langMap[targetLang]}_${foundEntry.type}]` // Fallback if no specific translation for targetLang
+                    });
+                } else {
+                    unknownWords.push(word);
+                    parsedWords.push({
+                        word: word,
+                        type: "unknown",
+                        translation: `[${word}]` // Show original unknown word
+                    });
+                }
+            }
+
+            if (unknownWords.length > 0) {
+                const unknownStr = unknownWords.join(', ');
+                return { error: `Translation limited: Unknown words found: ${unknownStr}. Please ensure all words are in SheetDB with a 'type' defined.` };
+            }
+
+            // Group parts for structured sentence building
+            let sentenceParts = {
+                subject: [], adverbTime: [], adverbPlace: [], adverbManner: [],
+                verb: [], object: [], adjective: [],
+                negative: [], tense: [], question: [], particle: []
+            };
+
+            parsedWords.forEach(pWord => {
+                switch (pWord.type) {
+                    case "subject": sentenceParts.subject.push(pWord); break;
+                    case "verb": sentenceParts.verb.push(pWord); break;
+                    case "object": sentenceParts.object.push(pWord); break;
+                    case "adverb_time": sentenceParts.adverbTime.push(pWord); break;
+                    case "adverb_place": sentenceParts.adverbPlace.push(pWord); break;
+                    case "adverb_manner": sentenceParts.adverbManner.push(pWord); break;
+                    case "adjective": sentenceParts.adjective.push(pWord); break;
+                    case "negative_prefix": sentenceParts.negative.push(pWord); break;
+                    case "particle_verb_past": sentenceParts.tense.push(pWord); break;
+                    case "particle_end_future": sentenceParts.tense.push(pWord); break;
+                    case "question_word": sentenceParts.question.push(pWord); break;
+                    case "particle_end": sentenceParts.particle.push(pWord); break;
+                    case "particle_general": sentenceParts.particle.push(pWord); break;
+                    case "negative_suffix": sentenceParts.negative.push(pWord); break; // Add negative suffix handling
+                    default: 
+                        sentenceParts.particle.push(pWord); // Catch-all for other types or unknowns
+                        break;
+                }
+            });
+
+            // Determine if it's a question or negative sentence
+            const isQuestion = sentenceParts.question.length > 0 || parsedWords.some(p => p.type === 'particle_end' && p.word === vocabularyLookup['ဟွေး']?.[sourceLang]); // Check if 'ဟွေး' equivalent exists
+            const isNegative = parsedWords.some(p => p.type === 'negative_prefix') || parsedWords.some(p => p.type === 'negative_suffix');
+
+            // --- Sentence Construction Logic based on Target Language ---
+            let finalSentenceParts = [];
+
+            // Helper to get translated word and its original object
+            const getTranslatedWords = (partsArray) => partsArray.map(w => w.translation);
+
+            const translatedSubject = getTranslatedWords(sentenceParts.subject).join(' ');
+            const translatedVerb = getTranslatedWords(sentenceParts.verb).join(' ');
+            const translatedObject = getTranslatedWords(sentenceParts.object).join(' ');
+            const translatedAdverbTime = getTranslatedWords(sentenceParts.adverbTime).join(' ');
+            const translatedAdverbPlace = getTranslatedWords(sentenceParts.adverbPlace).join(' ');
+            const translatedAdverbManner = getTranslatedWords(sentenceParts.adverbManner).join(' ');
+            const translatedAdjective = getTranslatedWords(sentenceParts.adjective).join(' ');
+            const translatedQuestionWord = getTranslatedWords(sentenceParts.question).join(' ');
+            const translatedTenseParticles = getTranslatedWords(sentenceParts.tense);
+            const translatedEndParticles = getTranslatedWords(sentenceParts.particle.filter(p => p.type === 'particle_end'));
+            const translatedGeneralParticles = getTranslatedWords(sentenceParts.particle.filter(p => p.type === 'particle_general'));
+            
+            // Negative markers (find their target language equivalent)
+            const targetNegativePrefix = sentenceParts.negative.find(n => n.type === 'negative_prefix')?.translation || '';
+            const targetNegativeSuffix = sentenceParts.negative.find(n => n.type === 'negative_suffix')?.translation || '';
+
+
+            // Burmese (SOV) Grammar Rules
+            if (targetLang === 'my') {
+                if (translatedAdverbTime) finalSentenceParts.push(translatedAdverbTime);
+                if (translatedSubject) finalSentenceParts.push(translatedSubject);
+
+                let myanmarObject = translatedObject;
+                if (translatedAdjective && translatedObject) {
+                    myanmarObject = translatedAdjective + ' ' + translatedObject; // Adjective + Noun
+                } else if (translatedAdjective) {
+                    myanmarObject = translatedAdjective;
+                }
+                if (myanmarObject) finalSentenceParts.push(myanmarObject);
+
+                if (translatedAdverbPlace) finalSentenceParts.push(translatedAdverbPlace);
+                if (translatedAdverbManner) finalSentenceParts.push(translatedAdverbManner);
+
+                let myanmarVerb = translatedVerb;
+                if (isNegative && translatedVerb) {
+                    myanmarVerb = (targetNegativePrefix || 'မ') + myanmarVerb; 
+                }
+                
+                // Tense handling for Burmese
+                if (translatedTenseParticles.includes(vocabularyLookup['ထွူလဲဉ်း']?.[targetLang])) { // Pa'O 'ထွူလဲဉ်း' -> မြန်မာ 'ခဲ့'
+                    if (myanmarVerb) myanmarVerb += 'ခဲ့'; 
+                } else if (translatedTenseParticles.includes(vocabularyLookup['လီသွူ']?.[targetLang])) { // Pa'O 'လီသွူ' -> မြန်မာ 'မယ်'
+                    if (myanmarVerb) myanmarVerb += 'မယ်'; 
+                }
+                
+                if (myanmarVerb) finalSentenceParts.push(myanmarVerb);
+
+                if (translatedQuestionWord && translatedQuestionWord !== vocabularyLookup['ဟွေး']?.[targetLang]) { 
+                    finalSentenceParts.push(translatedQuestionWord);
+                }
+
+                if (isNegative) {
+                    finalSentenceParts.push(targetNegativeSuffix || 'ဘူး'); 
+                } else if (isQuestion) {
+                    if (translatedEndParticles.includes(vocabularyLookup['ဟွေး']?.[targetLang])) {
+                        finalSentenceParts.push(vocabularyLookup['ဟွေး']?.[targetLang]); // Use the actual translated 'လား'
+                    } else {
+                        finalSentenceParts.push('လား'); // Default for other questions if 'လား' not explicitly found
+                    }
+                } else {
+                    if (translatedEndParticles.length > 0) {
+                        finalSentenceParts.push(translatedEndParticles.join(' ')); 
+                    } else if (myanmarVerb && !myanmarVerb.endsWith('ခဲ့') && !myanmarVerb.endsWith('မယ်')) { 
+                        finalSentenceParts.push('တယ်');
+                    }
+                }
+                if (translatedGeneralParticles.length > 0) finalSentenceParts.push(translatedGeneralParticles.join(' '));
+
+            } 
+            // Pa'O (SVO) Grammar Rules (source could be Pa'O or others, but output structure is SVO)
+            else if (targetLang === 'blk') {
+                if (translatedSubject) finalSentenceParts.push(translatedSubject);
+
+                let paoVerb = translatedVerb;
+                if (isNegative && translatedVerb) {
+                    paoVerb = (targetNegativePrefix || 'နပ်') + paoVerb;
+                }
+                if (paoVerb) finalSentenceParts.push(paoVerb);
+
+                if (translatedAdverbManner) finalSentenceParts.push(translatedAdverbManner);
+                if (translatedAdverbPlace) finalSentenceParts.push(translatedAdverbPlace);
+
+                let paoObject = translatedObject;
+                if (translatedObject && translatedAdjective) {
+                    paoObject = translatedObject + ' ' + translatedAdjective; // Noun + Adjective
+                } else if (translatedAdjective) {
+                    paoObject = translatedAdjective;
+                }
+                if (paoObject) finalSentenceParts.push(paoObject);
+
+                if (translatedAdverbTime) finalSentenceParts.push(translatedAdverbTime);
+
+                if (translatedTenseParticles.includes(vocabularyLookup['လီသွူ']?.[targetLang])) { 
+                    finalSentenceParts.push(vocabularyLookup['လီသွူ']?.[targetLang]);
+                }
+
+                if (translatedQuestionWord && translatedQuestionWord !== vocabularyLookup['ဟွေး']?.[targetLang]) {
+                    finalSentenceParts.push(translatedQuestionWord);
+                }
+                
+                if (translatedEndParticles.includes(vocabularyLookup['ဟွေး']?.[targetLang])) {
+                    finalSentenceParts.push(vocabularyLookup['ဟွေး']?.[targetLang]);
+                } else {
+                    if (translatedEndParticles.length > 0) finalSentenceParts.push(translatedEndParticles.join(' '));
+                }
+                if (translatedGeneralParticles.length > 0) finalSentenceParts.push(translatedGeneralParticles.join(' '));
+
+            } 
+            // English (SVO) Grammar Rules
+            else if (targetLang === 'en') {
+                // Time Adverb at beginning sometimes
+                if (translatedAdverbTime && (translatedAdverbTime === vocabularyLookup['မွိုးနီႏ']?.[targetLang] || translatedAdverbTime === vocabularyLookup['လမွိုးနီႏ']?.[targetLang])) {
+                    finalSentenceParts.push(translatedAdverbTime + ','); // e.g., Today, I eat rice.
+                }
+
+                if (translatedSubject) finalSentenceParts.push(translatedSubject);
+
+                // English 'do not' for negation
+                let englishVerb = translatedVerb;
+                if (isNegative && translatedVerb) {
+                    if (translatedSubject) finalSentenceParts.push('do not');
+                    englishVerb = translatedVerb; // Keep original verb form for simplicity
+                }
+                
+                // English Tense - simplified
+                if (translatedTenseParticles.includes(vocabularyLookup['လီသွူ']?.[targetLang])) { // Future
+                    if (translatedSubject && !isNegative) { // 'will' goes after subject, before verb
+                        const subjectIndex = finalSentenceParts.indexOf(translatedSubject);
+                        if (subjectIndex !== -1) {
+                            finalSentenceParts.splice(subjectIndex + 1, 0, 'will');
+                        }
+                    } else if (isNegative) {
+                        // If negative, assume "will not" or "won't"
+                        const doNotIndex = finalSentenceParts.indexOf('do not');
+                        if (doNotIndex !== -1) {
+                            finalSentenceParts[doNotIndex] = 'will not';
+                        }
+                    }
+                } else if (translatedTenseParticles.includes(vocabularyLookup['ထွူလဲဉ်း']?.[targetLang])) { // Past
+                    // For simplicity, just add 'already' at end or assume simple past verb form
+                }
+
+                if (englishVerb) finalSentenceParts.push(englishVerb);
+                
+                // Adverbs of Manner/Place can go after verb/object
+                if (translatedAdverbManner) finalSentenceParts.push(translatedAdverbManner);
+                if (translatedAdverbPlace) finalSentenceParts.push(translatedAdverbPlace);
+
+                // English Adjective before Noun
+                let englishObject = translatedObject;
+                if (translatedAdjective && translatedObject) {
+                    englishObject = translatedAdjective + ' ' + translatedObject;
+                } else if (translatedAdjective) {
+                    englishObject = translatedAdjective;
+                }
+                if (englishObject) finalSentenceParts.push(englishObject);
+
+                // Time Adverb (if not placed at beginning)
+                if (translatedAdverbTime && !finalSentenceParts[0].includes(translatedAdverbTime)) {
+                     finalSentenceParts.push(translatedAdverbTime);
+                }
+                
+                // Question words and punctuation
+                if (isQuestion) {
+                    if (translatedQuestionWord) {
+                        // Move question word to front if not already there
+                        const currentFirst = finalSentenceParts[0];
+                        if (currentFirst !== translatedQuestionWord && translatedSubject) { // Basic reordering for "What do you eat?"
+                             let questionPrefix = "Do"; // Default for yes/no
+                             if (translatedQuestionWord && !translatedQuestionWord.includes(vocabularyLookup['ဟွေး']?.[targetLang])) {
+                                 finalSentenceParts.unshift(translatedQuestionWord);
+                                 questionPrefix = ''; // No "Do" if already a question word
+                             }
+                             if (questionPrefix) {
+                                 finalSentenceParts.unshift(questionPrefix);
+                             }
+                        }
+                    } else { // Yes/No question
+                        finalSentenceParts.unshift("Do"); // Simplistic for 'Do you...?'
+                    }
+                    finalSentenceParts.push("?");
+                } else {
+                    finalSentenceParts.push(".");
+                }
+
+                // Remove the initial comma if it's the only element
+                if (finalSentenceParts[0] === ',') finalSentenceParts.shift();
+            }
+
+
+            return { translatedText: finalSentenceParts.filter(Boolean).join(' ').trim() };
+        }
+
+        // --- Initialization on page load ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            await fetchAllTranslationData(); // Fetch data first
+            populateLanguageSelectors(); // Then populate dropdowns
+        });
+    </script>
+</body>
+</html>
