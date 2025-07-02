@@ -5,113 +5,223 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pa'O Translation App</title>
     <style>
+        :root {
+            --primary-color: #007bff; /* A vibrant blue */
+            --secondary-color: #28a745; /* A lively green */
+            --dark-blue: #0056b3;
+            --dark-green: #218838;
+            --text-color: #333;
+            --background-light: #f0f8ff; /* Light sky blue */
+            --background-container: #ffffff;
+            --border-color: #a7d9ff; /* Lighter blue for borders */
+            --shadow-color: rgba(0, 123, 255, 0.15); /* Blue-tinted shadow */
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            background-color: var(--background-light);
+            color: var(--text-color);
         }
+
         header {
-            background-color: #333;
+            background-color: var(--primary-color);
             color: white;
-            padding: 1em 0;
+            padding: 1.5em 0;
             text-align: center;
+            box-shadow: 0 4px 8px var(--shadow-color);
         }
+
         nav {
-            background-color: #444;
-            padding: 0.5em 0;
+            background-color: var(--dark-blue);
+            padding: 0.7em 0;
             text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
         nav a {
             color: white;
             text-decoration: none;
-            padding: 0.5em 1em;
-            margin: 0 0.5em;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-        nav a:hover {
-            background-color: #555;
-        }
-        .container {
-            flex: 1;
-            padding: 20px;
-            max-width: 800px;
-            margin: 20px auto;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
+            padding: 0.7em 1.2em;
+            margin: 0 0.6em;
+            border-radius: 6px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
             font-weight: bold;
         }
-        select, button {
-            padding: 10px;
-            margin-right: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            cursor: pointer;
+
+        nav a:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
         }
+
+        .container {
+            flex: 1;
+            padding: 30px;
+            max-width: 900px; /* Increased max-width for 4K feel */
+            margin: 30px auto;
+            background-color: var(--background-container);
+            border-radius: 12px;
+            box-shadow: 0 6px 15px var(--shadow-color);
+            border: 1px solid var(--border-color);
+        }
+
+      h2, h3 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 25px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+        }
+        
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--dark-blue);
+        }
+
+        select, button, textarea {
+            padding: 12px;
+            margin-right: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1.05em; /* Slightly larger font */
+        }
+
+        select {
+            background-color: #e6f7ff; /* Light blue tint for selects */
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+        }
+
         button {
-            background-color: #5cb85c;
+            background-color: var(--secondary-color);
             color: white;
             border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-weight: bold;
+            letter-spacing: 0.5px;
         }
+
         button:hover {
-            background-color: #4cae4c;
+            background-color: var(--dark-green);
+            transform: translateY(-2px);
         }
+
         textarea {
-            width: 100%;
-            height: 150px;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            width: calc(100% - 24px); /* Account for padding */
+            height: 180px; /* Taller textarea */
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
             box-sizing: border-box;
             resize: vertical;
+            font-size: 1.1em;
+            transition: border-color 0.3s ease;
         }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+        }
+
         .translation-output {
-            background-color: #e9e9e9;
-            padding: 15px;
-            border-radius: 4px;
-            min-height: 100px;
-            border: 1px solid #ccc;
+            background-color: #e9f5ff; /* Very light blue for output */
+            padding: 20px;
+            border-radius: 8px;
+            min-height: 120px;
+            border: 1px solid var(--border-color);
+            font-size: 1.15em;
+            line-height: 1.6;
+            color: var(--dark-blue);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08);
         }
+
         footer {
-            background-color: #333;
+            background-color: var(--primary-color);
             color: white;
             text-align: center;
-            padding: 1em 0;
+            padding: 1.2em 0;
             margin-top: auto;
+            box-shadow: 0 -4px 8px var(--shadow-color);
         }
+
         .language-selectors {
             display: flex;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            gap: 15px; /* Space between elements */
         }
+
         .language-selectors label {
-            margin-right: 10px;
+            margin-right: 5px; /* Adjust spacing */
             margin-bottom: 0;
         }
+
         #loadingMessage {
-            color: gray;
+            color: var(--dark-blue);
             font-style: italic;
-            margin-top: 10px;
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* SVG Icon for quality - Example (requires actual SVG file or embedded SVG) */
+        .icon {
+            display: inline-block;
+            vertical-align: middle;
+            width: 24px; /* Adjust size as needed for 4K */
+            height: 24px;
+            margin-left: 8px;
+            /* For an actual SVG, you'd use background-image or embed it */
+            /* For demonstration, let's assume an external SVG */
+            /* background: url('path/to/your/quality-icon.svg') no-repeat center center / contain; */
+        }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px auto;
+                padding: 20px;
+            }
+            nav a {
+                padding: 0.6em 1em;
+                margin: 0 0.3em;
+            }
+            .language-selectors {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .language-selectors label,
+            .language-selectors select {
+                width: 100%; /* Full width on small screens */
+            }
+            button {
+                width: 100%;
+                margin-right: 0;
+                margin-top: 10px;
+            }
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>Pa'O Translation App</h1>
+        <h1>Pa'O Translation App <span class="icon" title="High Quality SVG/4K Display">✨</span></h1>
     </header>
 
     <nav>
@@ -164,13 +274,8 @@
     </footer>
 
     <script>
-        // These will store the loaded phrasebooks
-        let blkPhrases = {};
-        let enPhrases = {};
-        let myPhrases = {};
-        let shnPhrases = {};
-        let jaPhrases = {}; // Assuming you might add these
-        let zhPhrases = {}; // Assuming you might add these
+        // Store language data directly as objects
+        let loadedPhrasebooks = {}; // This will hold all fetched language data
 
         const langMap = {
             'en': 'English',
@@ -181,42 +286,50 @@
             'zh': '中文'
         };
 
-        const loadedPhrasebooks = {
-            'blk': blkPhrases,
-            'en': enPhrases,
-            'my': myPhrases,
-            'shn': shnPhrases,
-            'ja': jaPhrases,
-            'zh': zhPhrases
-        };
+        // Your SheetDB API URL
+        const SHEETDB_API_URL = 'https://sheetdb.io/api/v1/unuwgl15jxmdf';
 
-        // Function to fetch a specific phrasebook JSON file
-        async function fetchPhrasebook(langCode) {
+        // Function to fetch all data from SheetDB
+        async function fetchAllTranslationData() {
             const loadingMessage = document.getElementById('loadingMessage');
-            loadingMessage.style.display = 'block'; // Show loading message
+            loadingMessage.style.display = 'block';
+            loadingMessage.innerText = `Loading all translation data from SheetDB...`;
             try {
-                const response = await fetch(`${langCode}.json`);
+                const response = await fetch(SHEETDB_API_URL);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const data = await response.json();
-                console.log(`Phrasebook for ${langCode} loaded:`, data);
-                // Assign the loaded data to the correct global variable
-                switch(langCode) {
-                    case 'blk': blkPhrases = data; break;
-                    case 'en': enPhrases = data; break;
-                    case 'my': myPhrases = data; break;
-                    case 'shn': shnPhrases = data; break;
-                    case 'ja': jaPhrases = data; break;
-                    case 'zh': zhPhrases = data; break;
-                }
-                loadedPhrasebooks[langCode] = data; // Update the reference
+                console.log('All data fetched from SheetDB:', data);
+                
+                // Process the fetched data into separate phrasebooks
+                // Assuming your SheetDB columns are: "id", "blk", "en", "my", "shn", etc.
+                const newPhrasebooks = {
+                    'blk': {},
+                    'en': {},
+                    'my': {},
+                    'shn': {},
+                    'ja': {},
+                    'zh': {}
+                };
+
+                data.forEach(row => {
+                    const id = row.id;
+                    if (id) {
+                        for (const langCode in langMap) {
+                            if (row[langCode]) {
+                                newPhrasebooks[langCode][id] = row[langCode];
+                            }
+                        }
+                    }
+                });
+                loadedPhrasebooks = newPhrasebooks; // Update the global loadedPhrasebooks
                 loadingMessage.style.display = 'none'; // Hide loading message on success
-                return data;
+                return true; // Indicate success
             } catch (error) {
-                console.error(`Could not fetch ${langCode}.json:`, error);
-                loadingMessage.innerText = `Error loading ${langMap[langCode] || langCode} data.`;
-                return null; // Return null on error
+                console.error('Could not fetch data from SheetDB:', error);
+                loadingMessage.innerText = `Error loading data from SheetDB. Please check API URL or network.`;
+                return false; // Indicate failure
             }
         }
 
@@ -249,34 +362,26 @@
                 return;
             }
 
-            // Ensure source and target phrasebooks are loaded
-            let sourcePhrasebook = loadedPhrasebooks[sourceLang];
-            let targetPhrasebook = loadedPhrasebooks[targetLang];
-
-            if (!sourcePhrasebook) {
-                outputDiv.innerText = `Loading ${langMap[sourceLang]} data...`;
-                sourcePhrasebook = await fetchPhrasebook(sourceLang);
-                if (!sourcePhrasebook) {
-                    outputDiv.innerText = `Failed to load ${langMap[sourceLang]} data.`;
+            // Ensure all phrasebooks are loaded from SheetDB
+            if (Object.keys(loadedPhrasebooks).length === 0 || !loadedPhrasebooks[sourceLang] || !loadedPhrasebooks[targetLang]) {
+                outputDiv.innerText = "Translation data not yet loaded. Please wait...";
+                const success = await fetchAllTranslationData();
+                if (!success) {
+                    outputDiv.innerText = "Failed to load translation data from SheetDB.";
                     return;
                 }
             }
-            if (!targetPhrasebook && sourceLang !== targetLang) { // Only fetch target if different from source
-                outputDiv.innerText = `Loading ${langMap[targetLang]} data...`;
-                targetPhrasebook = await fetchPhrasebook(targetLang);
-                if (!targetPhrasebook) {
-                    outputDiv.innerText = `Failed to load ${langMap[targetLang]} data.`;
-                    return;
-                }
-            }
+            
+            const sourcePhrasebook = loadedPhrasebooks[sourceLang];
+            const targetPhrasebook = loadedPhrasebooks[targetLang];
 
-
-            let foundTranslation = "Translation not found in our phrasebook.";
+            let foundTranslation = "Translation not found in our phrasebook. Please try another phrase.";
             let translated = false;
 
             // Find the ID for the input text in the source language
             let phraseId = null;
             for (const id in sourcePhrasebook) {
+                // Case-insensitive comparison
                 if (sourcePhrasebook.hasOwnProperty(id) && sourcePhrasebook[id].toLowerCase() === inputText.toLowerCase()) {
                     phraseId = id;
                     break;
@@ -302,17 +407,10 @@
             outputDiv.innerText = translated ? foundTranslation : "Translation not found in our phrasebook. Please try another phrase.";
         }
 
-        // Initialize language display and eagerly load the default Pa'O phrasebook
-        // We'll also load English, as it's a common target/source.
+        // Initialize language display and eagerly load all data from SheetDB on page load
         document.addEventListener('DOMContentLoaded', async () => {
             setLanguageDisplay();
-            // Eagerly load blk and en phrasebooks on page load for faster initial lookup
-            await fetchPhrasebook('blk');
-            await fetchPhrasebook('en');
-            await fetchPhrasebook('my');
-            await fetchPhrasebook('shn');
-            await fetchPhrasebook('ja');
-            await fetchPhrasebook('zh');
+            await fetchAllTranslationData();
         });
     </script>
 </body>
