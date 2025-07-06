@@ -105,7 +105,7 @@
         }
 
         button {
-            background-color: var(--secondary-color);
+            background-color: var(--dark-blue);
             color: white;
             border: none;
             cursor: pointer;
@@ -225,9 +225,8 @@
     </header>
 
     <nav>
-        <a href="?lang=en">English (en)</a>
-        <a href="?lang=my">ဗမာ (my)</a>
-        <a href="?lang=blk">ပအိုဝ်း (blk)</a>
+       
+        <button onclick="goToNextPage()">လွေꩻငါထဲင်းလိတ်မဲ့ငါ</button>
 
     </nav>
 
@@ -237,7 +236,7 @@
         <div class="language-selectors">
             <label for="sourceLang">Translate From:</label>
             <select id="sourceLang">
-                <option value="blk">ပအိုဝ်း (blk)</option>
+                <option value="blk">ပအိုဝ်ႏ (blk)</option>
                 <option value="en">English (en)</option>
                 <option value="my">ဗမာ (my)</option>
                 <option value="shn">ရှမ်း (shn)</option>
@@ -249,7 +248,7 @@
             <select id="targetLang">
                 <option value="en">English (en)</option>
                 <option value="my">ဗမာ (my)</option>
-                <option value="blk">ပအိုဝ်း (blk)</option>
+                <option value="blk">ပအိုဝ်ႏ (blk)</option>
                 <option value="shn">ရှမ်း (shn)</option>
                 <option value="ja">日本語 (ja)</option>
                 <option value="zh">中文 (zh)</option>
@@ -259,7 +258,7 @@
         <p>Enter text to translate:</p>
         <textarea id="inputText" placeholder="Type or paste your text here..."></textarea>
         <button onclick="translateText()">Translate</button>
-        <div id="loadingMessage" style="display:none;">Loading translation data...</div>
+        <div id="loadingMessage" style="display:none;">Loading translation info...</div>
 
         <h3>Translation:</h3>
         <div class="translation-output" id="translationOutput">
@@ -272,63 +271,85 @@
     </footer>
 
     <script>
+    function goToNextPage() {
+            // window.location.href က URL အပြောင်းအလဲလုပ်ပြီး စာမျက်နှာကို ပြောင်းလဲပေးပါတယ်။
+            window.location.href = "PaB1.html";
+    }
         // Store language data directly as objects
         let loadedPhrasebooks = {}; // This will hold all fetched language data
 
         const langMap = {
             'en': 'English',
             'my': 'ဗမာ',
-            'blk': 'ပအိုဝ်း',
+            'blk': 'ပအိုဝ်ႏ',
             'shn': 'ရှမ်း',
             'ja': '日本語',
             'zh': '中文'
         };
 
-        // Your SheetDB API URL
-        const SHEETDB_API_URL = 'https://sheetdb.io/api/v1/unuwgl15jxmdf';
+        // Define an array of your SheetDB API URLs
+        const SHEETDB_API_URLS = [
+            'https://sheetdb.io/api/v1/unuwgl15jxmdf', // Your original API URL
+            'https://sheetdb.io/api/v1/dxcw74d756ouw', // Add your second API URL here
+            'https://sheetdb.io/api/v1/g5aj9h4q6oatk'  // Add your third API URL here
+        ];
 
         // Function to fetch all data from SheetDB
         async function fetchAllTranslationData() {
             const loadingMessage = document.getElementById('loadingMessage');
             loadingMessage.style.display = 'block';
-            loadingMessage.innerText = `Loading all translation data from SheetDB...`;
-            try {
-                const response = await fetch(SHEETDB_API_URL);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                console.log('All data fetched from SheetDB:', data);
-                
-                // Process the fetched data into separate phrasebooks
-                // Assuming your SheetDB columns are: "id", "blk", "en", "my", "shn", etc.
-                const newPhrasebooks = {
-                    'blk': {},
-                    'en': {},
-                    'my': {},
-                    'shn': {},
-                    'ja': {},
-                    'zh': {}
-                };
+            loadingMessage.innerText = `Loading all translation data from RYPAK...`;
 
-                data.forEach(row => {
-                    const id = row.id;
-                    if (id) {
-                        for (const langCode in langMap) {
-                            if (row[langCode]) {
-                                newPhrasebooks[langCode][id] = row[langCode];
-                            }
+            let allData = [];
+            let success = true;
+
+            for (const url of SHEETDB_API_URLS) {
+                loadingMessage.innerText = `Loading data from ${url}...`;
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status} from ${url}`);
+                    }
+                    const data = await response.json();
+                    console.log(`Data fetched from ${url}:`, data);
+                    allData = allData.concat(data); // Concatenate data from all APIs
+                } catch (error) {
+                    console.error(`Could not fetch data from ${url}:`, error);
+                    loadingMessage.innerText = `Error loading data from ${url}. Please check data URL or network.`;
+                    success = false; // Mark as failed if any API call fails
+                    break; // Stop processing if one fails, or continue if you want to gather partial data
+                }
+            }
+
+            if (!success) {
+                return false; // Indicate overall failure
+            }
+
+            // Process the combined fetched data into separate phrasebooks
+            const newPhrasebooks = {
+                'blk': {},
+                'en': {},
+                'my': {},
+                'shn': {},
+                'ja': {},
+                'zh': {}
+            };
+
+            allData.forEach(row => {
+                const id = row.id;
+                if (id) {
+                    for (const langCode in langMap) {
+                        if (row[langCode]) {
+                            // Prioritize later entries if IDs are duplicated across sheets, or handle as needed
+                            newPhrasebooks[langCode][id] = row[langCode];
                         }
                     }
-                });
-                loadedPhrasebooks = newPhrasebooks; // Update the global loadedPhrasebooks
-                loadingMessage.style.display = 'none'; // Hide loading message on success
-                return true; // Indicate success
-            } catch (error) {
-                console.error('Could not fetch data from SheetDB:', error);
-                loadingMessage.innerText = `Error loading data from SheetDB. Please check API URL or network.`;
-                return false; // Indicate failure
-            }
+                }
+            });
+
+            loadedPhrasebooks = newPhrasebooks; // Update the global loadedPhrasebooks
+            loadingMessage.style.display = 'none'; // Hide loading message on success
+            return true; // Indicate success
         }
 
         function getQueryParam(name) {
@@ -361,13 +382,15 @@
             }
 
             // Ensure all phrasebooks are loaded from SheetDB
-            if (Object.keys(loadedPhrasebooks).length === 0 || !loadedPhrasebooks[sourceLang] || !loadedPhrasebooks[targetLang]) {
-                outputDiv.innerText = "Translation data not yet loaded. Please wait...";
-                const success = await fetchAllTranslationData();
-                if (!success) {
-                    outputDiv.innerText = "Failed to load translation data from SheetDB.";
-                    return;
-                }
+            // The check below will re-fetch if `loadedPhrasebooks` is empty or incomplete.
+            // However, with multiple APIs, `fetchAllTranslationData` needs to be robust.
+            if (Object.keys(loadedPhrasebooks).length === 0 || !loadedPhrasebooks[sourceLang] || !loadedPhrasebooks[targetLang] || Object.keys(loadedPhrasebooks[sourceLang]).length === 0) {
+                 outputDiv.innerText = "Translation data not yet loaded. Please wait...";
+                 const success = await fetchAllTranslationData();
+                 if (!success) {
+                     outputDiv.innerText = "Failed to load translation data from SheetDB. Check console for details.";
+                     return;
+                 }
             }
             
             const sourcePhrasebook = loadedPhrasebooks[sourceLang];
@@ -412,4 +435,5 @@
         });
     </script>
 </body>
-</html>
+    </html>
+    
