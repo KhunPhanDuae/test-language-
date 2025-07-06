@@ -235,24 +235,10 @@
 
         <div class="language-selectors">
             <label for="sourceLang">Translate From:</label>
-            <select id="sourceLang">
-                <option value="blk">ပအိုဝ်ႏ (blk)</option>
-                <option value="en">English (en)</option>
-                <option value="my">ဗမာ (my)</option>
-                <option value="shn">ရှမ်း (shn)</option>
-                <option value="ja">日本語 (ja)</option>
-                <option value="zh">中文 (zh)</option>
-            </select>
+            <select id="sourceLang"></select>
 
             <label for="targetLang">Translate To:</label>
-            <select id="targetLang">
-                <option value="en">English (en)</option>
-                <option value="my">ဗမာ (my)</option>
-                <option value="blk">ပအိုဝ်ႏ (blk)</option>
-                <option value="shn">ရှမ်း (shn)</option>
-                <option value="ja">日本語 (ja)</option>
-                <option value="zh">中文 (zh)</option>
-            </select>
+            <select id="targetLang"></select>
         </div>
 
         <p>Enter text to translate:</p>
@@ -272,29 +258,70 @@
 
     <script>
     function goToNextPage() {
-            // window.location.href က URL အပြောင်းအလဲလုပ်ပြီး စာမျက်နှာကို ပြောင်းလဲပေးပါတယ်။
             window.location.href = "PaB1.html";
     }
-        // Store language data directly as objects
         let loadedPhrasebooks = {}; // This will hold all fetched language data
+        let langMap = {}; // This will now be populated from SheetDB
 
-        const langMap = {
-            'en': 'English',
-            'my': 'ဗမာ',
-            'blk': 'ပအိုဝ်ႏ',
-            'shn': 'ရှမ်း',
-            'ja': '日本語',
-            'zh': '中文'
-        };
-
-        // Define an array of your SheetDB API URLs
         const SHEETDB_API_URLS = [
             'https://sheetdb.io/api/v1/unuwgl15jxmdf', // Your original API URL
             'https://sheetdb.io/api/v1/dxcw74d756ouw', // Add your second API URL here
             'https://sheetdb.io/api/v1/g5aj9h4q6oatk'  // Add your third API URL here
         ];
 
-        // Function to fetch all data from SheetDB
+        // New API for language codes and names
+        const LANG_API_URL = 'https://sheetdb.io/api/v1/dxcw74d756ouw'; // Replace with your SheetDB ID for language codes
+
+        async function fetchLanguageData() {
+            try {
+                const response = await fetch(LANG_API_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status} from ${LANG_API_URL}`);
+                }
+                const data = await response.json();
+                
+                // Assuming your language sheet has columns like 'code' and 'name'
+                data.forEach(item => {
+                    if (item.code && item.name) {
+                        langMap[item.code] = item.name;
+                    }
+                });
+                console.log("Language map loaded:", langMap);
+            } catch (error) {
+                console.error("Could not fetch language data:", error);
+                // Fallback or error message for the user
+                alert("Failed to load language options. Please check your network or language DATA URL.");
+            }
+        }
+
+        function populateLanguageSelectors() {
+            const sourceLangSelect = document.getElementById('sourceLang');
+            const targetLangSelect = document.getElementById('targetLang');
+
+            // Clear existing options
+            sourceLangSelect.innerHTML = '';
+            targetLangSelect.innerHTML = '';
+
+            for (const code in langMap) {
+                if (langMap.hasOwnProperty(code)) {
+                    const name = langMap[code];
+                    const optionSource = document.createElement('option');
+                    optionSource.value = code;
+                    optionSource.innerText = `${name} (${code})`;
+                    sourceLangSelect.appendChild(optionSource);
+
+                    const optionTarget = document.createElement('option');
+                    optionTarget.value = code;
+                    optionTarget.innerText = `${name} (${code})`;
+                    targetLangSelect.appendChild(optionTarget);
+                }
+            }
+
+            // Set default selections after populating
+            sourceLangSelect.value = 'blk'; // Default source is Pa'O
+            targetLangSelect.value = 'en'; // Default target is English
+        }
+
         async function fetchAllTranslationData() {
             const loadingMessage = document.getElementById('loadingMessage');
             loadingMessage.style.display = 'block';
@@ -325,22 +352,16 @@
                 return false; // Indicate overall failure
             }
 
-            // Process the combined fetched data into separate phrasebooks
-            const newPhrasebooks = {
-                'blk': {},
-                'en': {},
-                'my': {},
-                'shn': {},
-                'ja': {},
-                'zh': {}
-            };
+            const newPhrasebooks = {};
+            for (const code in langMap) {
+                newPhrasebooks[code] = {};
+            }
 
             allData.forEach(row => {
                 const id = row.id;
                 if (id) {
-                    for (const langCode in langMap) {
+                    for (const langCode in langMap) { // Use the dynamically loaded langMap
                         if (row[langCode]) {
-                            // Prioritize later entries if IDs are duplicated across sheets, or handle as needed
                             newPhrasebooks[langCode][id] = row[langCode];
                         }
                     }
@@ -357,19 +378,6 @@
             return urlParams.get(name);
         }
 
-        function setLanguageDisplay() {
-            const currentLangCode = getQueryParam('lang') || 'blk'; // Default to Pa'O
-            const currentLangName = langMap[currentLangCode] || 'Unknown Language';
-            document.getElementById('current-language-title').innerText = `Current Language: ${currentLangName}`;
-
-            document.getElementById('sourceLang').value = 'blk'; // Default source is Pa'O
-            if (currentLangCode && langMap[currentLangCode]) {
-                document.getElementById('targetLang').value = currentLangCode;
-            } else {
-                document.getElementById('targetLang').value = 'en'; // Default target is English
-            }
-        }
-
         async function translateText() {
             const inputText = document.getElementById('inputText').value.trim();
             const sourceLang = document.getElementById('sourceLang').value;
@@ -382,13 +390,11 @@
             }
 
             // Ensure all phrasebooks are loaded from SheetDB
-            // The check below will re-fetch if `loadedPhrasebooks` is empty or incomplete.
-            // However, with multiple APIs, `fetchAllTranslationData` needs to be robust.
             if (Object.keys(loadedPhrasebooks).length === 0 || !loadedPhrasebooks[sourceLang] || !loadedPhrasebooks[targetLang] || Object.keys(loadedPhrasebooks[sourceLang]).length === 0) {
                  outputDiv.innerText = "Translation data not yet loaded. Please wait...";
                  const success = await fetchAllTranslationData();
                  if (!success) {
-                     outputDiv.innerText = "Failed to load translation data from SheetDB. Check console for details.";
+                     outputDiv.innerText = "Failed to load translation data from RYPAK. Check console for details.";
                      return;
                  }
             }
@@ -402,7 +408,6 @@
             // Find the ID for the input text in the source language
             let phraseId = null;
             for (const id in sourcePhrasebook) {
-                // Case-insensitive comparison
                 if (sourcePhrasebook.hasOwnProperty(id) && sourcePhrasebook[id].toLowerCase() === inputText.toLowerCase()) {
                     phraseId = id;
                     break;
@@ -410,28 +415,25 @@
             }
 
             if (phraseId) {
-                // If ID is found, look up the translation in the target language
                 if (targetPhrasebook && targetPhrasebook[phraseId]) {
                     foundTranslation = targetPhrasebook[phraseId];
                     translated = true;
                 } else if (sourceLang === targetLang) {
-                    // If source and target are the same, and input matched, just return input
                     foundTranslation = inputText;
                     translated = true;
                 } else {
-                    // This case means ID was found in source, but no matching phrase in target
                     foundTranslation = `No translation for "${inputText}" in ${langMap[targetLang]} yet.`;
-                    translated = true; // Mark as "translated" even if missing, as ID was found
+                    translated = true;
                 }
             }
 
             outputDiv.innerText = translated ? foundTranslation : "Translation not found in our phrasebook. Please try another phrase.";
         }
 
-        // Initialize language display and eagerly load all data from SheetDB on page load
         document.addEventListener('DOMContentLoaded', async () => {
-            setLanguageDisplay();
-            await fetchAllTranslationData();
+            await fetchLanguageData(); // First, load the language codes and names
+            populateLanguageSelectors(); // Then, populate the dropdowns
+            await fetchAllTranslationData(); // Finally, load all translation data
         });
     </script>
 </body>
