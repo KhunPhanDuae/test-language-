@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pa'O Translation App</title>
+    <title id="appTitle">Pa'O Translation App</title>
     <style>
         :root {
             --primary-color: #007bff; /* A vibrant blue */
@@ -217,70 +217,86 @@
                 margin-top: 10px;
             }
         }
+        /* New style for UI language selector */
+        .ui-language-selector {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .ui-language-selector label {
+            display: inline-block;
+            margin-right: 10px;
+        }
+        .ui-language-selector select {
+            min-width: 150px; /* Adjust as needed */
+        }
     </style>
 </head>
 <body>
     <header>
-        <h1>Pa'O Translation App <span class="icon" title="High Quality SVG/4K Display">✨</span></h1>
+        <h1 id="headerTitle">Pa'O Translation App <span class="icon" title="High Quality SVG/4K Display">✨</span></h1>
     </header>
 
     <nav>
-       
-        <button onclick="goToNextPage()">လွေꩻငါထဲင်းလိတ်မဲ့ငါ</button>
-
+        <button onclick="goToNextPage()" id="navButton"></button>
     </nav>
 
     <div class="container">
+        <div class="ui-language-selector">
+            <label for="uiLangSelect" id="uiLangLabel"></label>
+            <select id="uiLangSelect"></select>
+        </div>
+        
         <h2 id="current-language-title"></h2>
 
         <div class="language-selectors">
-            <label for="sourceLang">Translate From:</label>
+            <label for="sourceLang" id="labelSourceLang"></label>
             <select id="sourceLang"></select>
 
-            <label for="targetLang">Translate To:</label>
+            <label for="targetLang" id="labelTargetLang"></label>
             <select id="targetLang"></select>
         </div>
 
-        <p>Enter text to translate:</p>
-        <textarea id="inputText" placeholder="Type or paste your text here..."></textarea>
-        <button onclick="translateText()">Translate</button>
-        <div id="loadingMessage" style="display:none;">Loading translation info...</div>
+        <p id="enterTextPrompt"></p>
+        <textarea id="inputText" placeholder=""></textarea>
+        <button onclick="translateText()" id="translateButton"></button>
+        <div id="loadingMessage" style="display:none;"></div>
 
-        <h3>Translation:</h3>
+        <h3 id="translationOutputTitle"></h3>
         <div class="translation-output" id="translationOutput">
             Your translated text will appear here.
         </div>
     </div>
 
     <footer>
-        <p>&copy; 2025 Pa'O Translation App</p>
+        <p id="footerText"></p>
     </footer>
 
     <script>
     function goToNextPage() {
             window.location.href = "PaB1.html";
     }
-        let loadedPhrasebooks = {}; // This will hold all fetched language data
-        let langMap = {}; // This will now be populated from SheetDB
+        let loadedPhrasebooks = {}; // This will hold all fetched translation data
+        let langMap = {}; // This will hold language codes and names (e.g., {en: "English", blk: "Pa'O"})
+        let uiText = {}; // To hold UI text translations for the currently selected UI language
 
         const SHEETDB_API_URLS = [
             'https://sheetdb.io/api/v1/unuwgl15jxmdf', // Your original API URL
-            'https://sheetdb.io/api/v1/dxcw74d756ouw', // Add your second API URL here
-            'https://sheetdb.io/api/v1/g5aj9h4q6oatk'  // Add your third API URL here
+            'https://sheetdb.io/api/v1/dxcw74d756ouw', // Your second API URL
+            'https://sheetdb.io/api/v1/g5aj9h4q6oatk'  // Your third API URL
         ];
 
-        // New API for language codes and names
-        const LANG_API_URL = 'https://sheetdb.io/api/v1/dxcw74d756ouw'; // Replace with your SheetDB ID for language codes
+        // This API is used for both language codes/names AND UI text translations.
+        const COMMON_SHEETDB_URL = 'https://sheetdb.io/api/v1/dxcw74d756ouw'; 
 
         async function fetchLanguageData() {
             try {
-                const response = await fetch(LANG_API_URL);
+                const response = await fetch(COMMON_SHEETDB_URL);
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status} from ${LANG_API_URL}`);
+                    throw new Error(`HTTP error! status: ${response.status} from ${COMMON_SHEETDB_URL}`);
                 }
                 const data = await response.json();
                 
-                // Assuming your language sheet has columns like 'code' and 'name'
+                // Filter for rows that contain 'code' and 'name' for language dropdowns
                 data.forEach(item => {
                     if (item.code && item.name) {
                         langMap[item.code] = item.name;
@@ -289,49 +305,143 @@
                 console.log("Language map loaded:", langMap);
             } catch (error) {
                 console.error("Could not fetch language data:", error);
-                // Fallback or error message for the user
-                alert("Failed to load language options. Please check your network or language DATA URL.");
+                alert("Failed to load language options. Please check your network or SheetDB URL.");
+            }
+        }
+
+        async function fetchUiText(langCode) {
+            try {
+                const response = await fetch(COMMON_SHEETDB_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status} from ${COMMON_SHEETDB_URL}`);
+                }
+                const data = await response.json();
+                
+                // Filter for rows that contain 'key' for UI text translations
+                uiText = {}; 
+                data.forEach(item => {
+                    if (item.key && item[langCode]) {
+                        uiText[item.key] = item[langCode];
+                    }
+                });
+                console.log(`UI text loaded for ${langCode}:`, uiText);
+                updateUIElements(); // Update the UI immediately after fetching text
+            } catch (error) {
+                console.error("Could not fetch UI text data:", error);
+                // Fallback for UI text if API call fails or requested language is missing
+                uiText = {
+                    uiLangLabel: "App Language:", // Added UI language label - Fallback
+                    appTitle: "Pa'O Translation App ✨",
+                    navButton: "လွေꩻငါထဲင်းလိတ်မဲ့ငါ", // Default Pa'O text
+                    labelSourceLang: "Translate From:",
+                    labelTargetLang: "Translate To:",
+                    enterTextPrompt: "Enter text to translate:",
+                    placeholderText: "Type or paste your text here...",
+                    translateButton: "Translate",
+                    translationOutputTitle: "Translation:",
+                    noTextToTranslate: "Please enter some text to translate.",
+                    loadingTranslationInfo: "Loading translation info...",
+                    loadingDataFromRYPAK: "Loading all translation data from RYPAK...",
+                    loadingDataFromURL: "Loading data from ",
+                    errorLoadingData: "Error loading data from ",
+                    translationNotFound: "Translation not found in our phrasebook. Please try another phrase.",
+                    translationDataNotLoaded: "Translation data not yet loaded. Please wait...",
+                    failedToLoadTranslationData: "Failed to load translation data from SheetDB. Check console for details.",
+                    noTranslationInTargetLang: `No translation for "[[TEXT]]" in [[LANGUAGE]] yet.`,
+                    footerText: "&copy; 2025 Pa'O Translation App"
+                };
+                updateUIElements(); // Update with fallback text
+            }
+        }
+
+        function updateUIElements() {
+            // Update UI language label - THIS LINE WAS ADDED/CONFIRMED
+            document.getElementById('uiLangLabel').innerText = uiText.uiLangLabel || "App Language:";
+
+            // Update Header, Nav, Labels, Buttons, etc.
+            document.getElementById('appTitle').innerText = uiText.appTitle || "Pa'O Translation App ✨";
+            document.getElementById('headerTitle').innerHTML = (uiText.appTitle || "Pa'O Translation App") + ' <span class="icon" title="High Quality SVG/4K Display">✨</span>';
+            document.getElementById('navButton').innerText = uiText.navButton || "လွေꩻငါထဲင်းလိတ်မဲ့ငါ";
+            document.getElementById('labelSourceLang').innerText = uiText.labelSourceLang || "Translate From:";
+            document.getElementById('labelTargetLang').innerText = uiText.labelTargetLang || "Translate To:";
+            document.getElementById('enterTextPrompt').innerText = uiText.enterTextPrompt || "Enter text to translate:";
+            document.getElementById('inputText').placeholder = uiText.placeholderText || "Type or paste your text here...";
+            document.getElementById('translateButton').innerText = uiText.translateButton || "Translate";
+            document.getElementById('translationOutputTitle').innerText = uiText.translationOutputTitle || "Translation:";
+            document.getElementById('footerText').innerHTML = uiText.footerText || "&copy; 2025 Pa'O Translation App";
+            document.getElementById('loadingMessage').innerText = uiText.loadingTranslationInfo || "Loading translation info...";
+
+            const outputDiv = document.getElementById('translationOutput');
+            // Only change default output text if it's the original placeholder
+            if (outputDiv.innerText.includes("Your translated text will appear here") || outputDiv.innerText === "Translation not found in our phrasebook. Please try another phrase.") {
+                outputDiv.innerText = uiText.placeholderText || "Your translated text will appear here.";
             }
         }
 
         function populateLanguageSelectors() {
             const sourceLangSelect = document.getElementById('sourceLang');
             const targetLangSelect = document.getElementById('targetLang');
+            const uiLangSelect = document.getElementById('uiLangSelect'); // New UI language selector
 
-            // Clear existing options
+            // Clear existing options for all selectors
             sourceLangSelect.innerHTML = '';
             targetLangSelect.innerHTML = '';
+            uiLangSelect.innerHTML = ''; // Make sure this is cleared
 
             for (const code in langMap) {
                 if (langMap.hasOwnProperty(code)) {
                     const name = langMap[code];
+                    
+                    // Populate Source Language dropdown
                     const optionSource = document.createElement('option');
                     optionSource.value = code;
                     optionSource.innerText = `${name} (${code})`;
                     sourceLangSelect.appendChild(optionSource);
 
+                    // Populate Target Language dropdown
                     const optionTarget = document.createElement('option');
                     optionTarget.value = code;
                     optionTarget.innerText = `${name} (${code})`;
                     targetLangSelect.appendChild(optionTarget);
+
+                    // Populate UI Language dropdown (should include all available languages)
+                    const optionUi = document.createElement('option');
+                    optionUi.value = code;
+                    optionUi.innerText = name; // Only display the name, not the code, for UI selection
+                    uiLangSelect.appendChild(optionUi);
                 }
             }
 
-            // Set default selections after populating
-            sourceLangSelect.value = 'blk'; // Default source is Pa'O
-            targetLangSelect.value = 'en'; // Default target is English
+            // Set default selections
+            sourceLangSelect.value = 'blk'; 
+            targetLangSelect.value = 'en'; 
+
+            // Set default UI language from local storage or 'en'
+            const savedUiLang = localStorage.getItem('uiLang') || 'en';
+            if (uiLangSelect.querySelector(`option[value="${savedUiLang}"]`)) {
+                uiLangSelect.value = savedUiLang;
+            } else {
+                uiLangSelect.value = 'en'; // Fallback if saved language is not in options
+            }
+
+            // Add event listener for UI language change
+            uiLangSelect.addEventListener('change', (event) => {
+                const selectedUiLang = event.target.value;
+                localStorage.setItem('uiLang', selectedUiLang); // Save selected UI language
+                fetchUiText(selectedUiLang); // Update UI elements
+            });
         }
 
         async function fetchAllTranslationData() {
             const loadingMessage = document.getElementById('loadingMessage');
             loadingMessage.style.display = 'block';
-            loadingMessage.innerText = `Loading all translation data from RYPAK...`;
+            loadingMessage.innerText = uiText.loadingDataFromRYPAK || `Loading all translation data from RYPAK...`;
 
             let allData = [];
             let success = true;
 
             for (const url of SHEETDB_API_URLS) {
-                loadingMessage.innerText = `Loading data from ${url}...`;
+                loadingMessage.innerText = (uiText.loadingDataFromURL || `Loading data from `) + url + '...';
                 try {
                     const response = await fetch(url);
                     if (!response.ok) {
@@ -342,14 +452,14 @@
                     allData = allData.concat(data); // Concatenate data from all APIs
                 } catch (error) {
                     console.error(`Could not fetch data from ${url}:`, error);
-                    loadingMessage.innerText = `Error loading data from ${url}. Please check data URL or network.`;
+                    loadingMessage.innerText = (uiText.errorLoadingData || `Error loading data from `) + url + `. Please check data URL or network.`;
                     success = false; // Mark as failed if any API call fails
-                    break; // Stop processing if one fails, or continue if you want to gather partial data
+                    break; 
                 }
             }
 
             if (!success) {
-                return false; // Indicate overall failure
+                return false; 
             }
 
             const newPhrasebooks = {};
@@ -360,7 +470,7 @@
             allData.forEach(row => {
                 const id = row.id;
                 if (id) {
-                    for (const langCode in langMap) { // Use the dynamically loaded langMap
+                    for (const langCode in langMap) { 
                         if (row[langCode]) {
                             newPhrasebooks[langCode][id] = row[langCode];
                         }
@@ -368,14 +478,9 @@
                 }
             });
 
-            loadedPhrasebooks = newPhrasebooks; // Update the global loadedPhrasebooks
-            loadingMessage.style.display = 'none'; // Hide loading message on success
-            return true; // Indicate success
-        }
-
-        function getQueryParam(name) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(name);
+            loadedPhrasebooks = newPhrasebooks; 
+            loadingMessage.style.display = 'none'; 
+            return true; 
         }
 
         async function translateText() {
@@ -385,57 +490,6 @@
             const outputDiv = document.getElementById('translationOutput');
 
             if (inputText === "") {
-                outputDiv.innerText = "Please enter some text to translate.";
+                outputDiv.innerText = uiText.noTextToTranslate || "Please enter some text to translate.";
                 return;
-            }
-
-            // Ensure all phrasebooks are loaded from SheetDB
-            if (Object.keys(loadedPhrasebooks).length === 0 || !loadedPhrasebooks[sourceLang] || !loadedPhrasebooks[targetLang] || Object.keys(loadedPhrasebooks[sourceLang]).length === 0) {
-                 outputDiv.innerText = "Translation data not yet loaded. Please wait...";
-                 const success = await fetchAllTranslationData();
-                 if (!success) {
-                     outputDiv.innerText = "Failed to load translation data from RYPAK. Check console for details.";
-                     return;
-                 }
-            }
-            
-            const sourcePhrasebook = loadedPhrasebooks[sourceLang];
-            const targetPhrasebook = loadedPhrasebooks[targetLang];
-
-            let foundTranslation = "Translation not found in our phrasebook. Please try another phrase.";
-            let translated = false;
-
-            // Find the ID for the input text in the source language
-            let phraseId = null;
-            for (const id in sourcePhrasebook) {
-                if (sourcePhrasebook.hasOwnProperty(id) && sourcePhrasebook[id].toLowerCase() === inputText.toLowerCase()) {
-                    phraseId = id;
-                    break;
-                }
-            }
-
-            if (phraseId) {
-                if (targetPhrasebook && targetPhrasebook[phraseId]) {
-                    foundTranslation = targetPhrasebook[phraseId];
-                    translated = true;
-                } else if (sourceLang === targetLang) {
-                    foundTranslation = inputText;
-                    translated = true;
-                } else {
-                    foundTranslation = `No translation for "${inputText}" in ${langMap[targetLang]} yet.`;
-                    translated = true;
-                }
-            }
-
-            outputDiv.innerText = translated ? foundTranslation : "Translation not found in our phrasebook. Please try another phrase.";
-        }
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            await fetchLanguageData(); // First, load the language codes and names
-            populateLanguageSelectors(); // Then, populate the dropdowns
-            await fetchAllTranslationData(); // Finally, load all translation data
-        });
-    </script>
-</body>
-    </html>
-    
+                
