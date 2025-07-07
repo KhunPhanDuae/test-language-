@@ -492,4 +492,59 @@
             if (inputText === "") {
                 outputDiv.innerText = uiText.noTextToTranslate || "Please enter some text to translate.";
                 return;
-                
+            }
+
+            if (Object.keys(loadedPhrasebooks).length === 0 || !loadedPhrasebooks[sourceLang] || !loadedPhrasebooks[targetLang] || Object.keys(loadedPhrasebooks[sourceLang]).length === 0) {
+                 outputDiv.innerText = uiText.translationDataNotLoaded || "Translation data not yet loaded. Please wait...";
+                 const success = await fetchAllTranslationData();
+                 if (!success) {
+                     outputDiv.innerText = uiText.failedToLoadTranslationData || "Failed to load translation data from SheetDB. Check console for details.";
+                     return;
+                 }
+            }
+            
+            const sourcePhrasebook = loadedPhrasebooks[sourceLang];
+            const targetPhrasebook = loadedPhrasebooks[targetLang];
+
+            let foundTranslation = uiText.translationNotFound || "Translation not found in our phrasebook. Please try another phrase.";
+            let translated = false;
+
+            let phraseId = null;
+            for (const id in sourcePhrasebook) {
+                if (sourcePhrasebook.hasOwnProperty(id) && sourcePhrasebook[id].toLowerCase() === inputText.toLowerCase()) {
+                    phraseId = id;
+                    break;
+                }
+            }
+
+            if (phraseId) {
+                if (targetPhrasebook && targetPhrasebook[phraseId]) {
+                    foundTranslation = targetPhrasebook[phraseId];
+                    translated = true;
+                } else if (sourceLang === targetLang) {
+                    foundTranslation = inputText;
+                    translated = true;
+                } else {
+                    foundTranslation = (uiText.noTranslationInTargetLang || `No translation for "[[TEXT]]" in [[LANGUAGE]] yet.`)
+                                        .replace('[[TEXT]]', inputText)
+                                        .replace('[[LANGUAGE]]', langMap[targetLang] || targetLang);
+                    translated = true;
+                }
+            }
+
+            outputDiv.innerText = translated ? foundTranslation : (uiText.translationNotFound || "Translation not found in our phrasebook. Please try another phrase.");
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await fetchLanguageData(); // 1. First, load the language codes and names (for all dropdowns)
+            populateLanguageSelectors(); // 2. Then, populate all dropdowns (including the new UI language selector)
+            
+            // 3. Determine initial UI language and fetch UI text
+            const initialUiLang = localStorage.getItem('uiLang') || 'en'; // Get from local storage or default to 'en'
+            await fetchUiText(initialUiLang); // Fetch UI text for the selected UI language
+
+            await fetchAllTranslationData(); // 4. Finally, load all translation data for the translation logic
+        });
+    </script>
+</body>
+</html>
