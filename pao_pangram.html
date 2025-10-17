@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="blk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ပအိုဝ်းစာပေဖောင့် Pangram</title>
+    <link href="https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* အရောင်များအတွက် variable များ */
+            --primary-color: #008000; /* အဓိကအရောင် (အစိမ်းရောင်) */
+            --secondary-color: #4CAF50; /* ဒုတိယအရောင် */
+            --bg-color: #f0f4f7;
+            --text-color: #2c3e50;
+            --container-bg: #ffffff;
+            --border-color: #e0e6ed;
+            --note-color: #e67e22;
+            --missing-color: #c0392b;
+        }
+
+        body {
+            font-family: 'Padauk', 'Myanmar Text', 'Pyidaungsu', sans-serif;
+            line-height: 1.7;
+            padding: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            min-height: 100vh; /* အမြင့်ဆုံးအရွယ်အစား */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* ထိပ်ဆုံးမှ စတင်ရန် */
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            margin: 40px auto;
+            background: var(--container-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .container:hover {
+             box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary-color);
+            position: relative;
+        }
+        h1::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 3px;
+            background: var(--secondary-color);
+            position: absolute;
+            bottom: -3px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .datetime {
+            text-align: center;
+            font-size: 1rem;
+            color: #3498db;
+            margin-bottom: 30px;
+            padding: 8px 15px;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+            border: 1px solid #bdc3c7;
+        }
+
+        .pangram-text {
+            font-size: 1.7rem;
+            font-weight: 500;
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            border-left: 8px solid var(--primary-color);
+            background-color: #f7fcf9;
+            border-radius: 8px;
+            line-height: 2; /* ဖတ်ရလွယ်ကူစေရန် စာကြောင်းခြားကို ပိုပေးထားသည် */
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .note {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            margin-top: 30px;
+            padding: 15px;
+            border-radius: 6px;
+            background-color: #fef5e7;
+            border-left: 5px solid var(--note-color);
+        }
+
+        .note p {
+            margin: 0;
+        }
+        
+        .author {
+            text-align: right;
+            margin-top: 40px;
+            font-style: italic;
+            font-size: 1rem;
+            color: #95a5a6;
+            padding-top: 10px;
+            border-top: 1px dashed var(--border-color);
+        }
+        
+        /* အသုံးပြုထားသော ရှားပါးဗျည်းများအတွက် */
+        .missing-consonants {
+            color: var(--missing-color);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                margin: 20px auto;
+                padding: 20px;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            .pangram-text {
+                font-size: 1.4rem;
+                line-height: 1.8;
+            }
+            .note {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>ပအိုဝ်းစာပေဖောင့်အတွက် Pangram</h1>
+    
+    <p id="current-datetime" class="datetime">
+        ဖန်တီးသည့် ရက်စွဲ: ၂၀၂၅ ခုနှစ်၊ အောက်တိုဘာလ ၁၇ ရက်၊ သောကြာနေ့
+    </p>
+
+    <div class="pangram-text">
+        ကမ္ဘာႏအစ ဟံႏတန်လောင်းကို သဓာတ်ꩻခွေါင်ငါႏ ရာႏဇာႏတပါꩻ ထွားညဗာႏဂဏန်ꩻ ထွူတဲင် ခွန်ဠေး ခွန်ဌေး သီး ဒေါ့ꩻရိုꩻဖေႏဝင်ꩻ မာဃ လိုꩻယွဲး အဖြာꩻသွံဆီ ဖျော်တွိုႏလဲဉ်းဒျာႏခရာႏနဝ်ꩻသွူ။ 
+    </div>
+
+    <div class="note">
+        <p>တသော့ꩻပါတဝ်း ဗီးဖုံႏ ( <span class="missing-consonants">ဈ ဋ ဍ ဎ</span> )။ (ဤပန်ဂရမ်တွင် စာလုံးရေ အပြည့်အစုံမပါသေးကြောင်း ဖော်ပြသည်။)</p>
+    </div>
+
+    <div class="author">
+        By ခွန်ဖန်ဒွဲ့(KhunRorNa)တဲမ်းခါꩻ
+    </div>
+</div>
+
+</body>
+</html>
