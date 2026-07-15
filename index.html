@@ -167,7 +167,7 @@
 <body>
 
 <div class="container">
-    <h2>နယ်ꩻခြွိုင်းခြိုꩻ - Pa'O Sentence Collector</h2>
+    <h2>Pa'O Digital Hub  - Pa'O Sentence Collector</h2>
     
     <div class="flex-row">
         <div>
@@ -212,49 +212,51 @@
 <script>
     let sentences = [];
     let registeredUsers = []; 
+    let cachedDbData = []; 
     let isUserVerified = false; 
     let currentInputHasDbDuplicate = false; 
     let dbDuplicateSentencesList = []; 
 
-    const SHEETDB_API_URL = "https://sheetdb.io/api/v1/e7fhcqei9sorn";
+    // 🔴 ခွန်ဖန်ဒွဲ့၏ Google Apps Script URL အသစ်
+    const GOOGLE_SCRIPT_API_URL = "https://script.google.com/macros/s/AKfycbxnEbIG-cVuohkn4_TlIPWa8oLrsLO60fy-i1CxB7i08ZFzhUb89sdcXpV5czzJIVN6/exec";
 
     window.onload = function() {
-        loadRegisteredUsers();
+        loadRegisteredUsersAndData();
     };
 
-    function loadRegisteredUsers() {
-        fetch(`${SHEETDB_API_URL}?sheet=PAO_USERS`)
+    // Database မှ User များနှင့် P1 ဒေတာများကို တစ်ခါတည်း ဆွဲယူဖတ်ရှုခြင်း
+    function loadRegisteredUsersAndData() {
+        fetch(GOOGLE_SCRIPT_API_URL)
             .then(res => res.json())
-            .then(data => {
-                if(Array.isArray(data)) {
-                    registeredUsers = data;
-                    populateIDDropdown(data);
+            .then(result => {
+                if(result.status === "success") {
+                    cachedDbData = Array.isArray(result.p1Data) ? result.p1Data : [];
+                    registeredUsers = Array.isArray(result.users) ? result.users : [];
+                    
+                    populateIDDropdown(registeredUsers);
                 }
             })
-            .catch(err => console.error("Error loading user list:", err));
+            .catch(err => console.error("Error loading data from Google Sheets:", err));
     }
 
     // Dropdown ထဲသို့ ID များ စတင်ထည့်သွင်းခြင်း
     function populateIDDropdown(users) {
-        filterIDs(); // filterIDs function ကိုသုံးပြီး အစောဆုံးစာရင်းကို သွင်းယူမည်
+        filterIDs(); 
     }
 
-    // 🔍 ID များကို ရိုက်ရှာပြီး Real-time Filter လုပ်ပေးမည့် Function အသစ်
+    // 🔍 ID များကို ရိုက်ရှာပြီး Real-time Filter လုပ်ပေးမည့် Function
     function filterIDs() {
         let select = document.getElementById('userId');
         let searchQuery = document.getElementById('searchId').value.trim().toLowerCase();
         
-        // Dropdown ကို ရှင်းထုတ်ပြီး default option ပြန်ထည့်မည်
-        select.innerHTML = '<option value="">-- ID ရွေးချယ်ပါ --</option>';
+        select.innerHTML = '<option value="">-- လွိုက်ထူႏ ID --</option>';
         
-        // ထပ်နေသော ID များကို ဖယ်ထုတ်ပြီး အစဉ်လိုက်စီမည်
-        let ids = [...new Set(registeredUsers.map(u => u.USERID).filter(id => id))];
-        ids.sort();
+        // PAO_USERS ထဲရှိ USERID များကို ထပ်နေတာဖယ်ပြီး စီရန်
+        let ids = [...new Set(registeredUsers.map(u => String(u.USERID)).filter(id => id && id.trim() !== ""))];
+        ids.sort((a, b) => a - b);
         
-        // ရှာဖွေမှုစာသားနှင့် ကိုက်ညီသော ID များကိုသာ စစ်ထုတ်မည်
         let filteredIds = ids.filter(id => id.toLowerCase().includes(searchQuery));
         
-        // ကိုက်ညီသော ID များကို Dropdown ထဲသို့ ပြန်လည်ထည့်သွင်းမည်
         filteredIds.forEach(id => {
             let option = document.createElement('option');
             option.value = id;
@@ -262,10 +264,10 @@
             select.appendChild(option);
         });
 
-        // Dropdown စာရင်းပြောင်းလဲသွားသဖြင့် Verification ကိုပါ တစ်ခါတည်း ပြန်စစ်ဆေးပေးရန်
         validateUserRealtime();
     }
 
+    // တဲမ်းလိတ်သား အမည်နှင့် ID မှန်ကန်မှုရှိမရှိ စစ်ဆေးခြင်း
     function validateUserRealtime() {
         let name = document.getElementById('author').value.trim();
         let id = document.getElementById('userId').value;
@@ -277,7 +279,7 @@
             return;
         }
 
-        let match = registeredUsers.find(u => u.AUTHOR.toLowerCase() === name.toLowerCase() && u.USERID === id);
+        let match = registeredUsers.find(u => String(u.AUTHOR).toLowerCase() === name.toLowerCase() && String(u.USERID) === id);
 
         if (match) {
             alertBox.style.display = "none";
@@ -304,34 +306,30 @@
         if (text.length > 3) {
             searchTimeout = setTimeout(() => {
                 checkDuplicateInDatabase(text);
-            }, 500);
+            }, 300);
         } else {
             hideDuplicateAlert();
             currentInputHasDbDuplicate = false;
         }
     });
 
+    // ဒေတာဘေ့စ် (P1) ထဲတွင် စာသားထပ်နေခြင်း ရှိမရှိ Local cache ထဲမှ အမြန်စစ်ဆေးခြင်း
     function checkDuplicateInDatabase(text) {
-        let searchUrl = `${SHEETDB_API_URL}/search?PAOTEXT=${encodeURIComponent(text)}`;
+        let duplicates = cachedDbData.filter(item => item.PAOTEXT && item.PAOTEXT.trim() === text);
         
-        fetch(searchUrl)
-            .then(res => res.json())
-            .then(data => {
-                if (data && data.length > 0) {
-                    let alertBox = document.getElementById('dbDuplicateAlert');
-                    let duplicateDetails = data.map(item => {
-                        return `<br>• တဲမ်းသား: <strong>${item.AUTHOR || 'သေတောဝ်း အမဉ်ꩻ'}</strong> (ID: <strong>${item.USERID || 'အောဝ်ႏတောဝ်း'}</strong>)`;
-                    }).join('');
-                    
-                    alertBox.innerHTML = `⚠️ <strong>ဖေႏသေဗာႏ:</strong> လိတ်ရဲဉ်ႏယိုနောဝ်ꩻ အောဝ်ႏထွူလဲဉ်းဒျာႏတဲင် ဒင်ႏသော့ꩻလꩻတောဝ်းသွူ ${duplicateDetails}`;
-                    alertBox.style.display = "block";
-                    currentInputHasDbDuplicate = true; 
-                } else {
-                    hideDuplicateAlert();
-                    currentInputHasDbDuplicate = false;
-                }
-            })
-            .catch(err => console.error("Database search error:", err));
+        if (duplicates.length > 0) {
+            let alertBox = document.getElementById('dbDuplicateAlert');
+            let duplicateDetails = duplicates.map(item => {
+                return `<br>• တဲမ်းသား: <strong>${item.AUTHOR || 'သေတောဝ်း အမဉ်ꩻ'}</strong> (ID: <strong>${item.USERID || 'အောဝ်ႏတောဝ်း'}</strong>)`;
+            }).join('');
+            
+            alertBox.innerHTML = `⚠️ <strong>ဖေႏသေဗာႏ:</strong> လိတ်ရဲဉ်ႏယိုနောဝ်ꩻ အောဝ်ႏထွူလဲဉ်းဒျာႏတဲင် ဒင်ႏသော့ꩻလꩻတောဝ်းသွူ ${duplicateDetails}`;
+            alertBox.style.display = "block";
+            currentInputHasDbDuplicate = true; 
+        } else {
+            hideDuplicateAlert();
+            currentInputHasDbDuplicate = false;
+        }
     }
 
     function hideDuplicateAlert() {
@@ -442,7 +440,7 @@
     }
 
     function clearAll() {
-        if (confirm("ကားတဲင် ကတဲမ်းရွမ်ဆꩻလꩻယို ယာူထိုꩻနောဝ်ꩻ စဲင်းစဲ့ဒျာႏနဲ့?")) {
+        if (confirm("ကားတဲင် ကတဲမ်းရွမ်ဆꩻလꩻယို ယားထိုꩻနောဝ်ꩻ စဲင်းစဲ့ဒျာႏနဲ့?")) {
             sentences = [];
             dbDuplicateSentencesList = [];
             hideDuplicateAlert();
@@ -463,23 +461,24 @@
         return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     }
 
+    // ဒေတာများကို Google Apps Script မှတစ်ဆင့် Google Sheet သို့ ပို့ပေးခြင်း
     async function uploadToSheet() {
         if (sentences.length === 0) {
-            alert("အီႏဒင်ႏထေ့ Pa'o ငေါဝ်းတာႏ လိတ်ရဲဉ်ႏ အောဝ်ႏတောဝ်းဒွိုန်းဩ");
-            return;
+            alert("အီႏဒင်ႏထင်ႏ ပအိုဝ်ႏငေါဝ်းတာႏ လိတ်ရဲဉ်ႏ အောဝ်ႏတောဝ်းဒွိုန်းဩ"); return;
         }
 
         let btn = document.getElementById('btnSheet');
         btn.disabled = true;
-        btn.innerText = "Checking Sheets for duplicates...";
+        btn.innerText = "အောဝ်ႏစဲစ်ထွားလိတ်ယာႏ...";
         
         dbDuplicateSentencesList = [];
 
         try {
-            let responseAll = await fetch(`${SHEETDB_API_URL}`);
-            let dbData = await responseAll.json();
+            // လတ်တလော Sheet ထဲက ဒေတာအခြေအနေကို နောက်ဆုံးတစ်ခေါက် ထပ်မံစစ်ဆေးခြင်း
+            let responseAll = await fetch(GOOGLE_SCRIPT_API_URL);
+            let result = await responseAll.json();
             
-            let dbSentences = Array.isArray(dbData) ? dbData.map(item => item.PAOTEXT.trim()) : [];
+            let dbSentences = (result.status === "success" && Array.isArray(result.p1Data)) ? result.p1Data.map(item => item.PAOTEXT ? item.PAOTEXT.trim() : "") : [];
             
             for (let item of sentences) {
                 if (dbSentences.includes(item.text)) {
@@ -491,48 +490,47 @@
                 updateUI();
                 alert(`❌ ဒင်ႏထင်ႏလꩻတောဝ်း! လိတ်ရဲဉ်ႏ Preview အကို(${dbDuplicateSentencesList.length}) ရဲဉ်ႏဖုံႏယိုနောဝ်ꩻ အောဝ်ႏထွူလဲဉ်းသွူ။\n\nလိတ်ရဲဉ်ႏနောဝ်ꩻဖုံႏယို အွဉ်ႏနယ်ဖေႏ အရောင်ႏတနျာႏသွူ ယားထိုꩻ လဲင်ႏတရဲဉ်ႏထွူ ဒင်ႏထင်ႏချာယင်း လꩻဒျာႏဩ။`);
                 btn.disabled = false;
-                btn.innerText = "Save to Google Sheet";
+                btn.innerText = "ဒင်ႏပသာထင်ႏ";
                 return; 
             }
 
             let submissionTimestamp = getCurrentFormattedDateTime();
+            btn.innerText = "အောဝ်ႏပသာတွင်ꩻ...";
 
-            btn.innerText = "Sending...";
-            let payload = {
-                data: sentences.map(item => ({ 
+            let successCount = 0;
+            for (let item of sentences) {
+                let payload = {
                     "PAOTEXT": item.text,
                     "AUTHOR": item.author,
                     "USERID": item.userId,
                     "DATE": submissionTimestamp
-                }))
-            };
+                };
 
-            let postResponse = await fetch(SHEETDB_API_URL, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            });
-            
-            let postData = await postResponse.json();
-
-            if (postData.created) {
-                alert(`တွိုႏဗꩻလဲဉ်း! လိတ်ရဲဉ်ႏ (${postData.created}) သော့ꩻထွူလဲဉ်း`);
-                sentences = []; 
-                dbDuplicateSentencesList = [];
-                updateUI();
-            } else {
-                alert("အောဝ်ႏမွဉ်းဖျင် အခင်ႏလမ်း");
+                await fetch(GOOGLE_SCRIPT_API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                successCount++;
             }
+
+            alert(`တွိုႏဗꩻလဲဉ်း! လိတ်ရဲဉ်ႏ (${successCount}) သော့ꩻထွူလဲဉ်း`);
+            sentences = []; 
+            dbDuplicateSentencesList = [];
+            updateUI();
+            
+            // ဒေတာအသစ်များအားလုံးကို local database cache တွင် ပြန်လည်မွမ်းမံရန်
+            loadRegisteredUsersAndData();
 
         } catch (error) {
             console.error('Error:', error);
             alert("အောဝ်ႏထွားစဲစ် လိတ်ယာႏတွင်ꩻ အဲဉ်တာနဲစ်လဲင်းဟောဝ်းတောဝ်း");
         } finally {
             btn.disabled = false;
-            btn.innerText = "Save to Google Sheet";
+            btn.innerText = "ဒင်ႏပသာထင်ႏ";
         }
     }
 
