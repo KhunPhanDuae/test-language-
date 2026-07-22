@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="my">
+<html lang="blk">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +8,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     body { background-color: #f4f6f9; color: #333; min-height: 100vh; display: flex; flex-direction: column; }
     
+    /* Login Modal */
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 1000; }
     .modal-card { background: white; padding: 25px; border-radius: 12px; width: 90%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
     .modal-card h2 { margin-bottom: 15px; color: #d97757; font-size: 1.3rem; text-align: center; }
@@ -38,10 +39,47 @@
     .btn-group button { background: none; border: none; font-size: 0.9rem; font-weight: bold; color: #555; cursor: pointer; margin-left: 15px; }
     .btn-suggest { background-color: #4cc9f0 !important; color: white !important; padding: 8px 20px; border-radius: 6px; font-weight: bold; text-transform: uppercase; border: none !important; }
     .btn-suggest:disabled { background-color: #ccc !important; cursor: not-allowed; }
+
+    /* --- Sidebar / Drawer Style (အသစ်ထည့်ထားသည်) --- */
+    .sidebar-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 2000; display: none; opacity: 0; transition: opacity 0.3s ease;
+    }
+    .sidebar-overlay.active { display: block; opacity: 1; }
+    
+    .sidebar {
+      position: fixed; top: 0; left: -320px; width: 300px; height: 100%;
+      background: #e8ecef; box-shadow: 5px 0 15px rgba(0,0,0,0.2);
+      z-index: 2001; transition: left 0.3s ease; display: flex; flex-direction: column;
+      border-top-right-radius: 20px; border-bottom-right-radius: 20px;
+    }
+    .sidebar.active { left: 0; }
+    
+    .sidebar-header {
+      padding: 15px; background: #ddd; display: flex; justify-content: space-between;
+      align-items: center; border-top-right-radius: 20px; font-weight: bold; font-size: 0.95rem; color: #333;
+    }
+    .close-btn {
+      background: none; border: none; font-size: 1.5rem; color: #ff4d4d;
+      cursor: pointer; font-weight: bold; line-height: 1;
+    }
+    
+    .string-list {
+      flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px;
+    }
+    .string-item {
+      background: white; padding: 12px 15px; border-radius: 10px; cursor: pointer;
+      font-size: 0.9rem; color: #333; border: 1px solid #ddd; transition: all 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+    .string-item:hover { background: #f0f0f0; border-color: #e07a5f; }
+    .string-item.active-item { border-left: 5px solid #e07a5f; background: #fff5f2; font-weight: bold; }
   </style>
 </head>
 <body>
 
+  <!-- Login Modal -->
   <div class="modal-overlay" id="loginModal">
     <div class="modal-card">
       <h2>လွိုက်ထူႏဖေႏ တဲမ်းလိတ်သား မဉ်ꩻ</h2>
@@ -59,13 +97,29 @@
     </div>
   </div>
 
+  <!-- Sidebar Overlay & Sidebar (အသစ်ထည့်ထားသည်) -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span>ပြန်ႏဘာႏသာႏအတာႏ နျꩻသွော့ꩻ လိတ်ရဲဉ်ႏလꩻယိုဩ။</span>
+      <button class="close-btn" onclick="closeSidebar()">&times;</button>
+    </div>
+    <div class="string-list" id="stringListContainer">
+      <!-- JavaScript မှ စာကြောင်းများ လာရောက်ဖြည့်သွင်းပေးမည် -->
+    </div>
+  </div>
+
   <header>
     <h1>Pa'O Language Translation Portal</h1>
     <div class="user-info" id="userInfoDisplay">Author Name: - | Author ID: -</div>
   </header>
 
   <div class="nav-bar">
-    <div><span>&lt; STRINGS</span> &nbsp;&nbsp;&nbsp; <span style="cursor:pointer" onclick="copyEnglishText()">🔗 COPY LINK</span></div>
+    <div>
+      <!-- < STRINGS ကို နှိပ်ပါက Sidebar ပွင့်မည် -->
+      <span style="cursor:pointer" onclick="openSidebar()">&lt; STRINGS</span> &nbsp;&nbsp;&nbsp; 
+      <span style="cursor:pointer" onclick="copyEnglishText()">🔗 COPY LINK</span>
+    </div>
     <div class="nav-btns">
       <button onclick="prevString()">&Hat; နောဝ်ꩻခါ</button>
       <button onclick="nextString()">&vee; ဆꩻငါ</button>
@@ -114,10 +168,9 @@
             let nameSelect = document.getElementById("authorSelect");
             let idSelect = document.getElementById("authorIdSelect");
             
-            nameSelect.innerHTML = '<option value="">-- နာမည် ရွေးပါ --</option>';
-            idSelect.innerHTML = '<option value="">-- အိုင်ဒီ ရွေးပါ --</option>';
+            nameSelect.innerHTML = '<option value="">လွိုက်ဖေႏ မဉ်ꩻ ဟုဲင်း</option>';
+            idSelect.innerHTML = '<option value="">လွိုက်ဖေႏ အုဲင်ဒီ ဟုဲင်း</option>';
             
-            // Name Dropdown ကို ဖြည့်စွက်ခြင်း
             authorsData.forEach((auth, idx) => {
               let opt = document.createElement("option");
               opt.value = idx;
@@ -125,7 +178,6 @@
               nameSelect.appendChild(opt);
             });
 
-            // ID Dropdown ကို ဖြည့်စွက်ခြင်း
             authorsData.forEach((auth, idx) => {
               let opt = document.createElement("option");
               opt.value = idx;
@@ -136,7 +188,7 @@
         })
         .catch(err => {
           console.error(err);
-          alert("Author စာရင်း ရယူ၍ မရပါ။ Sheet သို့မဟုတ် Script URL စစ်ဆေးပေးပါ။");
+          alert("Author ထဲမ်းသော့ꩻစာႏရင်ꩻလꩻတောဝ်း၊ သွုပ်ထေ့ဖေႏသွော့ꩻ တာႏဝွန်ႏအောဝ်ႏဖန်းဖြယ်သားထျꩻ");
         });
     }
 
@@ -145,17 +197,15 @@
       let idIdx = document.getElementById("authorIdSelect").value;
 
       if(nameIdx === "" || idIdx === "") {
-        alert("ကျေးဇူးပြု၍ စာရေးသူ အမည်နှင့် အိုင်ဒီ နှစ်ခုလုံးကို ရွေးချယ်ပေးပါ!");
+        alert("လွိုက်ဖေႏသွော့ꩻ အုဲင်ဒီ တွမ်ႏ မဉ်ꩻ ယို နီဗာႏဩ!");
         return;
       }
 
-      // ရွေးချယ်ထားသော Name နှင့် ID မကိုက်ညီပါက ဝင်ခွင့် မပြုပါ
       if(nameIdx !== idIdx) {
-        alert("Author Name နှင့် Author ID မကိုက်ညီပါ။ ကျေးဇူးပြု၍ မိမိ၏ အမည်နှင့် အိုင်ဒီကို မှန်ကန်စွာ ရွေးချယ်ပေးပါ။");
+        alert("Author Name တွမ်ႏ Author ID တမဲန်ႏတောဝ်းဝင်ꩻ။ လွိုက်ဖေႏ နီနမ်း မဉ်ꩻ တွမ်ႏ အုဲင်ဒီနောဝ်ꩻနေား။");
         return;
       }
 
-      // မှန်ကန်စွာ ကိုက်ညီပါက အကောင့်အချက်အလက် သိမ်းဆည်းမည်
       selectedAuthor = authorsData[nameIdx];
       document.getElementById("userInfoDisplay").innerText = `Author Name: ${selectedAuthor.name} | Author ID: ${selectedAuthor.id}`;
       document.getElementById("loginModal").style.display = "none";
@@ -171,6 +221,7 @@
             stringsData = response.data;
             currentIndex = 0;
             renderCurrentString();
+            populateSidebarList(); // Sidebar ထဲသို့ စာကြောင်းများ ထည့်ရန် ခေါ်ယူခြင်း
           }
         });
     }
@@ -201,6 +252,54 @@
         submitBtn.disabled = false;
         banner.style.display = "none";
       }
+
+      // Sidebar ထဲမှ ရွေးထားသော စာကြောင်းအား Active Highlight လုပ်ပေးခြင်း
+      updateSidebarActiveItem();
+    }
+
+    /* --- Sidebar ခေါ်ယူ/ပိတ်သိမ်းခြင်း စနစ် (အသစ်) --- */
+    function openSidebar() {
+      document.getElementById("sidebar").classList.add("active");
+      document.getElementById("sidebarOverlay").classList.add("active");
+    }
+
+    function closeSidebar() {
+      document.getElementById("sidebar").classList.remove("active");
+      document.getElementById("sidebarOverlay").classList.remove("active");
+    }
+
+    function populateSidebarList() {
+      let container = document.getElementById("stringListContainer");
+      container.innerHTML = "";
+
+      stringsData.forEach((item, index) => {
+        let div = document.createElement("div");
+        div.className = "string-item";
+        div.setAttribute("data-index", index);
+        div.innerText = item.english;
+
+        // စာကြောင်းကို နှိပ်လိုက်ပါက အဲ့ဒီစာကြောင်းသို့ ပြောင်းပြီး Sidebar ပိတ်သွားမည်
+        div.onclick = function() {
+          currentIndex = index;
+          renderCurrentString();
+          closeSidebar();
+        };
+
+        container.appendChild(div);
+      });
+
+      updateSidebarActiveItem();
+    }
+
+    function updateSidebarActiveItem() {
+      let items = document.querySelectorAll(".string-item");
+      items.forEach((item, idx) => {
+        if(idx === currentIndex) {
+          item.classList.add("active-item");
+        } else {
+          item.classList.remove("active-item");
+        }
+      });
     }
 
     function prevString() {
@@ -226,7 +325,7 @@
     function copyEnglishText() {
       if(stringsData.length > 0 && stringsData[currentIndex]) {
         navigator.clipboard.writeText(stringsData[currentIndex].english);
-        alert("English စာသားအား ကူးယူပြီးပါပြီ။");
+        alert("ထူႏကူꩻ English လိတ်ရဲဉ်ႏထွူလဲဉ်း။");
       }
     }
 
@@ -234,7 +333,7 @@
       let val = document.getElementById("paoInput").value;
       if(val) {
         navigator.clipboard.writeText(val);
-        alert("Pa'O စာသားအား ကူးယူပြီးပါပြီ။");
+        alert("ထူႏကူꩻ Pa'O လိတ်ရဲဉ်ႏ ထွူလဲဉ်း။");
       }
     }
 
@@ -250,7 +349,7 @@
     function submitTranslation() {
       let paoText = document.getElementById("paoInput").value.trim();
       if(!paoText) {
-        alert("ဘာသာပြန်စာသား ထည့်သွင်းပေးပါ!");
+        alert("သော့ꩻဖေႏသွော့ꩻ ပြန်ႏဘာႏသာႏလိတ်ယာႏ ဩ!");
         return;
       }
 
@@ -283,7 +382,7 @@
         }
       })
       .catch(err => {
-        alert("တင်ပို့ရာတွင် အမှားအယွင်းရှိနေပါသည်။");
+        alert("ဒင်ႏပသာကျာꩻ အမာႏ တရွို့ꩻအောဝ်ႏ ။");
         document.getElementById("submitBtn").disabled = false;
       });
     }
