@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pa'O Language Translation Portal</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #f4f6f9; color: #333; min-height: 100vh; display: flex; flex-direction: column; }
+    
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+    .modal-card { background: white; padding: 25px; border-radius: 12px; width: 90%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+    .modal-card h2 { margin-bottom: 15px; color: #d97757; font-size: 1.3rem; text-align: center; }
+    .modal-card label { font-size: 0.9rem; font-weight: bold; color: #555; display: block; margin-top: 10px; }
+    .modal-card select { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; }
+    .modal-card button { width: 100%; padding: 12px; margin-top: 20px; background: #e07a5f; color: white; border: none; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; }
+    
+    header { background-color: #e07a5f; color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; }
+    header h1 { font-size: 1.2rem; font-weight: 600; }
+    .user-info { font-size: 0.85rem; opacity: 0.9; }
+    
+    .nav-bar { background-color: #eee; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd; font-size: 0.9rem; font-weight: bold; color: #555; }
+    .nav-btns button { background: none; border: none; font-size: 0.9rem; font-weight: bold; color: #555; cursor: pointer; margin-left: 15px; }
+    .nav-btns button:hover { color: #e07a5f; }
+    
+    .container { flex: 1; display: flex; flex-direction: column; max-width: 800px; margin: 0 auto; width: 100%; padding: 20px; }
+    
+    .english-card { background: white; padding: 30px 20px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 20px; min-height: 150px; display: flex; align-items: center; justify-content: center; text-align: center; }
+    .english-text { font-size: 1.6rem; color: #222; font-weight: 500; }
+    
+    .translation-card { background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); overflow: hidden; display: flex; flex-direction: column; }
+    textarea { width: 100%; height: 120px; padding: 15px; border: none; resize: none; font-size: 1.1rem; outline: none; color: #333; }
+    
+    .status-banner { padding: 10px 15px; background-color: #fff3cd; color: #856404; font-size: 0.85rem; display: none; text-align: center; }
+    
+    .action-bar { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background-color: #fafafa; border-top: 1px solid #eee; }
+    .counter { font-weight: bold; color: #666; font-size: 1rem; }
+    .btn-group button { background: none; border: none; font-size: 0.9rem; font-weight: bold; color: #555; cursor: pointer; margin-left: 15px; }
+    .btn-suggest { background-color: #4cc9f0 !important; color: white !important; padding: 8px 20px; border-radius: 6px; font-weight: bold; text-transform: uppercase; border: none !important; }
+    .btn-suggest:disabled { background-color: #ccc !important; cursor: not-allowed; }
+  </style>
+</head>
+<body>
+
+  <div class="modal-overlay" id="loginModal">
+    <div class="modal-card">
+      <h2>လွိုက်ထူႏဖေႏ တဲမ်းလိတ်သား မဉ်ꩻ</h2>
+      <label>Author Name (မဉ်ꩻ):</label>
+      <select id="authorSelect">
+        <option value="">အောဝ်ႏခွုမ်မာꩻတဆင်ႏ..</option>
+      </select>
+      
+      <label>Author ID (အုဲင်ဒီ):</label>
+      <select id="authorIdSelect">
+        <option value="">အောဝ်ႏခွုမ်မာꩻတဆင်ႏ..</option>
+      </select>
+      
+      <button onclick="confirmLogin()">လွေꩻငါခန်း</button>
+    </div>
+  </div>
+
+  <header>
+    <h1>Pa'O Language Translation Portal</h1>
+    <div class="user-info" id="userInfoDisplay">Author Name: - | Author ID: -</div>
+  </header>
+
+  <div class="nav-bar">
+    <div><span>&lt; STRINGS</span> &nbsp;&nbsp;&nbsp; <span style="cursor:pointer" onclick="copyEnglishText()">🔗 COPY LINK</span></div>
+    <div class="nav-btns">
+      <button onclick="prevString()">&Hat; နောဝ်ꩻခါ</button>
+      <button onclick="nextString()">&vee; ဆꩻငါ</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="english-card">
+      <div class="english-text" id="englishDisplay">အောဝ်ႏခွုမ်မာꩻ...</div>
+    </div>
+
+    <div class="translation-card">
+      <div class="status-banner" id="statusBanner"></div>
+      <textarea id="paoInput" placeholder="တဲမ်းပြန်ႏဘာႏသာႏ မိဉ်ႏထွူ ဒင်ပသာဖေႏဩ..." onkeydown="handleKeyDown(event)"></textarea>
+      
+      <div class="action-bar">
+        <div class="counter" id="counterDisplay">0 | 0</div>
+        <div class="btn-group">
+          <button onclick="copyPaoText()">ထူႏကူꩻလိတ်</button>
+          <button onclick="clearPaoText()">ယားထိုꩻ</button>
+          <button class="btn-suggest" id="submitBtn" onclick="submitTranslation()">ပသာထင်ႏ</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwb3_NiggUzY7tfFcrTNGXcALbckf_h_QRDuFEe771_4PUrX2U5izUMYR9Uukua66wv/exec";
+
+    let authorsData = [];
+    let stringsData = [];
+    let currentIndex = 0;
+    let selectedAuthor = null;
+
+    window.onload = function() {
+      fetchAuthors();
+    };
+
+    function fetchAuthors() {
+      fetch(SCRIPT_URL + "?action=getAuthors", { redirect: "follow" })
+        .then(res => res.json())
+        .then(response => {
+          if(response.status === "success") {
+            authorsData = response.data;
+            
+            let nameSelect = document.getElementById("authorSelect");
+            let idSelect = document.getElementById("authorIdSelect");
+            
+            nameSelect.innerHTML = '<option value="">-- နာမည် ရွေးပါ --</option>';
+            idSelect.innerHTML = '<option value="">-- အိုင်ဒီ ရွေးပါ --</option>';
+            
+            // Name Dropdown ကို ဖြည့်စွက်ခြင်း
+            authorsData.forEach((auth, idx) => {
+              let opt = document.createElement("option");
+              opt.value = idx;
+              opt.textContent = auth.name;
+              nameSelect.appendChild(opt);
+            });
+
+            // ID Dropdown ကို ဖြည့်စွက်ခြင်း
+            authorsData.forEach((auth, idx) => {
+              let opt = document.createElement("option");
+              opt.value = idx;
+              opt.textContent = auth.id;
+              idSelect.appendChild(opt);
+            });
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          alert("Author စာရင်း ရယူ၍ မရပါ။ Sheet သို့မဟုတ် Script URL စစ်ဆေးပေးပါ။");
+        });
+    }
+
+    function confirmLogin() {
+      let nameIdx = document.getElementById("authorSelect").value;
+      let idIdx = document.getElementById("authorIdSelect").value;
+
+      if(nameIdx === "" || idIdx === "") {
+        alert("ကျေးဇူးပြု၍ စာရေးသူ အမည်နှင့် အိုင်ဒီ နှစ်ခုလုံးကို ရွေးချယ်ပေးပါ!");
+        return;
+      }
+
+      // ရွေးချယ်ထားသော Name နှင့် ID မကိုက်ညီပါက ဝင်ခွင့် မပြုပါ
+      if(nameIdx !== idIdx) {
+        alert("Author Name နှင့် Author ID မကိုက်ညီပါ။ ကျေးဇူးပြု၍ မိမိ၏ အမည်နှင့် အိုင်ဒီကို မှန်ကန်စွာ ရွေးချယ်ပေးပါ။");
+        return;
+      }
+
+      // မှန်ကန်စွာ ကိုက်ညီပါက အကောင့်အချက်အလက် သိမ်းဆည်းမည်
+      selectedAuthor = authorsData[nameIdx];
+      document.getElementById("userInfoDisplay").innerText = `Author Name: ${selectedAuthor.name} | Author ID: ${selectedAuthor.id}`;
+      document.getElementById("loginModal").style.display = "none";
+      
+      fetchStrings();
+    }
+
+    function fetchStrings() {
+      fetch(SCRIPT_URL + "?action=getStrings", { redirect: "follow" })
+        .then(res => res.json())
+        .then(response => {
+          if(response.status === "success") {
+            stringsData = response.data;
+            currentIndex = 0;
+            renderCurrentString();
+          }
+        });
+    }
+
+    function renderCurrentString() {
+      if(stringsData.length === 0) {
+        document.getElementById("englishDisplay").innerText = "ဘာသာပြန်ရန် စာကြောင်း မရှိသေးပါ။";
+        return;
+      }
+      
+      let item = stringsData[currentIndex];
+      document.getElementById("englishDisplay").innerText = item.english;
+      document.getElementById("counterDisplay").innerText = `${currentIndex + 1} | ${stringsData.length}`;
+      
+      let input = document.getElementById("paoInput");
+      let banner = document.getElementById("statusBanner");
+      let submitBtn = document.getElementById("submitBtn");
+
+      if(item.pao && item.pao.trim() !== "") {
+        input.value = item.pao;
+        input.disabled = true;
+        submitBtn.disabled = true;
+        banner.style.display = "block";
+        banner.innerText = `ဤစာကြောင်းအား ${item.author_name} (ID: ${item.author_id}) မှ ဘာသာပြန်ဆိုပြီးဖြစ်သည်။`;
+      } else {
+        input.value = "";
+        input.disabled = false;
+        submitBtn.disabled = false;
+        banner.style.display = "none";
+      }
+    }
+
+    function prevString() {
+      if(currentIndex > 0) {
+        currentIndex--;
+        renderCurrentString();
+      }
+    }
+
+    function nextString() {
+      if(currentIndex < stringsData.length - 1) {
+        currentIndex++;
+        renderCurrentString();
+      }
+    }
+
+    function clearPaoText() {
+      if(!document.getElementById("paoInput").disabled) {
+        document.getElementById("paoInput").value = "";
+      }
+    }
+
+    function copyEnglishText() {
+      if(stringsData.length > 0 && stringsData[currentIndex]) {
+        navigator.clipboard.writeText(stringsData[currentIndex].english);
+        alert("English စာသားအား ကူးယူပြီးပါပြီ။");
+      }
+    }
+
+    function copyPaoText() {
+      let val = document.getElementById("paoInput").value;
+      if(val) {
+        navigator.clipboard.writeText(val);
+        alert("Pa'O စာသားအား ကူးယူပြီးပါပြီ။");
+      }
+    }
+
+    function handleKeyDown(event) {
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        if (!document.getElementById("submitBtn").disabled) {
+          submitTranslation();
+        }
+      }
+    }
+
+    function submitTranslation() {
+      let paoText = document.getElementById("paoInput").value.trim();
+      if(!paoText) {
+        alert("ဘာသာပြန်စာသား ထည့်သွင်းပေးပါ!");
+        return;
+      }
+
+      let payload = {
+        txt_id: stringsData[currentIndex].txt_id,
+        pao_text: paoText,
+        author_name: selectedAuthor.name,
+        author_id: selectedAuthor.id
+      };
+
+      document.getElementById("submitBtn").disabled = true;
+
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload),
+        redirect: "follow"
+      })
+      .then(res => res.json())
+      .then(res => {
+        if(res.status === "success") {
+          alert(res.message);
+          stringsData[currentIndex].pao = paoText;
+          stringsData[currentIndex].author_name = selectedAuthor.name;
+          stringsData[currentIndex].author_id = selectedAuthor.id;
+          renderCurrentString();
+        } else {
+          alert("Error: " + res.message);
+          document.getElementById("submitBtn").disabled = false;
+        }
+      })
+      .catch(err => {
+        alert("တင်ပို့ရာတွင် အမှားအယွင်းရှိနေပါသည်။");
+        document.getElementById("submitBtn").disabled = false;
+      });
+    }
+  </script>
+</body>
+</html>
