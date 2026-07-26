@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="my">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Pa'O Smart Voice Engine</title>
+
+<style>
+
+body{
+font-family:Arial;
+max-width:520px;
+margin:30px auto;
+padding:20px;
+background:#f5f5f5;
+text-align:center;
+}
+
+input{
+width:100%;
+padding:12px;
+font-size:18px;
+}
+
+button{
+padding:12px 20px;
+margin:10px;
+background:#0066ff;
+color:white;
+border:0;
+border-radius:8px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<h2>Pa'O Smart Audio Reader</h2>
+
+
+<input id="text"
+placeholder="စာရိုက်ပါ">
+
+
+<button onclick="playText()">
+အသံဖတ်ရန်
+</button>
+
+
+<div id="status"></div>
+
+
+
+<script>
+
+
+const audioPath =
+"https://raw.githubusercontent.com/KhunPhanDuae/test-language-/main/audio/";
+
+
+let audioFiles=[];
+
+let audioCache=new Map();
+
+let ctx;
+
+let playing=[];
+
+
+
+// Audio Folder Index
+// အလိုအလျောက်တည်ဆောက်ရန်
+
+async function loadAudioIndex(){
+
+
+/*
+GitHub API ကနေ audio folder
+ထဲက ဖိုင်နာမည်တွေယူမယ်
+*/
+
+
+let api=
+"https://api.github.com/repos/KhunPhanDuae/test-language-/contents/audio";
+
+
+let res =
+await fetch(api);
+
+
+let data =
+await res.json();
+
+
+
+audioFiles =
+data
+.filter(x=>x.name.match(/\.(wav|mp3|m4a)$/))
+.map(x=>
+x.name.replace(/\.(wav|mp3|m4a)$/,"")
+);
+
+
+}
+
+
+
+loadAudioIndex();
+
+
+
+
+
+
+async function playText(){
+
+
+
+if(!ctx){
+
+ctx=new AudioContext();
+
+}
+
+
+
+let text=
+document.getElementById("text")
+.value.trim();
+
+
+
+let status=
+document.getElementById("status");
+
+
+
+if(!text){
+
+return;
+
+}
+
+
+
+status.innerText=
+"ရှာနေသည်...";
+
+
+
+let words =
+smartSplit(text);
+
+
+
+let buffers=[];
+
+
+
+for(let word of words){
+
+
+let audio =
+await getAudio(word);
+
+
+
+if(audio){
+
+buffers.push(audio);
+
+}
+
+
+}
+
+
+
+
+if(buffers.length==0){
+
+status.innerText=
+"အသံမတွေ့ပါ";
+
+return;
+
+}
+
+
+
+status.innerText=
+"ဖွင့်နေသည်";
+
+
+
+let time =
+ctx.currentTime;
+
+
+
+buffers.forEach(buffer=>{
+
+
+let source =
+ctx.createBufferSource();
+
+
+source.buffer=buffer;
+
+
+source.connect(
+ctx.destination
+);
+
+
+source.start(time);
+
+
+
+time += buffer.duration;
+
+
+});
+
+
+
+}
+
+
+
+
+
+// အဓိက ခွဲစနစ်
+
+function smartSplit(text){
+
+
+
+let result=[];
+
+
+
+while(text.length>0){
+
+
+let found="";
+
+
+// အရှည်ဆုံး ဖိုင်နာမည်ကို အရင်ရှာ
+
+for(let f of audioFiles){
+
+
+if(text.startsWith(f)
+&& f.length>found.length){
+
+found=f;
+
+}
+
+
+}
+
+
+
+if(found){
+
+
+result.push(found);
+
+
+text=
+text.substring(found.length);
+
+
+}
+
+else{
+
+
+// မတွေ့ရင် Character ခွဲ
+
+
+let char=text[0];
+
+
+result.push(char);
+
+
+text=
+text.substring(1);
+
+
+}
+
+
+}
+
+
+
+return result;
+
+
+}
+
+
+
+
+
+
+
+
+async function getAudio(name){
+
+
+
+for(let ext of
+[".wav",".mp3",".m4a"]){
+
+
+
+let url=
+audioPath+
+encodeURIComponent(name)+
+ext;
+
+
+
+if(audioCache.has(url)){
+
+return audioCache.get(url);
+
+}
+
+
+
+try{
+
+
+let res=
+await fetch(url);
+
+
+if(res.ok){
+
+
+let data=
+await res.arrayBuffer();
+
+
+let buffer=
+await ctx.decodeAudioData(data);
+
+
+audioCache.set(url,buffer);
+
+
+return buffer;
+
+
+}
+
+
+
+}catch(e){}
+
+
+}
+
+
+
+return null;
+
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>
