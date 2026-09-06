@@ -4,13 +4,13 @@
   xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
   <url>
-    <loc>https://test-language.pages.dev/</loc>
+    <loc>https://pao-dataset.pages.dev/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://test-language.pages.dev/PaB1</loc>
+    <loc>https://pao-dataset.pages.dev/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
