@@ -6,8 +6,8 @@
   <title>Pa’O Language Portal & Basics</title>
   
   <meta name="google-site-verification" content="m6ZrXvZ11fD4TZclO6RLMoDOUrMa7K2ddqOWgrbfhtE" />
-  <meta name="description" content="ပအိုဝ်းပြော၊ သင်ခန်းစာ၊ Dataset နှင့် Research Resources Website">
-  <meta name="keywords" content="pa'o language, language learning, endangered language, myanmar, dataset, nlp">
+  <meta name="description" content="ပအိုဝ်းစကားပြော၊ သင်ခန်းစာ၊ Dataset နှင့် Research Resources">
+  <meta name="keywords" content="pa'o language, language learning, pa-o speaking,endangered language, myanmar, dataset, nlp">
   <meta name="author" content="khunphanduae">
 
   <link rel="stylesheet" href="style.css">
@@ -46,6 +46,7 @@
       background-color: var(--surface-2);
       color: var(--text);
       line-height: 1.6;
+      overflow-x: hidden;
     }
 
     a {
@@ -97,6 +98,7 @@
       display: grid;
       place-items: center;
       border-radius: 8px;
+      flex-shrink: 0;
     }
 
     .brand-name {
@@ -133,6 +135,7 @@
       color: #fff;
       font-size: 24px;
       cursor: pointer;
+      padding: 5px;
     }
 
     /* =========================================================
@@ -149,6 +152,7 @@
       cursor: pointer;
       border: 1px solid transparent;
       transition: 0.2s;
+      text-align: center;
     }
 
     .btn-primary {
@@ -273,6 +277,7 @@
     .hero-actions {
       display: flex;
       gap: 15px;
+      flex-wrap: wrap;
     }
 
     .stats-section {
@@ -365,10 +370,11 @@
       place-items: center;
       font-weight: 800;
       font-size: 11px;
+      flex-shrink: 0;
     }
 
     /* =========================================================
-       PA'O BASICS TABLES (YET-TO-BE-INTEGRATED CODE STYLES)
+       RESPONSIVE TABLES & PA'O BASICS
     ========================================================= */
     .basics-container {
       background: var(--surface);
@@ -398,12 +404,20 @@
       margin-top: 0;
     }
 
+    /* Table Wrapper for Horizontal Scroll on Mobile */
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin-top: 15px;
+      margin-bottom: 25px;
+    }
+
     .paoh-table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 15px;
-      margin-bottom: 30px;
       background: #fff;
+      min-width: 500px; /* Prevents text crushing on narrow mobile */
     }
 
     .paoh-table th, 
@@ -418,6 +432,7 @@
       background: var(--primary-3);
       color: var(--primary);
       font-weight: 800;
+      white-space: nowrap;
     }
 
     .clickable-paoh-char {
@@ -468,7 +483,6 @@
       font-size: 14px;
     }
 
-    /* Fixed broken selector from input code */
     .search-box input:focus {
       border-color: var(--primary-2);
       box-shadow: 0 0 0 3px rgba(27,91,76,.09);
@@ -490,6 +504,7 @@
       background: var(--surface-2);
       color: var(--primary);
       font-weight: 750;
+      cursor: pointer;
     }
 
     .filters {
@@ -916,7 +931,8 @@
 
     .modal-body { padding: 25px; }
     .detail-intro { color: var(--muted); font-size: 14px; }
-    .detail-table { width: 100%; margin-top: 22px; border-collapse: collapse; }
+    
+    .detail-table { width: 100%; margin-top: 22px; border-collapse: collapse; min-width: 100%; }
     .detail-table td { padding: 10px 8px; border-bottom: 1px solid var(--border); font-size: 13px; vertical-align: top; }
     .detail-table td:first-child { width: 180px; color: #75817b; font-weight: 700; }
     .detail-table td:last-child { color: #26332e; }
@@ -971,45 +987,70 @@
     .toast.show { transform: translateY(0); opacity: 1; }
 
     /* =========================================================
-       RESPONSIVE
+       RESPONSIVE BREAKPOINTS (FIXED & IMPROVED)
     ========================================================= */
     @media (max-width: 1050px) {
       .dataset-grid { grid-template-columns: repeat(2, 1fr); }
       .category-grid { grid-template-columns: repeat(2, 1fr); }
       .governance-grid { grid-template-columns: 1fr 1fr; }
       .footer-grid { grid-template-columns: 1fr 1fr; }
+      
       .main-nav { display: none; }
       .mobile-menu-btn { display: block; }
+
       .main-nav.mobile-open {
         position: absolute;
         left: 20px; right: 20px; top: 70px;
-        display: grid; gap: 2px; padding: 10px;
+        display: grid; 
+        gap: 2px; 
+        padding: 12px;
         background: var(--primary);
-        border: 1px solid rgba(255,255,255,.1);
+        border: 1px solid rgba(255,255,255,.15);
         border-radius: 10px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        z-index: 1001;
       }
-      .main-nav.mobile-open a { padding: 11px; }
+      .main-nav.mobile-open a { 
+        padding: 12px; 
+        border-radius: 6px;
+      }
+      .main-nav.mobile-open a:hover {
+        background: rgba(255,255,255,0.1);
+      }
     }
 
     @media (max-width: 800px) {
+      .hero h1 { font-size: 32px; }
       .stats-grid { grid-template-columns: 1fr 1fr; }
       .about-grid, .evaluation-grid, .contribute-box { grid-template-columns: 1fr; }
       .filters { grid-template-columns: 1fr 1fr; }
-      .report-item { grid-template-columns: 1fr; gap: 4px; }
+      .report-item { grid-template-columns: 1fr; gap: 8px; }
+      .contribute-box { padding: 22px; }
     }
 
     @media (max-width: 600px) {
-      .container { width: min(var(--max-width), calc(100% - 28px)); }
-      .hero { padding: 65px 0 85px; }
-      .section { padding: 55px 0; }
+      .container { width: calc(100% - 28px); }
+      .hero { padding: 55px 0 75px; }
+      .hero h1 { font-size: 26px; }
+      .hero-lead { font-size: 14px; }
+      .hero-actions { flex-direction: column; width: 100%; }
+      .hero-actions .btn { width: 100%; }
+
+      .section { padding: 45px 0; }
+      .basics-container { padding: 18px; }
       .stats-section { margin-top: -28px; }
-      .stats-grid, .dataset-grid, .category-grid, .governance-grid, .footer-grid { grid-template-columns: 1fr; }
+      
+      .stats-grid, .dataset-grid, .category-grid, .governance-grid, .footer-grid { 
+        grid-template-columns: 1fr; 
+      }
+      
       .search-row, .filters { grid-template-columns: 1fr; }
       .section-header { display: block; }
-      .modal-backdrop { padding: 8px; }
-      .modal { max-height: calc(100vh - 16px); }
-      .modal-header, .modal-body { padding: 18px; }
-      .detail-table td:first-child { width: 125px; }
+      
+      .modal-backdrop { padding: 10px; }
+      .modal { max-height: calc(100vh - 20px); }
+      .modal-header, .modal-body { padding: 16px; }
+      .detail-table td:first-child { width: 120px; }
     }
   </style>
 </head>
@@ -1130,19 +1171,21 @@
           <div class="panel">
             <h3>Language Metadata</h3>
             <p>Portal တွင် Pa’O Dataset များကို သက်ဆိုင်ရာ Language Identifier နှင့် Script metadata များဖြင့် မှတ်တမ်းတင်နိုင်သည်။</p>
-            <table class="detail-table">
-              <tr><td>Language</td><td>Pa’O</td></tr>
-              <tr><td>ISO 639-3</td><td>blk</td></tr>
-              <tr><td>Script</td><td>Mymr / Myanmar-based script</td></tr>
-              <tr><td>Primary Use</td><td>NLP / AI / MT / ASR / OCR / Research</td></tr>
-            </table>
+            <div class="table-responsive">
+              <table class="detail-table">
+                <tr><td>Language</td><td>Pa’O</td></tr>
+                <tr><td>ISO 639-3</td><td>blk</td></tr>
+                <tr><td>Script</td><td>Mymr / Myanmar-based script</td></tr>
+                <tr><td>Primary Use</td><td>NLP / AI / MT / ASR / OCR / Research</td></tr>
+              </table>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- =====================================================
-         PA'O BASICS SECTION (INTEGRATED FROM FIRST CODE)
+         PA'O BASICS SECTION
     ====================================================== -->
     <section class="section alt" id="basics">
       <div class="container">
@@ -1654,7 +1697,7 @@
   <!-- COMBINED SCRIPT LOGIC -->
   <script>
     /* =========================================================
-       AUDIO & SVG LOGIC FOR PA'O BASICS (FROM FIRST CODE)
+       AUDIO & SVG LOGIC FOR PA'O BASICS
     ========================================================= */
     function playPaohSound(romanizedName) {
       const audioPath = `audio/${romanizedName}.m4a`; 
@@ -1664,7 +1707,6 @@
       });
     }
 
-    // Fixed parameter bug: added romanValue to parameter list
     function loadPaOhDigitSVG(element, unicodeValue, romanValue) {
       let svgFileName = '';
 
@@ -1707,9 +1749,21 @@
       }
     }
 
+    // Helper to wrap dynamically rendered tables inside horizontal scroll wrappers
+    function ensureTableResponsive(tableElement) {
+      if (!tableElement.parentElement.classList.contains('table-responsive')) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'table-responsive';
+        tableElement.parentNode.insertBefore(wrapper, tableElement);
+        wrapper.appendChild(tableElement);
+      }
+    }
+
     function createTable(data, tableId, headers) {
       const tableElement = document.getElementById(tableId);
       if (!tableElement) return;
+
+      ensureTableResponsive(tableElement);
 
       const tbody = tableElement.querySelector('tbody') || document.createElement('tbody');
       if (!tableElement.querySelector('thead')) {
@@ -1763,6 +1817,8 @@
       const tableElement = document.getElementById(tableId);
       if (!tableElement) return;
 
+      ensureTableResponsive(tableElement);
+
       tableElement.innerHTML = ''; 
 
       const thead = document.createElement('thead');
@@ -1805,7 +1861,7 @@
     }
 
     /* =========================================================
-       DATASET PORTAL DATABASE & LOGIC (FROM SECOND CODE)
+       DATASET PORTAL DATABASE & LOGIC
     ========================================================= */
     const datasets = [
       {
@@ -2171,22 +2227,24 @@
 
       $("#modalBody").innerHTML = `
         <p class="detail-intro">${escapeHtml(item.description)}</p>
-        <table class="detail-table">
-          <tr><td>Dataset ID</td><td>${escapeHtml(item.id)}</td></tr>
-          <tr><td>Version</td><td>${escapeHtml(item.version)}</td></tr>
-          <tr><td>Language</td><td>${escapeHtml(item.language)}</td></tr>
-          <tr><td>ISO 639-3</td><td>${escapeHtml(item.iso)}</td></tr>
-          <tr><td>Script</td><td>${escapeHtml(item.script)}</td></tr>
-          <tr><td>Data Type</td><td>${escapeHtml(item.type)}</td></tr>
-          <tr><td>Records</td><td>${formatNumber(item.records)}</td></tr>
-          <tr><td>Audio Hours</td><td>${item.hours ? item.hours : "—"}</td></tr>
-          <tr><td>File Size</td><td>${escapeHtml(item.size)}</td></tr>
-          <tr><td>Format</td><td>${escapeHtml(item.format)}</td></tr>
-          <tr><td>License</td><td>${escapeHtml(item.license)}</td></tr>
-          <tr><td>Status</td><td>${escapeHtml(item.status)}</td></tr>
-          <tr><td>Source</td><td>${escapeHtml(item.source)}</td></tr>
-          <tr><td>Last Updated</td><td>${formatDate(item.updated)}</td></tr>
-        </table>
+        <div class="table-responsive">
+          <table class="detail-table">
+            <tr><td>Dataset ID</td><td>${escapeHtml(item.id)}</td></tr>
+            <tr><td>Version</td><td>${escapeHtml(item.version)}</td></tr>
+            <tr><td>Language</td><td>${escapeHtml(item.language)}</td></tr>
+            <tr><td>ISO 639-3</td><td>${escapeHtml(item.iso)}</td></tr>
+            <tr><td>Script</td><td>${escapeHtml(item.script)}</td></tr>
+            <tr><td>Data Type</td><td>${escapeHtml(item.type)}</td></tr>
+            <tr><td>Records</td><td>${formatNumber(item.records)}</td></tr>
+            <tr><td>Audio Hours</td><td>${item.hours ? item.hours : "—"}</td></tr>
+            <tr><td>File Size</td><td>${escapeHtml(item.size)}</td></tr>
+            <tr><td>Format</td><td>${escapeHtml(item.format)}</td></tr>
+            <tr><td>License</td><td>${escapeHtml(item.license)}</td></tr>
+            <tr><td>Status</td><td>${escapeHtml(item.status)}</td></tr>
+            <tr><td>Source</td><td>${escapeHtml(item.source)}</td></tr>
+            <tr><td>Last Updated</td><td>${formatDate(item.updated)}</td></tr>
+          </table>
+        </div>
 
         <div class="detail-section">
           <h3>Recommended Use Cases</h3>
@@ -2208,12 +2266,12 @@
       `;
 
       $("#datasetModal").classList.remove("hidden");
-      document.body.classList.add("modal-open");
+      document.body.style.overflow = "hidden";
     }
 
     function closeDatasetModal() {
       $("#datasetModal").classList.add("hidden");
-      document.body.classList.remove("modal-open");
+      document.body.style.overflow = "";
     }
 
     function copyCitation() {
@@ -2238,7 +2296,7 @@
        DOM CONTENT LOADED INITIALIZATION
     ========================================================= */
     document.addEventListener('DOMContentLoaded', () => {
-      // 1. Initialize Pa'O Basics Data Tables from paohData.js
+      // 1. Initialize Pa'O Basics Data Tables
       if (typeof paohBasicData !== 'undefined') {
         createTable(paohBasicData.paliVowels, 'pali-vowels-table', ['ပအိုဝ်းစာ', 'Romanization', 'IPA']);
         createTable(paohBasicData.paohVowels, 'paoh-vowels-table', ['ပအိုဝ်းစာ', 'Romanization', 'IPA (အကြံပြု)']);
