@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://test-language.pages.dev/sitemap.xml
+Sitemap: https://pao-dataset.pages.dev/sitemap.xml
