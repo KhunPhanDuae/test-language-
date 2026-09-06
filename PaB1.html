@@ -1,2365 +1,409 @@
 <!DOCTYPE html>  
-<html lang="blk">  
+<html lang="my">  
 <head>  
   <meta charset="UTF-8">  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-  <title>Pa’O Language Portal & Basics</title>  
+  <title>Pa’O Language Portal & Datasets</title>  
     
   <meta name="google-site-verification" content="m6ZrXvZ11fD4TZclO6RLMoDOUrMa7K2ddqOWgrbfhtE" />  
   <meta name="description" content="ပအိုဝ်းစကားပြော၊ သင်ခန်းစာ၊ Dataset နှင့် Research Resources">  
-  <meta name="keywords" content="pa'o language, language learning, pa-o speaking,endangered language, myanmar, dataset, nlp">  
-  <meta name="author" content="khunphanduae">  
-  
-  <link rel="stylesheet" href="style.css">  
-  
-  <style>  
-    /* =========================================================  
-       THEME VARIABLES & BASE  
-    ========================================================= */  
-    :root {  
-      --primary: #123c32;  
-      --primary-2: #1a594a;  
-      --primary-3: #e8f2ef;  
-      --surface: #ffffff;  
-      --surface-2: #f4f7f5;  
-      --text: #1e2824;  
-      --muted: #59645f;  
-      --border: #dbe3df;  
-      --gold: #c59b27;  
-      --gold-light: #fef8e7;  
-      --success: #2e7d32;  
-      --warning: #ed6c02;  
-      --radius: 12px;  
-      --max-width: 1200px;  
-      --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);  
-      --shadow: 0 4px 16px rgba(0,0,0,0.08);  
-    }  
-  
-    * {  
-      box-sizing: border-box;  
-      margin: 0;  
-      padding: 0;  
-    }  
-  
-    body {  
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;  
-      background-color: var(--surface-2);  
-      color: var(--text);  
-      line-height: 1.6;  
-      overflow-x: hidden;  
-    }  
-  
-    a {  
-      color: inherit;  
-      text-decoration: none;  
-    }  
-  
-    .container {  
-      width: min(var(--max-width), calc(100% - 40px));  
-      margin-inline: auto;  
-    }  
-  
-    .hidden {  
-      display: none !important;  
-    }  
-  
-    /* =========================================================  
-       HEADER & NAV  
-    ========================================================= */  
-    .site-header {  
-      position: sticky;  
-      top: 0;  
-      z-index: 1000;  
-      background: var(--primary);  
-      color: #fff;  
-      border-bottom: 1px solid rgba(255,255,255,0.1);  
-    }  
-  
-    .header-inner {  
-      display: flex;  
-      align-items: center;  
-      justify-content: space-between;  
-      height: 70px;  
-    }  
-  
-    .brand {  
-      display: flex;  
-      align-items: center;  
-      gap: 12px;  
-    }  
-  
-    .brand-logo {  
-      width: 40px;  
-      height: 40px;  
-      background: var(--gold);  
-      color: var(--primary);  
-      font-weight: 900;  
-      font-size: 20px;  
-      display: grid;  
-      place-items: center;  
-      border-radius: 8px;  
-      flex-shrink: 0;  
-    }  
-  
-    .brand-name {  
-      font-weight: 800;  
-      font-size: 18px;  
-      line-height: 1.2;  
-    }  
-  
-    .brand-subtitle {  
-      font-size: 11px;  
-      color: #b8c9c2;  
-    }  
-  
-    .main-nav {  
-      display: flex;  
-      gap: 20px;  
-    }  
-  
-    .main-nav a {  
-      font-size: 14px;  
-      color: #dce8e4;  
-      font-weight: 500;  
-      transition: 0.2s;  
-    }  
-  
-    .main-nav a:hover {  
-      color: #fff;  
-    }  
-  
-    .mobile-menu-btn {  
-      display: none;  
-      background: none;  
-      border: none;  
-      color: #fff;  
-      font-size: 24px;  
-      cursor: pointer;  
-      padding: 5px;  
-    }  
-  
-    /* =========================================================  
-       BUTTONS & COMPONENTS  
-    ========================================================= */  
-    .btn {  
-      display: inline-flex;  
-      align-items: center;  
-      justify-content: center;  
-      padding: 10px 18px;  
-      border-radius: 8px;  
-      font-size: 14px;  
-      font-weight: 600;  
-      cursor: pointer;  
-      border: 1px solid transparent;  
-      transition: 0.2s;  
-      text-align: center;  
-    }  
-  
-    .btn-primary {  
-      background: var(--gold);  
-      color: var(--primary);  
-    }  
-  
-    .btn-primary:hover {  
-      background: #b58d20;  
-    }  
-  
-    .btn-outline {  
-      border-color: rgba(255,255,255,0.3);  
-      color: #fff;  
-    }  
-  
-    .btn-outline:hover {  
-      background: rgba(255,255,255,0.1);  
-    }  
-  
-    .btn-light {  
-      background: var(--surface-2);  
-      border-color: var(--border);  
-      color: var(--text);  
-    }  
-  
-    .btn-light:hover {  
-      background: #e2eae6;  
-    }  
-  
-    .btn-dark {  
-      background: var(--primary);  
-      color: #fff;  
-    }  
-  
-    .btn-dark:hover {  
-      background: var(--primary-2);  
-    }  
-  
-    /* =========================================================  
-       SECTIONS GENERAL  
-    ========================================================= */  
-    .section {  
-      padding: 70px 0;  
-    }  
-  
-    .section.alt {  
-      background: var(--surface);  
-    }  
-  
-    .section-label {  
-      text-transform: uppercase;  
-      font-size: 12px;  
-      font-weight: 800;  
-      color: var(--gold);  
-      letter-spacing: 1px;  
-    }  
-  
-    .section-title {  
-      font-size: 28px;  
-      color: var(--primary);  
-      margin-top: 5px;  
-    }  
-  
-    .section-description {  
-      color: var(--muted);  
-      font-size: 15px;  
-      margin-top: 8px;  
-      max-width: 700px;  
-    }  
-  
-    .section-header {  
-      margin-bottom: 35px;  
-    }  
-  
-    /* =========================================================  
-       HERO & STATS  
-    ========================================================= */  
-    .hero {  
-      background: linear-gradient(135deg, var(--primary), var(--primary-2));  
-      color: #fff;  
-      padding: 90px 0 110px;  
-    }  
-  
-    .hero-content {  
-      max-width: 750px;  
-    }  
-  
-    .official-badge {  
-      display: inline-flex;  
-      align-items: center;  
-      gap: 8px;  
-      padding: 6px 12px;  
-      background: rgba(255,255,255,0.1);  
-      border-radius: 20px;  
-      font-size: 12px;  
-      font-weight: 700;  
-      color: var(--gold-light);  
-      margin-bottom: 20px;  
-    }  
-  
-    .official-dot {  
-      width: 8px;  
-      height: 8px;  
-      background: var(--gold);  
-      border-radius: 50%;  
-    }  
-  
-    .hero h1 {  
-      font-size: 42px;  
-      line-height: 1.2;  
-      margin-bottom: 20px;  
-    }  
-  
-    .hero-lead {  
-      font-size: 17px;  
-      color: #dce8e4;  
-      margin-bottom: 30px;  
-      line-height: 1.6;  
-    }  
-  
-    .hero-actions {  
-      display: flex;  
-      gap: 15px;  
-      flex-wrap: wrap;  
-    }  
-  
-    .stats-section {  
-      margin-top: -40px;  
-      position: relative;  
-      z-index: 10;  
-    }  
-  
-    .stats-grid {  
-      display: grid;  
-      grid-template-columns: repeat(4, 1fr);  
-      gap: 20px;  
-    }  
-  
-    .stat-card {  
-      background: var(--surface);  
-      padding: 24px;  
-      border-radius: var(--radius);  
-      box-shadow: var(--shadow);  
-      border: 1px solid var(--border);  
-    }  
-  
-    .stat-label {  
-      font-size: 13px;  
-      color: var(--muted);  
-      font-weight: 600;  
-    }  
-  
-    .stat-value {  
-      font-size: 32px;  
-      font-weight: 900;  
-      color: var(--primary);  
-      margin: 8px 0 4px;  
-    }  
-  
-    .stat-note {  
-      font-size: 11px;  
-      color: #89938e;  
-    }  
-  
-    /* =========================================================  
-       ABOUT & PANELS  
-    ========================================================= */  
-    .about-grid {  
-      display: grid;  
-      grid-template-columns: 1fr 1fr;  
-      gap: 25px;  
-    }  
-  
-    .panel {  
-      background: var(--surface);  
-      padding: 30px;  
-      border-radius: var(--radius);  
-      border: 1px solid var(--border);  
-    }  
-  
-    .panel h3 {  
-      color: var(--primary);  
-      font-size: 20px;  
-      margin-bottom: 12px;  
-    }  
-  
-    .panel p {  
-      color: var(--muted);  
-      font-size: 14px;  
-      line-height: 1.7;  
-    }  
-  
-    .principles {  
-      margin-top: 20px;  
-      display: grid;  
-      gap: 10px;  
-    }  
-  
-    .principle {  
-      display: flex;  
-      align-items: center;  
-      gap: 10px;  
-      font-size: 13px;  
-      color: var(--text);  
-    }  
-  
-    .check {  
-      width: 22px;  
-      height: 22px;  
-      border-radius: 50%;  
-      background: var(--primary-3);  
-      color: var(--primary);  
-      display: grid;  
-      place-items: center;  
-      font-weight: 800;  
-      font-size: 11px;  
-      flex-shrink: 0;  
-    }  
-  
-    /* =========================================================  
-       RESPONSIVE TABLES & PA'O BASICS  
-    ========================================================= */  
-    .basics-container {  
-      background: var(--surface);  
-      padding: 30px;  
-      border-radius: var(--radius);  
-      border: 1px solid var(--border);  
-      box-shadow: var(--shadow-sm);  
-    }  
-  
-    .basics-intro {  
-      background: var(--surface-2);  
-      padding: 20px;  
-      border-radius: 8px;  
-      border-left: 4px solid var(--gold);  
-      margin-bottom: 25px;  
-    }  
-  
-    .basics-intro h4 {  
-      display: block;  
-      font-weight: 800;  
-      color: var(--primary);  
-      margin-top: 10px;  
-      margin-bottom: 4px;  
-    }  
-  
-    .basics-intro h4:first-child {  
-      margin-top: 0;  
-    }  
-  
-    /* Table Wrapper for Horizontal Scroll on Mobile */  
-    .table-responsive {  
-      width: 100%;  
-      overflow-x: auto;  
-      -webkit-overflow-scrolling: touch;  
-      margin-top: 15px;  
-      margin-bottom: 25px;  
-    }  
-  
-    .paoh-table {  
-      width: 100%;  
-      border-collapse: collapse;  
-      background: #fff;  
-      min-width: 500px;  
-    }  
-  
-    .paoh-table th,   
-    .paoh-table td {  
-      border: 1px solid var(--border);  
-      padding: 12px 15px;  
-      text-align: left;  
-      font-size: 14px;  
-    }  
-  
-    .paoh-table th {  
-      background: var(--primary-3);  
-      color: var(--primary);  
-      font-weight: 800;  
-      white-space: nowrap;  
-    }  
-  
-    .clickable-paoh-char {  
-      cursor: pointer;  
-      color: var(--primary-2);  
-      font-weight: 700;  
-      transition: background 0.2s;  
-    }  
-  
-    .clickable-paoh-char:hover {  
-      background-color: var(--gold-light);  
-      color: var(--primary);  
-    }  
-  
-    .pa-o-digit-svg svg {  
-      width: 24px;  
-      height: 24px;  
-      vertical-align: middle;  
-    }  
-  
-    /* =========================================================  
-       CATALOGUE & SEARCH  
-    ========================================================= */  
-    .catalogue-toolbar {  
-      background: var(--surface);  
-      padding: 20px;  
-      border-radius: var(--radius);  
-      border: 1px solid var(--border);  
-    }  
-  
-    .search-row {  
-      display: grid;  
-      grid-template-columns: 1fr auto;  
-      gap: 12px;  
-    }  
-  
-    .search-box {  
-      position: relative;  
-    }  
-  
-    .search-box input {  
-      width: 100%;  
-      height: 45px;  
-      padding: 10px 15px 10px 42px;  
-      border: 1px solid var(--border);  
-      border-radius: 8px;  
-      outline: none;  
-      font-size: 14px;  
-    }  
-  
-    .search-box input:focus {  
-      border-color: var(--primary-2);  
-      box-shadow: 0 0 0 3px rgba(27,91,76,.09);  
-    }  
-  
-    .search-icon {  
-      position: absolute;  
-      left: 14px;  
-      top: 50%;  
-      transform: translateY(-50%);  
-      color: #7b8781;  
-      font-size: 17px;  
-    }  
-  
-    .filter-btn {  
-      min-width: 105px;  
-      border: 1px solid var(--border);  
-      border-radius: 9px;  
-      background: var(--surface-2);  
-      color: var(--primary);  
-      font-weight: 750;  
-      cursor: pointer;  
-    }  
-  
-    .filters {  
-      display: grid;  
-      grid-template-columns: repeat(4, 1fr);  
-      gap: 10px;  
-      margin-top: 12px;  
-    }  
-  
-    .filters select {  
-      width: 100%;  
-      min-height: 43px;  
-      padding: 8px 10px;  
-      border: 1px solid var(--border);  
-      border-radius: 8px;  
-      background: #fff;  
-      color: var(--text);  
-      outline: none;  
-      font-size: 13px;  
-    }  
-  
-    .catalogue-meta {  
-      display: flex;  
-      align-items: center;  
-      justify-content: space-between;  
-      gap: 15px;  
-      margin-top: 17px;  
-      color: var(--muted);  
-      font-size: 13px;  
-    }  
-  
-    /* =========================================================  
-       DATASET CARDS  
-    ========================================================= */  
-    .dataset-grid {  
-      display: grid;  
-      grid-template-columns: repeat(3, 1fr);  
-      gap: 18px;  
-      margin-top: 22px;  
-    }  
-  
-    .dataset-card {  
-      display: flex;  
-      flex-direction: column;  
-      min-height: 100%;  
-      padding: 22px;  
-      background: var(--surface);  
-      border: 1px solid var(--border);  
-      border-radius: var(--radius);  
-      box-shadow: var(--shadow-sm);  
-      transition: .2s;  
-    }  
-  
-    .dataset-card:hover {  
-      transform: translateY(-3px);  
-      box-shadow: var(--shadow);  
-      border-color: #cbd8d2;  
-    }  
-  
-    .dataset-top {  
-      display: flex;  
-      align-items: flex-start;  
-      justify-content: space-between;  
-      gap: 10px;  
-    }  
-  
-    .dataset-type {  
-      display: inline-flex;  
-      align-items: center;  
-      padding: 4px 8px;  
-      border-radius: 6px;  
-      background: var(--primary-3);  
-      color: var(--primary-2);  
-      font-size: 11px;  
-      font-weight: 900;  
-    }  
-  
-    .status {  
-      display: inline-flex;  
-      align-items: center;  
-      gap: 5px;  
-      font-size: 11px;  
-      font-weight: 800;  
-    }  
-  
-    .status::before {  
-      content: "";  
-      width: 7px;  
-      height: 7px;  
-      border-radius: 50%;  
-      background: currentColor;  
-    }  
-  
-    .status.verified { color: var(--success); }  
-    .status.review { color: var(--warning); }  
-    .status.development { color: #6b65a4; }  
-  
-    .dataset-title {  
-      margin-top: 14px;  
-      color: var(--primary);  
-      font-size: 18px;  
-      line-height: 1.45;  
-    }  
-  
-    .dataset-id {  
-      margin-top: 2px;  
-      color: #89938e;  
-      font-family: monospace;  
-      font-size: 11px;  
-    }  
-  
-    .dataset-description {  
-      margin-top: 10px;  
-      color: var(--muted);  
-      font-size: 13px;  
-    }  
-  
-    .dataset-tags {  
-      display: flex;  
-      flex-wrap: wrap;  
-      gap: 6px;  
-      margin-top: 14px;  
-    }  
-  
-    .tag {  
-      padding: 3px 7px;  
-      border: 1px solid var(--border);  
-      border-radius: 5px;  
-      color: #5c6862;  
-      font-size: 10px;  
-    }  
-  
-    .dataset-meta {  
-      display: grid;  
-      grid-template-columns: 1fr 1fr;  
-      gap: 9px;  
-      margin-top: 17px;  
-      padding-top: 15px;  
-      border-top: 1px solid var(--border);  
-    }  
-  
-    .meta-item span {  
-      display: block;  
-      color: #89938e;  
-      font-size: 10px;  
-    }  
-  
-    .meta-item strong {  
-      display: block;  
-      margin-top: 1px;  
-      color: #33413b;  
-      font-size: 12px;  
-    }  
-  
-    .dataset-actions {  
-      display: flex;  
-      gap: 8px;  
-      margin-top: auto;  
-      padding-top: 18px;  
-    }  
-  
-    .dataset-actions .btn {  
-      flex: 1;  
-      min-height: 38px;  
-      padding: 7px 10px;  
-      font-size: 12px;  
-    }  
-  
-    .empty-state {  
-      padding: 55px 20px;  
-      border: 1px dashed #c7d2cd;  
-      border-radius: var(--radius);  
-      text-align: center;  
-      color: var(--muted);  
-    }  
-  
-    /* =========================================================  
-       CATEGORY CARDS  
-    ========================================================= */  
-    .category-grid {  
-      display: grid;  
-      grid-template-columns: repeat(4, 1fr);  
-      gap: 15px;  
-    }  
-  
-    .category-card {  
-      padding: 22px;  
-      background: #fff;  
-      border: 1px solid var(--border);  
-      border-radius: var(--radius);  
-      cursor: pointer;  
-      transition: .2s;  
-    }  
-  
-    .category-card:hover {  
-      border-color: var(--gold);  
-      transform: translateY(-2px);  
-    }  
-  
-    .category-icon {  
-      width: 43px;  
-      height: 43px;  
-      display: grid;  
-      place-items: center;  
-      border-radius: 9px;  
-      background: var(--gold-light);  
-      color: #795b1c;  
-      font-size: 12px;  
-      font-weight: 900;  
-    }  
-  
-    .category-card h3 {  
-      margin-top: 13px;  
-      color: var(--primary);  
-      font-size: 16px;  
-    }  
-  
-    .category-card p {  
-      margin-top: 4px;  
-      color: var(--muted);  
-      font-size: 12px;  
-    }  
-  
-    /* =========================================================  
-       EVALUATION, REPORTS & GOVERNANCE  
-    ========================================================= */  
-    .evaluation-grid {  
-      display: grid;  
-      grid-template-columns: 1fr 1fr;  
-      gap: 20px;  
-    }  
-  
-    .metric { margin-top: 17px; }  
-  
-    .metric-header {  
-      display: flex;  
-      justify-content: space-between;  
-      margin-bottom: 5px;  
-      color: #53605a;  
-      font-size: 12px;  
-    }  
-  
-    .metric-bar {  
-      height: 9px;  
-      overflow: hidden;  
-      border-radius: 999px;  
-      background: #e3eae6;  
-    }  
-  
-    .metric-bar span {  
-      display: block;  
-      height: 100%;  
-      border-radius: inherit;  
-      background: linear-gradient(90deg, var(--primary-2), #51a67f);  
-    }  
-  
-    .evaluation-note {  
-      margin-top: 17px;  
-      padding: 14px;  
-      border-left: 4px solid var(--gold);  
-      background: #fffaf0;  
-      color: #68592f;  
-      border-radius: 7px;  
-      font-size: 12px;  
-    }  
-  
-    .report-list {  
-      display: grid;  
-      gap: 12px;  
-    }  
-  
-    .report-item {  
-      display: grid;  
-      grid-template-columns: 130px 1fr auto;  
-      gap: 20px;  
-      align-items: center;  
-      padding: 18px 20px;  
-      background: var(--surface);  
-      border: 1px solid var(--border);  
-      border-radius: 10px;  
-    }  
-  
-    .report-date { color: var(--muted); font-size: 12px; }  
-    .report-content h3 { color: var(--primary); font-size: 15px; }  
-    .report-content p { margin-top: 2px; color: var(--muted); font-size: 12px; }  
-  
-    .governance-grid {  
-      display: grid;  
-      grid-template-columns: repeat(3, 1fr);  
-      gap: 17px;  
-    }  
-  
-    .governance-card {  
-      padding: 22px;  
-      background: #fff;  
-      border: 1px solid var(--border);  
-      border-radius: var(--radius);  
-    }  
-  
-    .governance-card h3 { color: var(--primary); font-size: 16px; }  
-    .governance-card p { margin-top: 7px; color: var(--muted); font-size: 12px; }  
-  
-    /* =========================================================  
-       CONTRIBUTION  
-    ========================================================= */  
-    .contribute-box {  
-      display: grid;  
-      grid-template-columns: 1.1fr .9fr;  
-      gap: 25px;  
-      padding: 32px;  
-      border-radius: 18px;  
-      background: linear-gradient(135deg, #123c32, #1a594a);  
-      color: #fff;  
-    }  
-  
-    .contribute-box h2 { font-size: 30px; line-height: 1.3; }  
-    .contribute-box p { margin-top: 10px; color: #cfe0da; font-size: 14px; }  
-  
-    .contribution-list { display: grid; gap: 8px; margin-top: 17px; }  
-    .contribution-list div { display: flex; gap: 8px; color: #dce9e4; font-size: 13px; }  
-    .contribution-list b { color: var(--gold-light); }  
-  
-    .contribute-form {  
-      padding: 20px;  
-      background: rgba(255,255,255,.07);  
-      border: 1px solid rgba(255,255,255,.12);  
-      border-radius: 12px;  
-    }  
-  
-    .form-group { margin-bottom: 11px; }  
-    .form-group label { display: block; margin-bottom: 4px; color: #dce8e4; font-size: 11px; }  
-    .form-group input, .form-group textarea, .form-group select {  
-      width: 100%;  
-      padding: 9px 11px;  
-      border: 1px solid rgba(255,255,255,.15);  
-      border-radius: 7px;  
-      background: rgba(255,255,255,.09);  
-      color: #fff;  
-      outline: none;  
-      font-size: 12px;  
-    }  
-  
-    .form-group textarea { min-height: 80px; resize: vertical; }  
-    .form-group input::placeholder, .form-group textarea::placeholder { color: #a9c0b8; }  
-    .form-group select option { color: #222; }  
-  
-    /* =========================================================  
-       FOOTER  
-    ========================================================= */  
-    .site-footer {  
-      margin-top: 0;  
-      background: #0b2a23;  
-      color: #b8c9c2;  
-    }  
-  
-    .footer-grid {  
-      display: grid;  
-      grid-template-columns: 1.5fr 1fr 1fr 1fr;  
-      gap: 35px;  
-      padding: 55px 0;  
-    }  
-  
-    .footer-title { color: #fff; font-size: 15px; font-weight: 800; }  
-    .footer-text { margin-top: 8px; font-size: 12px; line-height: 1.8; }  
-    .footer-links { display: grid; gap: 5px; margin-top: 10px; }  
-    .footer-links a { font-size: 12px; color: #b8c9c2; }  
-    .footer-links a:hover { color: #fff; }  
-  
-    .footer-bottom {  
-      padding: 17px 0;  
-      border-top: 1px solid rgba(255,255,255,.08);  
-      text-align: center;  
-      color: #8fa39b;  
-      font-size: 11px;  
-    }  
-  
-    /* =========================================================  
-       MODAL & TOAST  
-    ========================================================= */  
-    .modal-backdrop {  
-      position: fixed;  
-      inset: 0;  
-      z-index: 2000;  
-      display: flex;  
-      align-items: center;  
-      justify-content: center;  
-      padding: 20px;  
-      background: rgba(7, 22, 18, .70);  
-      backdrop-filter: blur(4px);  
-    }  
-  
-    .modal {  
-      width: min(900px, 100%);  
-      max-height: calc(100vh - 40px);  
-      overflow: auto;  
-      background: #fff;  
-      border-radius: 16px;  
-      box-shadow: 0 30px 80px rgba(0,0,0,.25);  
-    }  
-  
-    .modal-header {  
-      position: sticky;  
-      top: 0;  
-      z-index: 2;  
-      display: flex;  
-      align-items: flex-start;  
-      justify-content: space-between;  
-      gap: 15px;  
-      padding: 23px 25px;  
-      background: #fff;  
-      border-bottom: 1px solid var(--border);  
-    }  
-  
-    .modal-title { color: var(--primary); font-size: 22px; line-height: 1.4; }  
-    .modal-close {  
-      width: 35px; height: 35px;  
-      border: 1px solid var(--border);  
-      border-radius: 8px;  
-      background: #fff;  
-      color: #59645f;  
-      font-size: 18px;  
-      cursor: pointer;  
-    }  
-  
-    .modal-body { padding: 25px; }  
-    .detail-intro { color: var(--muted); font-size: 14px; }  
-      
-    .detail-table { width: 100%; margin-top: 22px; border-collapse: collapse; min-width: 100%; }  
-    .detail-table td { padding: 10px 8px; border-bottom: 1px solid var(--border); font-size: 13px; vertical-align: top; }  
-    .detail-table td:first-child { width: 180px; color: #75817b; font-weight: 700; }  
-    .detail-table td:last-child { color: #26332e; }  
-  
-    .detail-section { margin-top: 28px; }  
-    .detail-section h3 { color: var(--primary); font-size: 16px; }  
-  
-    .code-box {  
-      position: relative;  
-      margin-top: 9px;  
-      padding: 16px;  
-      overflow-x: auto;  
-      border-radius: 8px;  
-      background: #15211e;  
-      color: #d9e9e3;  
-      font-family: monospace;  
-      font-size: 12px;  
-      line-height: 1.6;  
-    }  
-  
-    .copy-btn {  
-      position: absolute;  
-      right: 8px; top: 8px;  
-      padding: 4px 8px;  
-      border: 1px solid #40534c;  
-      border-radius: 5px;  
-      background: #21332e;  
-      color: #d9e9e3;  
-      font-size: 10px;  
-      cursor: pointer;  
-    }  
-  
-    .modal-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 25px; }  
-  
-    .toast {  
-      position: fixed;  
-      right: 20px; bottom: 20px;  
-      z-index: 3000;  
-      max-width: 340px;  
-      padding: 12px 15px;  
-      border-radius: 9px;  
-      background: #14231f;  
-      color: #fff;  
-      box-shadow: 0 10px 30px rgba(0,0,0,.18);  
-      font-size: 12px;  
-      transform: translateY(20px);  
-      opacity: 0;  
-      pointer-events: none;  
-      transition: .25s;  
-    }  
-  
-    .toast.show { transform: translateY(0); opacity: 1; }  
-  
-    /* =========================================================  
-       RESPONSIVE BREAKPOINTS (FIXED & IMPROVED)  
-    ========================================================= */  
-    @media (max-width: 1050px) {  
-      .dataset-grid { grid-template-columns: repeat(2, 1fr); }  
-      .category-grid { grid-template-columns: repeat(2, 1fr); }  
-      .governance-grid { grid-template-columns: 1fr 1fr; }  
-      .footer-grid { grid-template-columns: 1fr 1fr; }  
-        
-      .main-nav { display: none; }  
-      .mobile-menu-btn { display: block; }  
-  
-      .main-nav.mobile-open {  
-        position: absolute;  
-        left: 20px; right: 20px; top: 70px;  
-        display: grid;   
-        gap: 2px;   
-        padding: 12px;  
-        background: var(--primary);  
-        border: 1px solid rgba(255,255,255,.15);  
-        border-radius: 10px;  
-        box-shadow: 0 10px 25px rgba(0,0,0,0.3);  
-        z-index: 1001;  
-      }  
-      .main-nav.mobile-open a {   
-        padding: 12px;   
-        border-radius: 6px;  
-      }  
-      .main-nav.mobile-open a:hover {  
-        background: rgba(255,255,255,0.1);  
-      }  
-    }  
-  
-    @media (max-width: 800px) {  
-      .hero h1 { font-size: 32px; }  
-      .stats-grid { grid-template-columns: 1fr 1fr; }  
-      .about-grid, .evaluation-grid, .contribute-box { grid-template-columns: 1fr; }  
-      .filters { grid-template-columns: 1fr 1fr; }  
-      .report-item { grid-template-columns: 1fr; gap: 8px; }  
-      .contribute-box { padding: 22px; }  
-    }  
-  
-    @media (max-width: 600px) {  
-      .container { width: calc(100% - 28px); }  
-      .hero { padding: 55px 0 75px; }  
-      .hero h1 { font-size: 26px; }  
-      .hero-lead { font-size: 14px; }  
-      .hero-actions { flex-direction: column; width: 100%; }  
-      .hero-actions .btn { width: 100%; }  
-  
-      .section { padding: 45px 0; }  
-      .basics-container { padding: 18px; }  
-      .stats-section { margin-top: -28px; }  
-        
-      .stats-grid, .dataset-grid, .category-grid, .governance-grid, .footer-grid {   
-        grid-template-columns: 1fr;   
-      }  
-        
-      .search-row, .filters { grid-template-columns: 1fr; }  
-      .section-header { display: block; }  
-        
-      .modal-backdrop { padding: 10px; }  
-      .modal { max-height: calc(100vh - 20px); }  
-      .modal-header, .modal-body { padding: 16px; }  
-      .detail-table td:first-child { width: 120px; }  
-    }  
-  </style>  
+  <meta name="keywords" content="pa'o language, language learning, pa-o speaking, endangered language, myanmar, dataset, nlp">  
+  <meta name="author" content="khunphanduae">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background-color: #f8fafc;
+      color: #1e293b;
+      line-height: 1.5;
+      padding-bottom: 50px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 32px 24px;
+      margin: 20px 0;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .hero h1 {
+      font-size: 1.8rem;
+      color: #0f172a;
+      margin-bottom: 12px;
+    }
+    .hero p {
+      color: #64748b;
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+    }
+    .btn-primary {
+      background-color: #d97706;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+    .stat-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+    .stat-card .label {
+      font-size: 0.85rem;
+      color: #64748b;
+      margin-bottom: 8px;
+    }
+    .stat-card .value {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    /* Datasets Grid */
+    .dataset-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    /* Dataset Card */
+    .card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+    
+    .card-top {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+    .badge-box {
+      background: #f1f5f9;
+      border-radius: 8px;
+      padding: 6px 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    .dot.verified { background-color: #16a34a; }
+    .dot.review { background-color: #ea580c; }
+    
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      text-align: center;
+      color: #0f172a;
+      margin-bottom: 8px;
+    }
+    .dataset-id {
+      text-align: center;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      color: #64748b;
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 6px;
+      width: fit-content;
+      margin: 0 auto 16px auto;
+      letter-spacing: 0.5px;
+    }
+    .card-desc {
+      font-size: 0.85rem;
+      color: #64748b;
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .tag {
+      background: #f1f5f9;
+      color: #475569;
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      background: #f8fafc;
+      padding: 12px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    .meta-item {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+    }
+    .meta-item .key {
+      font-size: 0.7rem;
+      color: #94a3b8;
+      display: block;
+      margin-bottom: 2px;
+    }
+    .meta-item .val {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+    }
+    .btn-secondary {
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+    }
+    .btn-dark {
+      background: #064e3b;
+      color: #ffffff;
+    }
+    .btn-kaggle {
+      background: #20beff;
+      color: #ffffff;
+    }
+    .btn-disabled {
+      background: #f1f5f9;
+      color: #94a3b8;
+      cursor: not-allowed;
+    }
+  </style>
 </head>  
-  
-<body>  
-  
-  <!-- =======================================================  
-       HEADER  
-  ======================================================== -->  
-  <header class="site-header">  
-    <div class="container header-inner">  
-      <a href="#home" class="brand">  
-        <div class="brand-logo">P</div>  
-        <div>  
-          <div class="brand-name">Pa’O Dataset Portal</div>  
-          <span class="brand-subtitle">Pa’O Language Data & Research Resources</span>  
-        </div>  
-      </a>  
-  
-      <nav class="main-nav" id="mainNav">  
-        <a href="#home">ပင်မ</a>  
-        <a href="#basics">အခြေခံစာပေ</a>  
-        <a href="#datasets">Datasets</a>  
-        <a href="#categories">အမျိုးအစား</a>  
-        <a href="#evaluation">Evaluation</a>  
-        <a href="#reports">Reports</a>  
-        <a href="#governance">Data Policy</a>  
-        <a href="#contribute">ပါဝင်ရန်</a>  
-      </nav>  
-  
-      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">☰</button>  
-    </div>  
-  </header>  
-  
-  <main>  
-    <!-- =======================================================  
-         HERO  
-    ======================================================== -->  
-    <section class="hero" id="home">  
-      <div class="container">  
-        <div class="hero-content">  
-          <span class="official-badge">  
-            <span class="official-dot"></span>  
-            PA’O LANGUAGE DATA PORTAL  
-          </span>  
-          <h1>Pa’O ဘာသာစကားအတွက် Dataset နှင့် Data Resources</h1>  
-          <p class="hero-lead">  
-            Pa’O ဘာသာစကားဆိုင်ရာ စာသား၊ ဘာသာပြန်၊ အသံ၊ OCR၊ အဘိဓာန်၊ Instruction နှင့် Evaluation Dataset များကို စနစ်တကျ စုစည်း၊ ရှာဖွေ၊ မှတ်တမ်းတင်ပြီး အသုံးပြုနိုင်ရန် ရည်ရွယ်ထားသော Dataset Portal ဖြစ်သည်။  
-          </p>  
-          <div class="hero-actions">  
-            <a href="#datasets" class="btn btn-primary">Dataset ရှာရန်</a>  
-            <a href="#basics" class="btn btn-outline">အခြေခံစာပေ လေ့လာရန်</a>  
-          </div>  
-        </div>  
-      </div>  
-    </section>  
-  
-    <!-- =====================================================  
-         STATISTICS  
-    ====================================================== -->  
-    <section class="stats-section">  
-      <div class="container">  
-        <div class="stats-grid">  
-          <div class="stat-card">  
-            <div class="stat-label">စုစုပေါင်း Dataset</div>  
-            <div class="stat-value" id="statDatasets">0</div>  
-            <div class="stat-note">Portal catalogue records</div>  
-          </div>  
-          <div class="stat-card">  
-            <div class="stat-label">Data Records</div>  
-            <div class="stat-value" id="statRecords">0</div>  
-            <div class="stat-note">Dataset metadata အပေါ်မူတည်၍</div>  
-          </div>  
-          <div class="stat-card">  
-            <div class="stat-label">Speech Hours</div>  
-            <div class="stat-value" id="statHours">0</div>  
-            <div class="stat-note">catalogued audio resources</div>  
-          </div>  
-          <div class="stat-card">  
-            <div class="stat-label">Verified Datasets</div>  
-            <div class="stat-value" id="statVerified">0</div>  
-            <div class="stat-note">verification status</div>  
-          </div>  
-        </div>  
-      </div>  
-    </section>  
-  
-    <!-- =====================================================  
-         ABOUT  
-    ====================================================== -->  
-    <section class="section" id="about">  
-      <div class="container">  
-        <div class="section-header">  
-          <div>  
-            <div class="section-label">About Portal</div>  
-            <h2 class="section-title">Pa’O Dataset Portal ဆိုတာဘာလဲ</h2>  
-            <p class="section-description">  
-              Pa’O ဘာသာစကားအတွက် ရရှိနိုင်သော Data Resources များကို source၊ license၊ version၊ quality နှင့် verification status အပါအဝင် metadata စနစ်တကျဖြင့် ရှာဖွေကြည့်ရှုနိုင်ရန် တည်ဆောက်ထားသည့် အချက်အလက်ပလက်ဖောင်းဖြစ်သည်။  
-            </p>  
-          </div>  
-        </div>  
-  
-        <div class="about-grid">  
-          <div class="panel">  
-            <h3>ရည်ရွယ်ချက်</h3>  
-            <p>  
-              Pa’O Language Technology ဖွံ့ဖြိုးတိုးတက်ရေးအတွက် လက်ရှိ Dataset များကို ရှာဖွေရလွယ်ကူစေရန်၊ Data အသစ်များကို စနစ်တကျ မှတ်တမ်းတင်ရန်နှင့် Researcher၊ Developer၊ Native Speaker နှင့် Community များအကြား Data Resource မျှဝေမှုကို အထောက်အကူပြုရန် ရည်ရွယ်သည်။  
-            </p>  
-            <div class="principles">  
-              <div class="principle"><span class="check">✓</span><span>Source နှင့် provenance ကို မှတ်တမ်းတင်ခြင်း</span></div>  
-              <div class="principle"><span class="check">✓</span><span>License နှင့် အသုံးပြုခွင့်ကို ဖော်ပြခြင်း</span></div>  
-              <div class="principle"><span class="check">✓</span><span>Native Speaker Verification ကို အားပေးခြင်း</span></div>  
-              <div class="principle"><span class="check">✓</span><span>Dataset Versioning နှင့် Quality Evaluation</span></div>  
-              <div class="principle"><span class="check">✓</span><span>Research နှင့် AI Development အတွက် ပြန်လည်အသုံးချနိုင်ခြင်း</span></div>  
-            </div>  
-          </div>  
-  
-          <div class="panel">  
-            <h3>Language Metadata</h3>  
-            <p>Portal တွင် Pa’O Dataset များကို သက်ဆိုင်ရာ Language Identifier နှင့် Script metadata များဖြင့် မှတ်တမ်းတင်နိုင်သည်။</p>  
-            <div class="table-responsive">  
-              <table class="detail-table">  
-                <tr><td>Language</td><td>Pa’O</td></tr>  
-                <tr><td>ISO 639-3</td><td>blk</td></tr>  
-                <tr><td>Script</td><td>Mymr / Myanmar-based script</td></tr>  
-                <tr><td>Primary Use</td><td>NLP / AI / MT / ASR / OCR / Research</td></tr>  
-              </table>  
-            </div>  
-          </div>  
-        </div>  
-      </div>  
-    </section>  
-  
-    <!-- =====================================================  
-         PA'O BASICS SECTION  
-    ====================================================== -->  
-    <section class="section alt" id="basics">  
-      <div class="container">  
-        <div class="section-header">  
-          <div>  
-            <div class="section-label">Language Basics</div>  
-            <h2 class="section-title">ပအိုဝ်းစာ အခြေခံများ</h2>  
-            <p class="section-description">  
-              ပအိုဝ်းဘာသာစကား၏ ဗျည်း၊ သရ၊ ဂဏန်းများနှင့် အသံ (tones) များကို အသံထွက်ဖိုင်များဖြင့် လေ့လာနိုင်ပါသည်။  
-            </p>  
-          </div>  
-        </div>  
-  
-        <div class="basics-container">  
-          <div class="basics-intro">  
-            <h4>မြန်မာဘာသာဖြင့်</h4>  
-            <p>  
-              ဤလမ်းညွှန်သည် ပအိုဝ်းဘာသာစကား၏ ဗျည်း၊ သရနှင့် အသံ (tones) များကို လက်တင်အက္ခရာ (Romanization) ဖြင့် အကြမ်းဖျင်း ဖော်ပြထားခြင်း ဖြစ်ပါသည်။ ပအိုဝ်းဘာသာစကားတွင် အသံ ၆ မျိုး (6 tones) ရှိပြီး ၎င်းတို့အတွက် သီးခြားသင်္ကေတများ မရှိသေးသောကြောင့် နံပါတ်စဉ်များ (-1, -2, -3, -4, -5, -6) ဖြင့် ဖော်ပြထားပါသည်။  
-            </p>  
-            <p style="margin-top:8px;">  
-              ဤဖော်ပြချက်များသည် စံသတ်မှတ်ထားသော စနစ်များမဟုတ်သေးဘဲ နိုင်ငံတကာမှ ပအိုဝ်းဘာသာစကားကို ပိုမိုနားလည်နိုင်စေရန် ရည်ရွယ်ပါသည်။  
-            </p>  
-            <hr style="margin: 15px 0; border:0; border-top: 1px solid var(--border);">  
-            <h4>English Version</h4>  
-            <p>  
-              This guide provides a preliminary Romanization of Pa'O consonants, vowels, and tones. The Pa'O language has six distinct tones, which are currently represented by numbers (-1, -2, -3, -4, -5, -6) as there are no specific diacritics for them yet.  
-            </p>  
-          </div>  
-  
-          <h3 style="color:var(--primary); margin-top:20px;">ပါဠိသရ (၈) ဖြုံႏ, Pali vowels (8)</h3>  
-          <table id="pali-vowels-table" class="paoh-table">  
-            <thead>  
-              <tr><th>ပအိုဝ်းစာ</th><th>Romanization</th><th>IPA</th></tr>  
-            </thead>  
-            <tbody></tbody>  
-          </table>  
-  
-          <h3 style="color:var(--primary); margin-top:20px;">ပအိုဝ်ႏသရ (၁၆) ဖြုံႏ, Pa'O vowels (16)</h3>  
-          <table id="paoh-vowels-table" class="paoh-table">  
-            <thead>  
-              <tr><th>ပအိုဝ်းစာ</th><th>Romanization</th><th>IPA (အကြံပြု)</th></tr>  
-            </thead>  
-            <tbody></tbody>  
-          </table>  
-  
-          <h3 style="color:var(--primary); margin-top:20px;">ပအိုဝ်ႏဗျည်း (၃၃) ဖြုံႏ</h3>  
-          <table id="paoh-consonants-table" class="paoh-table">  
-            <thead>  
-              <tr><th>ပအိုဝ်းစာ</th><th>Romanization</th><th>IPA (အကြံပြု)</th></tr>  
-            </thead>  
-            <tbody></tbody>  
-          </table>  
-  
-          <h3 style="color:var(--primary); margin-top:20px;">  
-            <a href="#basics" style="color:var(--primary); text-decoration:underline;">ပအိုဝ်ႏဂဏန်ꩻ (၁၀) ဖြုံႏ, Pa'O numbers (10)</a>  
-          </h3>  
-          <table id="paoh-numbers-table" class="paoh-table">  
-            <thead>  
-              <tr><th>ပအိုဝ်းစာ</th><th>Romanization</th></tr>  
-            </thead>  
-            <tbody></tbody>  
-          </table>  
-  
-          <h3 style="color:var(--primary); margin-top:20px;">ဗီးပစ္စည်း (၂၀) ဖြုံႏ (Romanization အကြံပြုချက်)</h3>  
-          <table id="paoh-diacritics-table" class="paoh-table">  
-            <thead>  
-              <tr><th>ပအိုဝ်းစာ</th><th>Romanization</th><th>ဖော်ပြချက်</th></tr>  
-            </thead>  
-            <tbody></tbody>  
-          </table>  
-  
-          <h3 style="color:var(--primary); margin-top:30px; margin-bottom:10px;">လိတ်မွူး အတွယ်ꩻ (Tone ဇယားများ)</h3>  
-            
-          <h4 style="color:var(--primary-2); margin-top:15px;">လိတ်မွူး အတွယ်ꩻ (၁)</h4>  
-          <table id="tones-set1-table" class="paoh-table"></table>  
-  
-          <h4 style="color:var(--primary-2); margin-top:15px;">လိတ်မွူး အတွယ်ꩻ (၂)</h4>  
-          <table id="tones-set2-table" class="paoh-table"></table>  
-  
-          <h4 style="color:var(--primary-2); margin-top:15px;">လိတ်မွူး အတွယ်ꩻ (၃)</h4>  
-          <table id="tones-set3-table" class="paoh-table"></table>  
-  
-          <h4 style="color:var(--primary-2); margin-top:15px;">လိတ်မွူး အတွယ်ꩻ (၄)</h4>  
-          <table id="tones-set4-table" class="paoh-table"></table>  
-  
-          <h4 style="color:var(--primary-2); margin-top:15px;">လိတ်မွူး အတွယ်ꩻ (၅)</h4>  
-          <table id="tones-set5-table" class="paoh-table"></table>  
-  
-          <h4 style="color:var(--primary-2); margin-top:15px;">လိတ်မွူး အတွယ်ꩻ (၆)</h4>  
-          <table id="tones-set6-table" class="paoh-table"></table>  
-        </div>  
-      </div>  
-    </section>  
-  
-    <!-- =====================================================  
-         DATASET CATALOGUE  
-    ====================================================== -->  
-    <section class="section" id="datasets">  
-      <div class="container">  
-        <div class="section-header">  
-          <div>  
-            <div class="section-label">Dataset Catalogue</div>  
-            <h2 class="section-title">Dataset Catalogue</h2>  
-            <p class="section-description">  
-              Dataset အမည်၊ အမျိုးအစား၊ Language၊ License နှင့် Verification Status အလိုက် ရှာဖွေစစ်ထုတ်နိုင်သည်။  
-            </p>  
-          </div>  
-        </div>  
-  
-        <div class="catalogue-toolbar">  
-          <div class="search-row">  
-            <div class="search-box">  
-              <span class="search-icon">⌕</span>  
-              <input type="search" id="searchInput" placeholder="Dataset အမည်၊ ID၊ source သို့မဟုတ် keyword ရှာရန်..." autocomplete="off">  
-            </div>  
-            <button class="filter-btn" id="resetFilters">Reset</button>  
-          </div>  
-  
-          <div class="filters">  
-            <select id="typeFilter">  
-              <option value="">Data Type — အားလုံး</option>  
-              <option value="Text">Text</option>  
-              <option value="Parallel">Parallel</option>  
-              <option value="Speech">Speech</option>  
-              <option value="OCR">OCR</option>  
-              <option value="Lexicon">Lexicon</option>  
-              <option value="Instruction">Instruction</option>  
-              <option value="Evaluation">Evaluation</option>  
-            </select>  
-  
-            <select id="licenseFilter">  
-              <option value="">License — အားလုံး</option>  
-              <option value="CC BY 4.0">CC BY 4.0</option>  
-              <option value="CC0 1.0">CC0 1.0</option>  
-              <option value="Research">Research / Permission</option>  
-              <option value="Mixed">Mixed / Source-dependent</option>  
-            </select>  
-  
-            <select id="statusFilter">  
-              <option value="">Status — အားလုံး</option>  
-              <option value="Verified">Verified</option>  
-              <option value="Under Review">Under Review</option>  
-              <option value="Development">Development</option>  
-            </select>  
-  
-            <select id="sortFilter">  
-              <option value="newest">Sort — Newest</option>  
-              <option value="name">Name A–Z</option>  
-              <option value="records">Records</option>  
-              <option value="quality">Quality</option>  
-            </select>  
-          </div>  
-  
-          <div class="catalogue-meta">  
-            <span id="resultCount">0 datasets</span>  
-            <span>Portal Version 1.0</span>  
-          </div>  
-        </div>  
-  
-        <div class="dataset-grid" id="datasetGrid"></div>  
-  
-        <div class="empty-state hidden" id="emptyState">  
-          <strong>Dataset မတွေ့ပါ။</strong>  
-          <p style="margin-top:5px;">Search keyword သို့မဟုတ် filter ကို ပြန်လည်စစ်ဆေးပါ။</p>  
-        </div>  
-      </div>  
-    </section>  
-  
-    <!-- =====================================================  
-         CATEGORIES  
-    ====================================================== -->  
-    <section class="section alt" id="categories">  
-      <div class="container">  
-        <div class="section-header">  
-          <div>  
-            <div class="section-label">Data Types</div>  
-            <h2 class="section-title">Dataset အမျိုးအစားများ</h2>  
-          </div>  
-        </div>  
-  
-        <div class="category-grid">  
-          <div class="category-card" data-category="Text">  
-            <div class="category-icon">TXT</div>  
-            <h3>Text Corpus</h3>  
-            <p>စာသား၊ စာကြောင်း၊ ဆောင်းပါးနှင့် အခြားရေးသားထားသော Data များ။</p>  
-          </div>  
-  
-          <div class="category-card" data-category="Parallel">  
-            <div class="category-icon">MT</div>  
-            <h3>Parallel Corpus</h3>  
-            <p>Pa’O ↔ Myanmar / English ဘာသာပြန်စာကြောင်းများ။</p>  
-          </div>  
-  
-          <div class="category-card" data-category="Speech">  
-            <div class="category-icon">ASR</div>  
-            <h3>Speech</h3>  
-            <p>Audio၊ Transcript နှင့် Speaker Metadata။</p>  
-          </div>  
-  
-          <div class="category-card" data-category="OCR">  
-            <div class="category-icon">OCR</div>  
-            <h3>OCR</h3>  
-            <p>Image နှင့် Pa’O Ground-truth Text Dataset များ။</p>  
-          </div>  
-  
-          <div class="category-card" data-category="Lexicon">  
-            <div class="category-icon">LEX</div>  
-            <h3>Lexicon</h3>  
-            <p>Dictionary၊ Lemma၊ POS၊ Morphology နှင့် Pronunciation။</p>  
-          </div>  
-  
-          <div class="category-card" data-category="Instruction">  
-            <div class="category-icon">LLM</div>  
-            <h3>Instruction</h3>  
-            <p>QA၊ Conversation၊ Translation နှင့် Instruction–Response Data။</p>  
-          </div>  
-  
-          <div class="category-card" data-category="Evaluation">  
-            <div class="category-icon">EVAL</div>  
-            <h3>Evaluation</h3>  
-            <p>Benchmark၊ Test Set နှင့် Quality Evaluation Data။</p>  
-          </div>  
-  
-          <div class="category-card" data-category="">  
-            <div class="category-icon">ALL</div>  
-            <h3>All Resources</h3>  
-            <p>Portal တွင် catalogued လုပ်ထားသော Resource အားလုံး။</p>  
-          </div>  
-        </div>  
-      </div>  
-    </section>  
-  
-    <!-- =====================================================  
-         EVALUATION  
-    ====================================================== -->  
-    <section class="section" id="evaluation">  
-      <div class="container">  
-        <div class="section-header">  
-          <div>  
-            <div class="section-label">Quality Evaluation</div>  
-            <h2 class="section-title">Dataset Quality Evaluation</h2>  
-            <p class="section-description">  
-              Dataset တစ်ခု၏ အရည်အသွေးကို Completeness၊ Accuracy၊ Consistency၊ Native Verification နှင့် Deduplication စသည့် စံနှုန်းများဖြင့် အကဲဖြတ်ရန် အသုံးပြုနိုင်သည်။  
-            </p>  
-          </div>  
-        </div>  
-  
-        <div class="evaluation-grid">  
-          <div class="panel">  
-            <h3>Portal Quality Indicators</h3>  
-  
-            <div class="metric">  
-              <div class="metric-header"><span>Completeness</span><strong>—%</strong></div>  
-              <div class="metric-bar"><span style="width:0"></span></div>  
-            </div>  
-  
-            <div class="metric">  
-              <div class="metric-header"><span>Accuracy</span><strong>—%</strong></div>  
-              <div class="metric-bar"><span style="width:0"></span></div>  
-            </div>  
-  
-            <div class="metric">  
-              <div class="metric-header"><span>Native Verification</span><strong>—%</strong></div>  
-              <div class="metric-bar"><span style="width:0"></span></div>  
-            </div>  
-  
-            <div class="metric">  
-              <div class="metric-header"><span>Deduplication</span><strong>—%</strong></div>  
-              <div class="metric-bar"><span style="width:0"></span></div>  
-            </div>  
-  
-            <div class="evaluation-note">  
-              Evaluation Score များကို တကယ့် verified evaluation results ရရှိပြီးမှ ဖြည့်သွင်းသင့်သည်။ Demo အတွက် placeholder အဖြစ် မည်သည့် score ကိုမျှ မသတ်မှတ်ထားပါ။  
-            </div>  
-          </div>  
-  
-          <div class="panel">  
-            <h3>Recommended Evaluation Protocol</h3>  
-            <div class="principles">  
-              <div class="principle"><span class="check">1</span><span>Automatic validation နှင့် schema check</span></div>  
-              <div class="principle"><span class="check">2</span><span>Duplicate / near-duplicate detection</span></div>  
-              <div class="principle"><span class="check">3</span><span>Native Speaker review</span></div>  
-              <div class="principle"><span class="check">4</span><span>Train / Validation / Test split separation</span></div>  
-              <div class="principle"><span class="check">5</span><span>License နှင့် provenance audit</span></div>  
-            </div>  
-          </div>  
-        </div>  
-      </div>  
-    </section>  
-  
-    <!-- =====================================================  
-         REPORTS  
-    ====================================================== -->  
-    <section class="section alt" id="reports">  
-      <div class="container">  
-        <div class="section-header">  
-          <div>  
-            <div class="section-label">Reports & Records</div>  
-            <h2 class="section-title">စစ်တမ်း၊ စာတမ်းနှင့် မှတ်တမ်း</h2>  
-            <p class="section-description">  
-              Dataset စုဆောင်းမှု၊ စစ်တမ်း၊ သုတေသန၊ Evaluation နှင့် ထုတ်ပြန်ချက်များကို Versioned record အဖြစ် ထိန်းသိမ်းရန်။  
-            </p>  
-          </div>  
-        </div>  
-  
-        <div class="report-list">  
-          <article class="report-item">  
-            <div class="report-date">2026</div>  
-            <div class="report-content">  
-              <h3>Pa’O Dataset Landscape Survey</h3>  
-              <p>Pa’O Language Data Resources များကို source နှင့် data type အလိုက် စုစည်းထားသော survey record။</p>  
-            </div>  
-            <button class="btn btn-light" onclick="showToast('Report link ကို နောက်ပိုင်းတွင် ထည့်သွင်းနိုင်သည်။')">View</button>  
-          </article>  
-  
-          <article class="report-item">  
-            <div class="report-date">2026</div>  
-            <div class="report-content">  
-              <h3>Pa’O Data Quality Evaluation</h3>  
-              <p>Dataset Quality၊ Verification နှင့် Data Governance ဆိုင်ရာ Evaluation Report။</p>  
-            </div>  
-            <button class="btn btn-light" onclick="showToast('Evaluation report link ကို နောက်ပိုင်းတွင် ထည့်သွင်းနိုင်သည်။')">View</button>  
-          </article>  
-  
-          <article class="report-item">  
-            <div class="report-date">Version 1.0</div>  
-            <div class="report-content">  
-              <h3>Pa’O Dataset Portal Release Note</h3>  
-              <p>Portal architecture နှင့် dataset catalogue စတင်ထုတ်ပြန်ခြင်းဆိုင်ရာ မှတ်တမ်း။</p>  
-            </div>  
-            <button class="btn btn-light" onclick="showToast('Release note ကို နောက်ပိုင်းတွင် သီးခြားစာမျက်နှာအဖြစ် ထည့်နိုင်သည်။')">View</button>  
-          </article>  
-        </div>  
-      </div>  
-    </section>  
-  
-    <!-- =====================================================  
-         DATA GOVERNANCE  
-    ====================================================== -->  
-    <section class="section" id="governance">  
-      <div class="container">  
-        <div class="section-header">  
-          <div>  
-            <div class="section-label">Data Governance</div>  
-            <h2 class="section-title">Data မူဝါဒနှင့် အသုံးပြုမှု</h2>  
-          </div>  
-        </div>  
-  
-        <div class="governance-grid">  
-          <article class="governance-card">  
-            <h3>License</h3>  
-            <p>Dataset တစ်ခုချင်းစီအတွက် သက်ဆိုင်ရာ License၊ Permission နှင့် Usage Restrictions ကို metadata ထဲတွင် ရှင်းလင်းစွာ ဖော်ပြရမည်။</p>  
-          </article>  
-  
-          <article class="governance-card">  
-            <h3>Provenance</h3>  
-            <p>Data source၊ creator၊ collection method၊ collection date နှင့် version history များကို မှတ်တမ်းတင်ထားသင့်သည်။</p>  
-          </article>  
-  
-          <article class="governance-card">  
-            <h3>Privacy</h3>  
-            <p>Speech နှင့် community data များတွင် ကိုယ်ရေးကိုယ်တာအချက်အလက်များ၊ consent နှင့် access control ကို ထည့်သွင်းစဉ်းစားရမည်။</p>  
-          </article>  
-  
-          <article class="governance-card">  
-            <h3>Quality Control</h3>  
-            <p>Unicode normalization၊ duplicate removal၊ annotation review နှင့် native-speaker verification လုပ်ငန်းစဉ်များကို မှတ်တမ်းတင်ပါ။</p>  
-          </article>  
-  
-          <article class="governance-card">  
-            <h3>Versioning</h3>  
-            <p>Dataset update တစ်ကြိမ်စီတိုင်းတွင် version၊ change log နှင့် release date ထည့်သွင်းထားသင့်သည်။</p>  
-          </article>  
-  
-          <article class="governance-card">  
-            <h3>Citation</h3>  
-            <p>Dataset ကို သုတေသနနှင့် AI project များတွင် ပြန်လည်အသုံးပြုသောအခါ creator နှင့် source ကို citation ပြုလုပ်နိုင်ရန် standard citation format ထားရှိပါ။</p>  
-          </article>  
-        </div>  
-      </div>  
-    </section>  
-  
-    <!-- =====================================================  
-         CONTRIBUTE  
-    ====================================================== -->  
-    <section class="section alt" id="contribute">  
-      <div class="container">  
-        <div class="contribute-box">  
-          <div>  
-            <div class="section-label" style="color:#e9d8a7;">Community Contribution</div>  
-            <h2 style="margin-top:6px;">Pa’O Data တည်ဆောက်ရေးတွင် ပါဝင်ကူညီပါ</h2>  
-            <p>  
-              Dataset အသစ်၊ စာသား၊ ဘာသာပြန်၊ အသံဖိုင်၊ အဘိဓာန်၊ OCR Data နှင့် Evaluation Data များကို စနစ်တကျ တင်ပြနိုင်ရန် Contribution workflow တည်ဆောက်နိုင်သည်။  
-            </p>  
-            <div class="contribution-list">  
-              <div><b>✓</b> Dataset တင်ပြခြင်း</div>  
-              <div><b>✓</b> Pa’O စာသား / ဘာသာပြန် စုဆောင်းခြင်း</div>  
-              <div><b>✓</b> Speech Recording နှင့် Transcript</div>  
-              <div><b>✓</b> Native Speaker Verification</div>  
-              <div><b>✓</b> Dataset Error Report</div>  
-            </div>  
-          </div>  
-  
-          <form class="contribute-form" id="contributionForm">  
-            <div class="form-group">  
-              <label for="contributorName">အမည်</label>  
-              <input id="contributorName" name="name" placeholder="သင့်အမည်" required>  
-            </div>  
-  
-            <div class="form-group">  
-              <label for="contributorEmail">Email</label>  
-              <input id="contributorEmail" name="email" type="email" placeholder="email@example.com" required>  
-            </div>  
-  
-            <div class="form-group">  
-              <label for="contributionType">Contribution အမျိုးအစား</label>  
-              <select id="contributionType" name="type">  
-                <option value="dataset">Dataset</option>  
-                <option value="speech">Speech</option>  
-                <option value="translation">Translation</option>  
-                <option value="lexicon">Lexicon</option>  
-                <option value="ocr">OCR</option>  
-                <option value="evaluation">Evaluation</option>  
-              </select>  
-            </div>  
-  
-            <div class="form-group">  
-              <label for="contributionMessage">အကြောင်းအရာ</label>  
-              <textarea id="contributionMessage" name="message" placeholder="သင်ပေးလိုသော Data အကြောင်း..." required></textarea>  
-            </div>  
-  
-            <button class="btn btn-primary" type="submit" style="width:100%;">Contribution တင်ပြရန်</button>  
-          </form>  
-        </div>  
-      </div>  
-    </section>  
-  </main>  
-  
-  <!-- =======================================================  
-       FOOTER  
-  ======================================================== -->  
-  <footer class="site-footer">  
-    <div class="container">  
-      <div class="footer-grid">  
-        <div>  
-          <div class="footer-title">Pa’O Dataset Portal</div>  
-          <p class="footer-text">  
-            Pa’O Language Data၊ Research နှင့် AI Resource များကို စနစ်တကျ စုစည်းဖော်ပြရန် ရည်ရွယ်သော Dataset Information Portal။  
-          </p>  
-        </div>  
-  
-        <div>  
-          <div class="footer-title">Portal</div>  
-          <div class="footer-links">  
-            <a href="#home">ပင်မ</a>  
-            <a href="#basics">အခြေခံစာပေ</a>  
-            <a href="#datasets">Datasets</a>  
-            <a href="#categories">အမျိုးအစားများ</a>  
-            <a href="#evaluation">Evaluation</a>  
-          </div>  
-        </div>  
-  
-        <div>  
-          <div class="footer-title">Documentation</div>  
-          <div class="footer-links">  
-            <a href="#reports">Reports</a>  
-            <a href="#governance">Data Policy</a>  
-            <a href="#contribute">Contribution</a>  
-          </div>  
-        </div>  
-  
-        <div>  
-          <div class="footer-title">Contact</div>  
-          <div class="footer-links">  
-            <a href="mailto:your-email@example.com">your-email@example.com</a>  
-            <a href="#">Official Repository</a>  
-            <a href="#">Documentation</a>  
-          </div>  
-        </div>  
-      </div>  
-  
-      <div class="footer-bottom">  
-        © 2026 Pa’O Dataset Portal · Portal Version 1.0 · Data should be used according to the applicable source license.  
-      </div>  
-    </div>  
-  </footer>  
-  
-  <!-- =======================================================  
-       DATASET DETAIL MODAL & TOAST  
-  ======================================================== -->  
-  <div class="modal-backdrop hidden" id="datasetModal">  
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">  
-      <div class="modal-header">  
-        <div>  
-          <div class="dataset-type" id="modalType">Dataset</div>  
-          <h2 class="modal-title" id="modalTitle">Dataset</h2>  
-        </div>  
-        <button class="modal-close" id="modalClose" aria-label="Close">×</button>  
-      </div>  
-      <div class="modal-body" id="modalBody"></div>  
-    </div>  
-  </div>  
-  
-  <div class="toast" id="toast">Done</div>  
-  
-  <!-- EXTERNAL PAOH DATA FILE -->  
-  <script src="paohData.js"></script>  
-  
-  <!-- COMBINED SCRIPT LOGIC -->  
-  <script>  
-    /* =========================================================  
-       AUDIO & SVG LOGIC FOR PA'O BASICS  
-    ========================================================= */  
-    function playPaohSound(romanizedName) {  
-      const audioPath = `audio/${romanizedName}.m4a`;   
-      const audio = new Audio(audioPath);  
-      audio.play().catch(e => {  
-        console.error(`အသံဖွင့်ရာတွင် အမှားအယွင်းရှိပါသည်: ${audioPath}`, e);  
-      });  
-    }  
-  
-    function loadPaOhDigitSVG(element, unicodeValue, romanValue) {  
-      let svgFileName = '';  
-  
-      switch (unicodeValue) {  
-        case '116D0': svgFileName = 'pa-o-digit-0.svg'; break;  
-        case '116D1': svgFileName = 'pa-o-digit-1.svg'; break;  
-        case '116D2': svgFileName = 'pa-o-digit-2.svg'; break;  
-        case '116D3': svgFileName = 'pa-o-digit-3.svg'; break;  
-        case '116D4': svgFileName = 'pa-o-digit-4.svg'; break;  
-        case '116D5': svgFileName = 'pa-o-digit-5.svg'; break;  
-        case '116D6': svgFileName = 'pa-o-digit-6.svg'; break;  
-        case '116D7': svgFileName = 'pa-o-digit-7.svg'; break;  
-        case '116D8': svgFileName = 'pa-o-digit-8.svg'; break;  
-        case '116D9': svgFileName = 'pa-o-digit-9.svg'; break;  
-        default:  
-          console.warn('Unknown Pa\'O Unicode for SVG replacement:', unicodeValue);  
-          return;  
-      }  
-  
-      if (svgFileName) {  
-        const pathToSvg = 'data/' + svgFileName;  
-        fetch(pathToSvg)  
-          .then(response => {  
-            if (!response.ok) {  
-              throw new Error(`Failed to load ${pathToSvg}: ${response.statusText}`);  
-            }  
-            return response.text();  
-          })  
-          .then(svgText => {  
-            element.innerHTML = svgText;  
-            element.classList.add('pa-o-digit-svg');  
-  
-            if (romanValue) {  
-              element.addEventListener('click', () => {  
-                playPaohSound(romanValue);  
-              });  
-            }  
-          })  
-          .catch(error => console.error('Error loading SVG for ' + unicodeValue + ':', error));  
-      }  
-    }  
+<body>
 
-    function ensureTableResponsive(tableElement) {  
-      if (!tableElement.parentElement.classList.contains('table-responsive')) {  
-        const wrapper = document.createElement('div');  
-        wrapper.className = 'table-responsive';  
-        tableElement.parentNode.insertBefore(wrapper, tableElement);  
-        wrapper.appendChild(tableElement);  
-      }  
-    }  
-  
-    function createTable(data, tableId, headers) {  
-      const tableElement = document.getElementById(tableId);  
-      if (!tableElement) return;  
-  
-      ensureTableResponsive(tableElement);  
-  
-      const tbody = tableElement.querySelector('tbody') || document.createElement('tbody');  
-      if (!tableElement.querySelector('thead')) {  
-        const thead = document.createElement('thead');  
-        const headerRow = document.createElement('tr');  
-        headers.forEach(headerText => {  
-          const th = document.createElement('th');  
-          th.textContent = headerText;  
-          headerRow.appendChild(th);  
-        });  
-        thead.appendChild(headerRow);  
-        tableElement.appendChild(thead);  
-      }  
+  <div class="container">
+    
+    <!-- Hero Banner -->
+    <div class="hero">
+      <h1>Pa’O ဘာသာစကားအတွက် Dataset နှင့် Data Resources</h1>
+      <p>Pa'O ဘာသာစကားဆိုင်ရာ AI Model များ၊ NLP နှင့် Speech Recognition များအတွက် စုစည်းထားသော Resource Portal ဖြစ်ပါသည်။</p>
+      <a href="#dataset-container" class="btn-primary">Dataset များကြည့်ရန်</a>
+    </div>
+
+    <!-- Stats Summary Section -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="label">စုစုပေါင်း Dataset</div>
+        <div class="value">10</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Data Records</div>
+        <div class="value">33,496</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Speech Hours</div>
+        <div class="value">0.5</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Verified Datasets</div>
+        <div class="value">5</div>
+      </div>
+    </div>
+
+    <!-- Datasets List Grid -->
+    <div class="dataset-grid" id="dataset-container">
+      <!-- Dynamic Rendering via JS -->
+    </div>
+
+  </div>
+
+  <script>
+    // တရားဝင် Hugging Face / Kaggle Links များ ထည့်သွင်းထားသော Datasets List
+    const datasets = [
+      {
+        id: "PAO-TXT-0001",
+        title: "Pa'O Sentences Dataset",
+        status: "Verified",
+        type: "Text",
+        desc: "Pa'O ဘာသာစကားဖြင့် ရေးသားထားသော စာကြောင်းများကို စုစည်းထားသည့် text dataset ဖြစ်သည်။ NLP နှင့် language modeling အတွက် အသုံးပြုနိုင်သည်။",
+        tags: ["NLP", "Text", "Sentence", "Pa'O"],
+        language: "Pa'O",
+        records: "2,226",
+        format: "Parquet",
+        license: "CC BY 4.0",
+        hfUrl: "https://huggingface.co/datasets/paodigitalhub/pao-sentences-dataset",
+        kaggleUrl: "https://www.kaggle.com/datasets/paodigitalhub/pao-sentences-dataset"
+      },
+      {
+        id: "PAO-WEB-0001",
+        title: "FineWeb2 – Pa’O Web Corpus",
+        status: "Under Review",
+        type: "Text",
+        desc: "CommonCrawl-derived web text collection ထဲမှ Pa'O language subset ဖြစ်သည်။ Web-scale language modeling အတွက် အထောက်အကူပြုနိုင်သည်။",
+        tags: ["Web", "CommonCrawl", "Pretraining", "FineWeb2"],
+        language: "Pa'O",
+        records: "-",
+        format: "Parquet",
+        license: "Mixed",
+        hfUrl: "https://huggingface.co/datasets/paodigitalhub/blk-text-corpus",
+        kaggleUrl: null
+      },
+      {
+        id: "PAO-SP-0001",
+        title: "Pa'O Audio Dataset",
+        status: "Verified",
+        type: "Speech",
+        desc: "Pa'O speech recordings နှင့် transcript၊ speaker metadata များပါဝင်သော speech dataset ဖြစ်သည်။",
+        tags: ["ASR", "Speech", "Audio", "Transcript"],
+        language: "Pa'O",
+        records: "46",
+        format: "WAV + Transcript",
+        license: "CC BY 4.0",
+        hfUrl: "https://huggingface.co/datasets/paodigitalhub/pao-audio-dataset",
+        kaggleUrl: null
+      },
+      {
+        id: "PAO-LEX-0001",
+        title: "Pa'O Lexicon Resource",
+        status: "Under Review",
+        type: "Lexicon",
+        desc: "Pa'O lexical entries နှင့် Myanmar meaning များကို စုစည်းထားသော research-oriented lexical resource ဖြစ်ပါသည်။",
+        tags: ["Dictionary", "Lexicon", "Vocabulary", "Research"],
+        language: "Pa'O → Myanmar",
+        records: "26,174",
+        format: "Research resource",
+        license: "Research / Permission",
+        hfUrl: null,
+        kaggleUrl: null
+      }
+    ];
+
+    function renderDatasets() {
+      const container = document.getElementById("dataset-container");
+      let html = "";
+
+      datasets.forEach(item => {
+        const isVerified = item.status === "Verified";
+        const dotClass = isVerified ? "verified" : "review";
         
-      tbody.innerHTML = '';   
-  
-      data.forEach(item => {  
-        const row = document.createElement('tr');  
-        const keys = Object.keys(item);  
-        keys.forEach(key => {  
-          const td = document.createElement('td');  
-          if (key === 'paoh') {  
-            if (tableId === 'paoh-numbers-table' && item.unicode) {  
-              td.innerHTML = item.paoh;  
-              td.classList.add('pa-o-unicode');  
-              td.classList.add('clickable-paoh-char');  
-              loadPaOhDigitSVG(td, item.unicode, item.roman);  
-            } else {  
-              td.textContent = item[key];  
-              if (item.roman) {  
-                td.classList.add('clickable-paoh-char');  
-                td.addEventListener('click', () => {  
-                  playPaohSound(item.roman);  
-                });  
-              }  
-            }  
-          } else {  
-            td.textContent = item[key];  
-          }  
-          row.appendChild(td);  
-        });  
-        tbody.appendChild(row);  
-      });  
-  
-      if (!tableElement.querySelector('tbody')) {  
-        tableElement.appendChild(tbody);  
-      }  
-    }  
-  
-    function createToneTable(data, tableId) {  
-      const tableElement = document.getElementById(tableId);  
-      if (!tableElement) return;  
-  
-      ensureTableResponsive(tableElement);  
-  
-      tableElement.innerHTML = '';   
-  
-      const thead = document.createElement('thead');  
-      const headerRow = document.createElement('tr');  
-      ['ပအိုဝ်းစာ', 'Romanization', 'ပအိုဝ်းစာ', 'Romanization', 'ပအိုဝ်းစာ', 'Romanization'].forEach(headerText => {  
-        const th = document.createElement('th');  
-        th.textContent = headerText;  
-        headerRow.appendChild(th);  
-      });  
-      thead.appendChild(headerRow);  
-      tableElement.appendChild(thead);  
-  
-      const tbody = document.createElement('tbody');  
-      for (let i = 0; i < data.length; i += 6) {  
-        const row = document.createElement('tr');  
-        for (let j = 0; j < 6; j++) {  
-          const item = data[i + j];  
-          if (item) {  
-            const paohTd = document.createElement('td');  
-            paohTd.textContent = item.paoh;  
-            if (item.roman) {  
-              paohTd.classList.add('clickable-paoh-char');  
-              paohTd.addEventListener('click', () => {  
-                playPaohSound(item.roman);  
-              });  
-            }  
-            row.appendChild(paohTd);  
-  
-            const romanTd = document.createElement('td');  
-            romanTd.textContent = item.roman;  
-            row.appendChild(romanTd);  
-          } else {  
-            row.appendChild(document.createElement('td'));  
-            row.appendChild(document.createElement('td'));  
-          }  
-        }  
-        tbody.appendChild(row);  
-      }  
-      tableElement.appendChild(tbody);  
-    }  
-  
-    /* =========================================================  
-       DATASET PORTAL DATABASE & LOGIC  
-    ========================================================= */  
-    const datasets = [  
-      {  
-        id: "PAO-TXT-0001",  
-        name: "Pa'O Sentences Dataset",  
-        type: "Text",  
-        language: "Pa'O",  
-        iso: "blk",  
-        script: "Mymr",  
-        version: "1.0",  
-        records: 2226,  
-        size: "—",  
-        format: "Parquet",  
-        license: "CC BY 4.0",  
-        status: "Verified",  
-        quality: null,  
-        source: "Pa'O Digital Hub / Hugging Face",  
-        updated: "2026-01-01",  
-        description: "Pa’O ဘာသာစကားဖြင့် ရေးသားထားသော စာကြောင်းများကို စုစည်းထားသည့် text dataset ဖြစ်သည်။ NLP နှင့် language modeling အတွက် အသုံးပြုနိုင်သည်။",  
-        tags: ["NLP", "Text", "Sentence", "Pa'O"],  
-        useCases: ["Text generation", "Sentence embedding", "Language modeling", "NLP research"],  
-        repository: "https://huggingface.co/datasets/paodigitalhub/pao-sentences-dataset",  
-        download: "https://huggingface.co/datasets/paodigitalhub/pao-sentences-dataset",  
-        citation: "Pa'O Sentences Dataset, Version 1.0."  
-      },  
-      {  
-        id: "PAO-MT-0001",  
-        name: "Pa'O–Myanmar Verified Text Corpus",  
-        type: "Parallel",  
-        language: "Pa'O ↔ Myanmar",  
-        iso: "blk",  
-        script: "Mymr",  
-        version: "1.0",  
-        records: 50,  
-        size: "—",  
-        format: "JSON / Dataset",  
-        license: "CC0 1.0",  
-        status: "Verified",  
-        quality: null,  
-        source: "Pa'O Digital Hub / Hugging Face",  
-        updated: "2026-01-01",  
-        description: "Pa’O နှင့် မြန်မာဘာသာအကြား ဘာသာပြန်စာကြောင်းများကို စုစည်းထားသော parallel corpus ဖြစ်သည်။",  
-        tags: ["Machine Translation", "Parallel", "Myanmar", "Pa'O"],  
-        useCases: ["Pa'O → Myanmar translation", "Myanmar → Pa'O translation", "Translation evaluation", "Parallel language modeling"],  
-        repository: "https://huggingface.co/datasets/paodigitalhub/blk-text-corpus",  
-        download: "https://huggingface.co/datasets/paodigitalhub/blk-text-corpus",  
-        citation: "Pa'O–Myanmar Verified Text Corpus, Version 1.0."  
-      },  
-      {  
-        id: "PAO-SP-0001",  
-        name: "Pa'O Audio Dataset",  
-        type: "Speech",  
-        language: "Pa'O",  
-        iso: "blk",  
-        script: "Mymr",  
-        version: "1.0",  
-        records: 46,  
-        size: "9.56 MB",  
-        hours: 0.5,  
-        format: "WAV + Transcript",  
-        license: "CC BY 4.0",  
-        status: "Verified",  
-        quality: null,  
-        source: "Pa'O Digital Hub / Hugging Face",  
-        updated: "2026-01-01",  
-        description: "Pa’O speech recordings နှင့် transcript၊ speaker metadata များပါဝင်သော speech dataset ဖြစ်သည်။",  
-        tags: ["ASR", "Speech", "Audio", "Transcript"],  
-        useCases: ["Automatic Speech Recognition", "Speech research", "TTS experiments", "Pronunciation research"],  
-        repository: "https://huggingface.co/datasets/paodigitalhub/pao-audio-dataset",  
-        download: "https://huggingface.co/datasets/paodigitalhub/pao-audio-dataset",  
-        citation: "Pa'O Audio Dataset, Version 1.0."  
-      },  
-      {  
-        id: "PAO-WEB-0001",  
-        name: "FineWeb2 — Pa'O Web Corpus",  
-        type: "Text",  
-        language: "Pa'O",  
-        iso: "blk",  
-        script: "Mymr",  
-        version: "2.x",  
-        records: null,  
-        size: "~1.7 MB",  
-        format: "Parquet",  
-        license: "Mixed",  
-        status: "Under Review",  
-        quality: null,  
-        source: "FineWeb2",  
-        updated: "2026",  
-        description: "CommonCrawl-derived web text collection ထဲမှ Pa’O language subset ဖြစ်သည်။ Web-scale language modeling အတွက် အထောက်အကူပြုနိုင်သည်။",  
-        tags: ["Web", "CommonCrawl", "Pretraining", "FineWeb2"],  
-        useCases: ["Language model pretraining", "Web corpus research", "Text mining"],  
-        repository: "https://huggingface.co/datasets/HuggingFaceFW/fineweb-2",  
-        download: "https://huggingface.co/datasets/HuggingFaceFW/fineweb-2",  
-        citation: "FineWeb2, Pa'O language subset."  
-      },  
-      {  
-        id: "PAO-WIKI-0001",  
-        name: "Pa'O Wikipedia Corpus",  
-        type: "Text",  
-        language: "Pa'O",  
-        iso: "blk",  
-        script: "Mymr",  
-        version: "Snapshot",  
-        records: 3236,  
-        size: "~13.4 MB",  
-        format: "Wikipedia dump / processed text",  
-        license: "Mixed",  
-        status: "Verified",  
-        quality: null,  
-        source: "Pa'O Wikipedia / Wikimedia",  
-        updated: "2026",  
-        description: "Pa’O Wikipedia တွင် ရှိသော ဆောင်းပါးများကို corpus အဖြစ် အသုံးပြုနိုင်ရန် စုစည်းထားသော resource ဖြစ်သည်။",  
-        tags: ["Wikipedia", "Encyclopedia", "Text", "Knowledge"],  
-        useCases: ["Language modeling", "Knowledge extraction", "Question answering", "Text classification"],  
-        repository: "https://blk.wikipedia.org/",  
-        download: "https://dumps.wikimedia.org/",  
-        citation: "Pa'O Wikipedia, Wikimedia Foundation."  
-      },  
-      {  
-        id: "PAO-SP-0002",  
-        name: "Lingua Libre Pa'O Pronunciation Collection",  
-        type: "Speech",  
-        language: "Pa'O",  
-        iso: "blk",  
-        script: "Mymr",  
-        version: "Collection",  
-        records: 1764,  
-        size: "—",  
-        hours: null,  
-        format: "WAV",  
-        license: "CC0 1.0",  
-        status: "Verified",  
-        quality: null,  
-        source: "Wikimedia Commons / Lingua Libre",  
-        updated: "2026",  
-        description: "Pa’O စကားလုံးအသံထွက် pronunciation recordings များကို စုစည်းထားသော audio resource ဖြစ်သည်။",  
-        tags: ["Pronunciation", "Lingua Libre", "WAV", "CC0"],  
-        useCases: ["Pronunciation modeling", "ASR research", "TTS research", "Speech lexicon"],  
-        repository: "https://commons.wikimedia.org/wiki/Category:Pa%27O_language",  
-        download: "https://commons.wikimedia.org/wiki/Category:Pa%27O_language",  
-        citation: "Wikimedia Commons, Lingua Libre Pa'O pronunciation recordings."  
-      },  
-      {  
-        id: "PAO-LEX-0001",  
-        name: "Pa'O Lexical Resource",  
-        type: "Lexicon",  
-        language: "Pa'O ↔ Myanmar",  
-        iso: "blk",  
-        script: "Mymr",  
-        version: "Research",  
-        records: 26174,  
-        size: "—",  
-        format: "Research resource",  
-        license: "Research / Permission",  
-        status: "Under Review",  
-        quality: null,  
-        source: "University / Research resources",  
-        updated: "Research record",  
-        description: "Pa’O lexical entries နှင့် Myanmar meaning များကို စုစည်းထားသော research-oriented lexical resource ဖြစ်သည်။ Access နှင့် redistribution conditions ကို source အလိုက် စစ်ဆေးရန်လိုသည်။",  
-        tags: ["Dictionary", "Lexicon", "Vocabulary", "Research"],  
-        useCases: ["Dictionary development", "Machine translation", "Morphology", "Vocabulary modeling"],  
-        repository: "#",  
-        download: "#",  
-        citation: "Pa'O lexical research resource. Source and permission should be verified before redistribution."  
-      },  
-      {  
-        id: "PAO-OCR-0001",  
-        name: "Pa'O OCR Image–Text Corpus",  
-        type: "OCR",  
-        language: "Pa'O",  
-        iso: "blk",  
-        script: "Mymr",  
-        version: "Planned",  
-        records: 0,  
-        size: "—",  
-        format: "PNG/JPEG + TXT",  
-        license: "To be determined",  
-        status: "Development",  
-        quality: null,  
-        source: "Community / Research",  
-        updated: "Planned",  
-        description: "Pa’O ပုံနှိပ်စာ၊ စာအုပ်နှင့် စာရွက်စာတမ်းများအတွက် Image–Ground Truth Text pair များ တည်ဆောက်ရန် ရည်ရွယ်ထားသော dataset project ဖြစ်သည်။",  
-        tags: ["OCR", "Image", "Printed Text", "Handwriting"],  
-        useCases: ["OCR training", "Document digitization", "Historical text preservation"],  
-        repository: "#",  
-        download: "#",  
-        citation: "Pa'O OCR Image–Text Corpus, Development Project."  
-      },  
-      {  
-        id: "PAO-INS-0001",  
-        name: "Pa'O Instruction & QA Dataset",  
-        type: "Instruction",  
-        language: "Pa'O",  
-        iso: "blk",  
-        script: "Mymr",  
-        version: "Planned",  
-        records: 0,  
-        size: "—",  
-        format: "JSONL",  
-        license: "To be determined",  
-        status: "Development",  
-        quality: null,  
-        source: "Community / Research",  
-        updated: "Planned",  
-        description: "Pa’O AI assistant နှင့် LLM များအတွက် instruction၊ question-answer၊ conversation နှင့် translation tasks များ တည်ဆောက်ရန် ရည်ရွယ်ထားသည်။",  
-        tags: ["LLM", "Instruction", "QA", "Conversation"],  
-        useCases: ["Pa'O chatbot", "Instruction tuning", "Question answering", "Conversation"],  
-        repository: "#",  
-        download: "#",  
-        citation: "Pa'O Instruction & QA Dataset, Development Project."  
-      },  
-      {  
-        id: "PAO-EVL-0001",  
-        name: "Pa'O NLP Evaluation Benchmark",  
-        type: "Evaluation",  
-        language: "Pa'O",  
-        iso: "blk",  
-        script: "Mymr",  
-        version: "Planned",  
-        records: 0,  
-        size: "—",  
-        format: "JSON / JSONL",  
-        license: "To be determined",  
-        status: "Development",  
-        quality: null,  
-        source: "Research / Community",  
-        updated: "Planned",  
-        description: "Pa’O language models၊ translation systems၊ OCR နှင့် ASR systems များ၏ performance ကို တိုင်းတာရန် ရည်ရွယ်ထားသော benchmark dataset ဖြစ်သည်။",  
-        tags: ["Benchmark", "Evaluation", "NLP", "AI"],  
-        useCases: ["LLM evaluation", "MT evaluation", "ASR evaluation", "OCR evaluation"],  
-        repository: "#",  
-        download: "#",  
-        citation: "Pa'O NLP Evaluation Benchmark, Development Project."  
-      }  
-    ];  
-  
-    /* HELPERS */  
-    const $ = selector => document.querySelector(selector);  
-    const $$ = selector => document.querySelectorAll(selector);  
-  
-    function formatNumber(value) {  
-      if (value === null || value === undefined || Number.isNaN(Number(value))) return "—";  
-      return Number(value).toLocaleString("en-US");  
-    }  
-  
-    function formatDate(date) { return date || "—"; }  
-  
-    function escapeHtml(value) {  
-      if (value === null || value === undefined) return "";  
-      return String(value)  
-        .replace(/&/g, "&amp;")  
-        .replace(/</g, "&lt;")  
-        .replace(/>/g, "&gt;")  
-        .replace(/"/g, "&quot;")  
-        .replace(/'/g, "&#039;");  
-    }  
+        // Buttons rendering logic
+        let buttonsHtml = "";
+        
+        if (item.hfUrl) {
+          buttonsHtml += `<a href="${item.hfUrl}" target="_blank" class="btn btn-dark">Hugging Face</a>`;
+        }
+        if (item.kaggleUrl) {
+          buttonsHtml += `<a href="${item.kaggleUrl}" target="_blank" class="btn btn-kaggle">Kaggle</a>`;
+        }
+        if (!item.hfUrl && !item.kaggleUrl) {
+          buttonsHtml += `<button class="btn btn-disabled" disabled>Not Available</button>`;
+        }
 
-    function showToast(message) {
-      const toast = $("#toast");
-      if (!toast) return;
-      toast.textContent = message;
-      toast.classList.add("show");
-      setTimeout(() => {
-        toast.classList.remove("show");
-      }, 3000);
-    }
-  
-    /* PORTAL FUNCTIONS */  
-    function updateStatistics() {  
-      const totalDatasets = datasets.length;  
-      const totalRecords = datasets.reduce((sum, item) => typeof item.records === "number" ? sum + item.records : sum, 0);  
-      const totalHours = datasets.reduce((sum, item) => typeof item.hours === "number" ? sum + item.hours : sum, 0);  
-      const verified = datasets.filter(item => item.status === "Verified").length;  
-  
-      $("#statDatasets").textContent = formatNumber(totalDatasets);  
-      $("#statRecords").textContent = formatNumber(totalRecords);  
-      $("#statHours").textContent = totalHours > 0 ? totalHours.toFixed(1) : "—";  
-      $("#statVerified").textContent = formatNumber(verified);  
-    }  
-  
-    function getFilteredDatasets() {  
-      const search = $("#searchInput").value.trim().toLowerCase();  
-      const type = $("#typeFilter").value;  
-      const license = $("#licenseFilter").value;  
-      const status = $("#statusFilter").value;  
-      const sort = $("#sortFilter").value;  
-  
-      let result = datasets.filter(item => {  
-        const searchable = [  
-          item.id, item.name, item.type, item.language,  
-          item.iso, item.script, item.source, item.description,  
-          ...(item.tags || [])  
-        ].join(" ").toLowerCase();  
-  
-        return (!search || searchable.includes(search)) &&  
-               (!type || item.type === type) &&  
-               (!license || item.license === license) &&  
-               (!status || item.status === status);  
-      });  
-  
-      result.sort((a, b) => {  
-        if (sort === "name") return a.name.localeCompare(b.name);  
-        if (sort === "records") return (b.records || 0) - (a.records || 0);  
-        if (sort === "quality") return (b.quality || 0) - (a.quality || 0);  
-        return String(b.updated || "").localeCompare(String(a.updated || ""));  
-      });  
-  
-      return result;  
-    }  
-  
-    function renderDatasets() {  
-      const grid = $("#datasetGrid");  
-      const empty = $("#emptyState");  
-      const result = getFilteredDatasets();  
-  
-      $("#resultCount").textContent = `${formatNumber(result.length)} datasets`;  
-  
-      if (!result.length) {  
-        grid.innerHTML = "";  
-        empty.classList.remove("hidden");  
-        return;  
-      }  
-  
-      empty.classList.add("hidden");  
-      grid.innerHTML = result.map(createDatasetCard).join("");  
-    }  
-  
-    function createDatasetCard(item) {  
-      const statusClass = item.status === "Verified" ? "verified" : item.status === "Under Review" ? "review" : "development";  
-  
-      return `  
-        <article class="dataset-card">  
-          <div class="dataset-top">  
-            <span class="dataset-type">${escapeHtml(item.type)}</span>  
-            <span class="status ${statusClass}">${escapeHtml(item.status)}</span>  
-          </div>  
-  
-          <h3 class="dataset-title">${escapeHtml(item.name)}</h3>  
-          <div class="dataset-id">${escapeHtml(item.id)}</div>  
-          <p class="dataset-description">${escapeHtml(item.description)}</p>  
-  
-          <div class="dataset-tags">  
-            ${(item.tags || []).map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}  
-          </div>  
-  
-          <div class="dataset-meta">  
-            <div class="meta-item"><span>Language</span><strong>${escapeHtml(item.language)}</strong></div>  
-            <div class="meta-item"><span>Records</span><strong>${formatNumber(item.records)}</strong></div>  
-            <div class="meta-item"><span>Format</span><strong>${escapeHtml(item.format)}</strong></div>  
-            <div class="meta-item"><span>License</span><strong>${escapeHtml(item.license)}</strong></div>  
-          </div>  
-  
-          <div class="dataset-actions">  
-            <button class="btn btn-light" onclick="openDataset('${item.id}')">Details</button>  
-            ${item.download && item.download !== "#" ?   
-              `<a class="btn btn-dark" href="${escapeHtml(item.download)}" target="_blank" rel="noopener noreferrer">Download</a>` :   
-              `<button class="btn btn-light" onclick="showToast('ဤ Dataset အတွက် Download link မသတ်မှတ်ရသေးပါ။')">Not Available</button>`  
-            }  
-          </div>  
-        </article>  
-      `;  
-    }  
-  
-    function openDataset(id) {  
-      const item = datasets.find(dataset => dataset.id === id);  
-      if (!item) return;  
-  
-      $("#modalType").textContent = item.type;  
-      $("#modalTitle").textContent = item.name;  
-  
-      const useCases = (item.useCases || []).map(use => `<li>${escapeHtml(use)}</li>`).join("");  
-      const citation = escapeHtml(item.citation || "");  
-  
-      $("#modalBody").innerHTML = `  
-        <p class="detail-intro">${escapeHtml(item.description)}</p>  
-        <div class="table-responsive">  
-          <table class="detail-table">  
-            <tr><td>Dataset ID</td><td>${escapeHtml(item.id)}</td></tr>  
-            <tr><td>Version</td><td>${escapeHtml(item.version)}</td></tr>  
-            <tr><td>Language / ISO</td><td>${escapeHtml(item.language)} (${escapeHtml(item.iso)})</td></tr>  
-            <tr><td>Script</td><td>${escapeHtml(item.script)}</td></tr>  
-            <tr><td>Records / Size</td><td>${formatNumber(item.records)} / ${escapeHtml(item.size)}</td></tr>  
-            <tr><td>Format</td><td>${escapeHtml(item.format)}</td></tr>  
-            <tr><td>License</td><td>${escapeHtml(item.license)}</td></tr>  
-            <tr><td>Status</td><td>${escapeHtml(item.status)}</td></tr>  
-            <tr><td>Source</td><td>${escapeHtml(item.source)}</td></tr>  
-            <tr><td>Last Updated</td><td>${formatDate(item.updated)}</td></tr>  
-          </table>  
-        </div>  
-        ${useCases ? `
-        <div class="detail-section">
-          <h3>Use Cases</h3>
-          <ul style="margin-left: 20px; margin-top: 8px; color: var(--muted); font-size: 13px;">
-            ${useCases}
-          </ul>
-        </div>` : ''}
-        <div class="detail-section">
-          <h3>Citation</h3>
-          <div class="code-box">
-            <button class="copy-btn" onclick="copyCitation()">Copy</button>
-            <code id="citationText">${citation}</code>
+        html += `
+          <div class="card">
+            <div>
+              <div class="card-top">
+                <div class="badge-box">
+                  <span>${item.type}</span> • 
+                  <span class="dot ${dotClass}"></span>
+                  <span>${item.status}</span>
+                </div>
+              </div>
+
+              <div class="card-title">${item.title}</div>
+              <div class="dataset-id">${item.id}</div>
+              <div class="card-desc">${item.desc}</div>
+
+              <div class="tags">
+                ${item.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+              </div>
+
+              <div class="meta-grid">
+                <div class="meta-item">
+                  <span class="key">Language</span>
+                  <span class="val">${item.language}</span>
+                </div>
+                <div class="meta-item">
+                  <span class="key">Records</span>
+                  <span class="val">${item.records}</span>
+                </div>
+                <div class="meta-item">
+                  <span class="key">Format</span>
+                  <span class="val">${item.format}</span>
+                </div>
+                <div class="meta-item">
+                  <span class="key">License</span>
+                  <span class="val">${item.license}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-actions">
+              ${buttonsHtml}
+            </div>
           </div>
-        </div>
-        <div class="modal-actions">
-          ${item.download && item.download !== "#" ? 
-            `<a class="btn btn-dark" href="${escapeHtml(item.download)}" target="_blank" rel="noopener noreferrer">Download Dataset</a>` : ''}
-          ${item.repository && item.repository !== "#" ? 
-            `<a class="btn btn-light" href="${escapeHtml(item.repository)}" target="_blank" rel="noopener noreferrer">Repository</a>` : ''}
-        </div>
-      `;  
+        `;
+      });
 
-      $("#datasetModal").classList.remove("hidden");
-    }  
-
-    function closeModal() {
-      $("#datasetModal").classList.add("hidden");
+      container.innerHTML = html;
     }
 
-    function copyCitation() {
-      const text = $("#citationText")?.textContent;
-      if (text) {
-        navigator.clipboard.writeText(text).then(() => {
-          showToast("Citation ကို Copy ကူးယူပြီးပါပြီ။");
-        });
-      }
-    }
-
-    /* INITIALIZATION & EVENT LISTENERS */
-    document.addEventListener("DOMContentLoaded", () => {
-      updateStatistics();
-      renderDatasets();
-
-      // Mobile Menu
-      const mobileBtn = $("#mobileMenuBtn");
-      const mainNav = $("#mainNav");
-      if (mobileBtn && mainNav) {
-        mobileBtn.addEventListener("click", () => {
-          mainNav.classList.toggle("mobile-open");
-        });
-      }
-
-      // Modal Actions
-      $("#modalClose")?.addEventListener("click", closeModal);
-      $("#datasetModal")?.addEventListener("click", (e) => {
-        if (e.target.id === "datasetModal") closeModal();
-      });
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") closeModal();
-      });
-
-      // Search & Filters
-      $("#searchInput")?.addEventListener("input", renderDatasets);
-      $("#typeFilter")?.addEventListener("change", renderDatasets);
-      $("#licenseFilter")?.addEventListener("change", renderDatasets);
-      $("#statusFilter")?.addEventListener("change", renderDatasets);
-      $("#sortFilter")?.addEventListener("change", renderDatasets);
-
-      $("#resetFilters")?.addEventListener("click", () => {
-        $("#searchInput").value = "";
-        $("#typeFilter").value = "";
-        $("#licenseFilter").value = "";
-        $("#statusFilter").value = "";
-        $("#sortFilter").value = "newest";
-        renderDatasets();
-      });
-
-      // Category Cards Click
-      $$(".category-card").forEach(card => {
-        card.addEventListener("click", () => {
-          const category = card.getAttribute("data-category");
-          $("#typeFilter").value = category;
-          renderDatasets();
-          document.getElementById("datasets")?.scrollIntoView({ behavior: "smooth" });
-        });
-      });
-
-      // Contribution Form
-      $("#contributionForm")?.addEventListener("submit", (e) => {
-        e.preventDefault();
-        showToast("ကျေးဇူးတင်ပါသည်။ အချက်အလက်များကို လက်ခံရရှိပါပြီ။");
-        e.target.reset();
-      });
-
-      // Populate Pa'O Basics tables if external paohData.js exists
-      if (typeof paohData !== "undefined") {
-        if (paohData.paliVowels) createTable(paohData.paliVowels, "pali-vowels-table", ["ပအိုဝ်းစာ", "Romanization", "IPA"]);
-        if (paohData.paohVowels) createTable(paohData.paohVowels, "paoh-vowels-table", ["ပအိုဝ်းစာ", "Romanization", "IPA"]);
-        if (paohData.consonants) createTable(paohData.consonants, "paoh-consonants-table", ["ပအိုဝ်းစာ", "Romanization", "IPA"]);
-        if (paohData.numbers) createTable(paohData.numbers, "paoh-numbers-table", ["ပအိုဝ်းစာ", "Romanization"]);
-        if (paohData.diacritics) createTable(paohData.diacritics, "paoh-diacritics-table", ["ပအိုဝ်းစာ", "Romanization", "ဖော်ပြချက်"]);
-
-        if (paohData.tonesSet1) createToneTable(paohData.tonesSet1, "tones-set1-table");
-        if (paohData.tonesSet2) createToneTable(paohData.tonesSet2, "tones-set2-table");
-        if (paohData.tonesSet3) createToneTable(paohData.tonesSet3, "tones-set3-table");
-        if (paohData.tonesSet4) createToneTable(paohData.tonesSet4, "tones-set4-table");
-        if (paohData.tonesSet5) createToneTable(paohData.tonesSet5, "tones-set5-table");
-        if (paohData.tonesSet6) createToneTable(paohData.tonesSet6, "tones-set6-table");
-      }
-    });
-  </script>  
-</body>  
+    window.onload = renderDatasets;
+  </script>
+</body>
 </html>
