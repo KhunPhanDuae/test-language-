@@ -35,7 +35,7 @@
 <meta name="google-site-verification" content="m6ZrXvZ11fD4TZclO6RLMoDOUrMa7K2ddqOWgrbfhtE" />
   <meta
     name="keywords"
-    content="ပအိုဝ်းစကား, ပအိုဝ်းဘာသာစကား, ပအိုဝ်းဒေတာ, ပအိုဝ်းစကားပြော, ပအိုဝ်းအဘိဓာန်, ပအိုဝ်းသင်ခန်းစာ, ပအိုဝ်း dataset, ပအိုဝ်း speech, ပအိုဝ်း TTS, Pa'O language, Pa-O language, Pa'O dataset, Pa-O dataset, Pa'O speech, Pa-O speech dataset, Pa'O NLP, Pa'O AI, Myanmar language dataset"
+    content="ပအိုဝ်းစကား, ပအိုဝ်းဘာသာစကား, ပအိုဝ်းဒေတာ, ပအိုဝ်းစကားပြော, ပအိုဝ်းအဘိဓာန်, ပအိုဝ်းသင်ခန်းစာ, ပအိုဝ်း dataset, ပအိုဝ်း speech, ပအိုဝ်း TTS, Pa'O language, Pa-O language, Pa'O dataset, Pa-O dataset, Pa'O speech, Pa'O speech dataset, Pa'O NLP, Pa'O AI, Myanmar language dataset"
   >
 
   <meta http-equiv="content-language" content="my">
@@ -960,6 +960,12 @@
         license:
           "CC BY 4.0",
 
+        licenseUrl:
+          "https://creativecommons.org/licenses/by/4.0/",
+
+        creator:
+          "Pa'O Digital Hub",
+
         hfUrl:
           "https://huggingface.co/datasets/paodigitalhub/pao-sentences-dataset",
 
@@ -1003,6 +1009,12 @@
 
         license:
           "Mixed",
+
+        licenseUrl:
+          "https://creativecommons.org/licenses/",
+
+        creator:
+          "Pa'O Digital Hub",
 
         hfUrl:
           "https://huggingface.co/datasets/paodigitalhub/blk-text-corpus",
@@ -1048,6 +1060,12 @@
         license:
           "CC BY 4.0",
 
+        licenseUrl:
+          "https://creativecommons.org/licenses/by/4.0/",
+
+        creator:
+          "Pa'O Digital Hub",
+
         hfUrl:
           "https://huggingface.co/datasets/paodigitalhub/pao-audio-dataset",
 
@@ -1091,6 +1109,12 @@
 
         license:
           "Research / Permission",
+
+        licenseUrl:
+          "https://test-language.pages.dev/PaB1",
+
+        creator:
+          "Pa'O Digital Hub",
 
         hfUrl:
           null,
@@ -1193,6 +1217,12 @@
             itemscope
             itemtype="https://schema.org/Dataset"
           >
+
+            <meta itemprop="url" content="${item.hfUrl || 'https://test-language.pages.dev/PaB1'}">
+
+            <div itemprop="creator" itemscope itemtype="https://schema.org/Organization" style="display:none;">
+              <span itemprop="name">${item.creator}</span>
+            </div>
 
 
             <div>
@@ -1319,7 +1349,9 @@
                   </span>
 
                   <span class="val">
-                    ${item.license}
+                    <a href="${item.licenseUrl}" itemprop="license" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">
+                      ${item.license}
+                    </a>
                   </span>
 
                 </div>
