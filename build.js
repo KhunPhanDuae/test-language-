@@ -5,8 +5,22 @@ const API_URL = "https://script.google.com/macros/s/AKfycbz41O81peRW-i3HzeugixiZ
 async function generateHTML() {
   try {
     console.log("Google Sheet မှ ဒေတာများ လှမ်းယူနေပါသည်...");
-    const response = await fetch(API_URL);
-    const data = await response.json();
+    const response = await fetch(API_URL, { redirect: 'follow' });
+
+    // တုံ့ပြန်ချက်ကို စာသားအဖြစ် အရင်ရယူခြင်း
+    const text = await response.text();
+
+    // JSON ဟုတ်မဟုတ် စစ်ဆေးခြင်း
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (e) {
+      console.error("\n❌ Google Apps Script မှ JSON မဟုတ်သော တုံ့ပြန်ချက် (HTML) ပြန်လာပါသည်:");
+      console.error("----------------------------------------");
+      console.error(text.slice(0, 500)); // HTML Error ၏ ပထမ စာလုံး ၅၀၀ ကို ထုတ်ပြမည်
+      console.error("----------------------------------------\n");
+      throw new Error("Google Apps Script ဘက်တွင် Error တက်နေပါသည် (အထက်ပါ စာသားကို စစ်ဆေးပါ)");
+    }
 
     let htmlContent = fs.readFileSync('index.html', 'utf8');
 
@@ -105,21 +119,21 @@ async function generateHTML() {
       cardsHtml = `<div style="text-align:center; grid-column:1/-1;">Dataset များ ရှာမတွေ့ပါ။</div>`;
     }
 
-    // HTML ဖိုင်ထဲသို့ Comment Marker ကြားတွင် အစားထိုးထည့်သွင်းခြင်း
+    // HTML ဖိုင်ထဲသို့ အစားထိုးထည့်သွင်းခြင်း (Function callback သုံး၍ $ ပြဿနာ ကာကွယ်ထားသည်)
     htmlContent = htmlContent.replace(
       /<!-- STATS_START -->[\s\S]*?<!-- STATS_END -->/,
-      `<!-- STATS_START -->\n${statsHtml}\n<!-- STATS_END -->`
+      () => `<!-- STATS_START -->\n${statsHtml}\n<!-- STATS_END -->`
     );
 
     htmlContent = htmlContent.replace(
       /<!-- DATASET_START -->[\s\S]*?<!-- DATASET_END -->/,
-      `<!-- DATASET_START -->\n${cardsHtml}\n<!-- DATASET_END -->`
+      () => `<!-- DATASET_START -->\n${cardsHtml}\n<!-- DATASET_END -->`
     );
 
     fs.writeFileSync('index.html', htmlContent, 'utf8');
     console.log("index.html ကို Google Sheet ဒေတာများဖြင့် အောင်မြင်စွာ Pre-render ရေးသွင်းပြီးပါပြီ။");
   } catch (err) {
-    console.error("Build လုပ်ရာတွင် အမှားဖြစ်ပေါ်ပါသည်:", err);
+    console.error("Build လုပ်ရာတွင် အမှားဖြစ်ပေါ်ပါသည်:", err.message || err);
     process.exit(1);
   }
 }
