@@ -1,0 +1,29 @@
+name: Pre-render HTML from Google Sheet
+
+on:
+  schedule:
+    # ၆ နာရီတစ်ကြိမ် အလိုအလျောက် Google Sheet ဒေတာ သွားဆွဲပြီး HTML ရေးပေးမည်
+    - cron: '0 */6 * * *'
+  workflow_dispatch: # GitHub Action Tab မှ Manual "Run workflow" နှိပ်၍လည်း ချက်ချင်း ရေးခိုင်းနိုင်သည်
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run Build Script
+        run: node build.js
+
+      - name: Commit and Push Updated HTML
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto Build Static HTML from Sheet [skip ci]" && git push)
