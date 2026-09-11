@@ -56,10 +56,10 @@ async function generateHTML() {
 
         let btnHtml = "";
         if (item.hfUrl) {
-          btnHtml += `<a href="${item.hfUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-dark">Hugging Face</a> `;
+          btnHtml += `<a href="${item.hfUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-dark">Pa'O Digital Hub</a> `;
         }
         if (item.kaggleUrl) {
-          btnHtml += `<a href="${item.kaggleUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-kaggle">Kaggle</a>`;
+          btnHtml += `<a href="${item.kaggleUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-kaggle">Pa'O Digital Hub</a>`;
         }
         if (!item.hfUrl && !item.kaggleUrl) {
           btnHtml += `<span class="btn btn-disabled">Not Available</span>`;
@@ -67,7 +67,7 @@ async function generateHTML() {
 
         return `
         <article class="card" itemscope itemtype="https://schema.org/Dataset">
-          <meta itemprop="url" content="${item.hfUrl || 'https://test-language.pages.dev/PaB1'}">
+          <meta itemprop="url" content="${item.hfUrl || 'https://pao-dataset.pages.dev/'}">
           <div itemprop="creator" itemscope itemtype="https://schema.org/Organization" style="display:none;">
             <span itemprop="name">${item.creator || "Pa'O Digital Hub"}</span>
           </div>
