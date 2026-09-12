@@ -1,139 +1,273 @@
 const fs = require('fs');
+const path = require('path');
 
-const API_URL = "https://script.google.com/macros/s/AKfycbz41O81peRW-i3HzeugixiZ_xacDqCiNqO6DNH4UDSobIPwr5crT185lqnjUux0oX1pzg/exec";
+const API_URL = 'https://script.google.com/macros/s/AKfycbz41O81peRW-i3HzeugixiZ_xacDqCiNqO6DNH4UDSobIPwr5crT185lqnjUux0oX1pzg/exec';
+const HTML_FILE = path.join(__dirname, 'index.html');
 
+/**
+ * Escape text before inserting into HTML.
+ */
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+/**
+ * Safely validate URLs.
+ */
+function safeUrl(value, fallback = '#') {
+  if (!value) return fallback;
+  try {
+    const url = new URL(String(value));
+    if (url.protocol === 'http:' || url.protocol === 'https:') {
+      return url.href;
+    }
+    return fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+/**
+ * Safely convert values to text.
+ */
+function text(value, fallback = '-') {
+  if (value === null || value === undefined || value === '') {
+    return fallback;
+  }
+  return escapeHtml(value);
+}
+
+/**
+ * Main build function.
+ */
 async function generateHTML() {
   try {
-    console.log("Google Sheet မှ ဒေတာများ လှမ်းယူနေပါသည်...");
-    const response = await fetch(API_URL, { redirect: 'follow' });
+    console.log('========================================');
+    console.log("Pa'O Digital Hub Build Started");
+    console.log('========================================');
 
-    // တုံ့ပြန်ချက်ကို စာသားအဖြစ် အရင်ရယူခြင်း
-    const text = await response.text();
+    // --------------------------------------------------
+    // 1. Read Google Apps Script API
+    // --------------------------------------------------
+    console.log('📡 Google Sheet မှ ဒေတာများ လှမ်းယူနေပါသည်...');
 
-    // JSON ဟုတ်မဟုတ် စစ်ဆေးခြင်း
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch (e) {
-      console.error("\n❌ Google Apps Script မှ JSON မဟုတ်သော တုံ့ပြန်ချက် (HTML) ပြန်လာပါသည်:");
-      console.error("----------------------------------------");
-      console.error(text.slice(0, 500)); // HTML Error ၏ ပထမ စာလုံး ၅၀၀ ကို ထုတ်ပြမည်
-      console.error("----------------------------------------\n");
-      throw new Error("Google Apps Script ဘက်တွင် Error တက်နေပါသည် (အထက်ပါ စာသားကို စစ်ဆေးပါ)");
+    const response = await fetch(API_URL, {
+      redirect: 'follow',
+      headers: { Accept: 'application/json' }
+    });
+
+    console.log(`HTTP Status: ${response.status}`);
+
+    if (!response.ok) {
+      throw new Error(`Google Apps Script HTTP Error: ${response.status} ${response.statusText}`);
     }
 
-    let htmlContent = fs.readFileSync('index.html', 'utf8');
+    const rawText = await response.text();
+    console.log(`API response length: ${rawText.length} characters`);
 
-    // ၁။ Stats HTML ဖန်တီးခြင်း
+    // --------------------------------------------------
+    // 2. Parse JSON
+    // --------------------------------------------------
+    let data;
+    try {
+      data = JSON.parse(rawText);
+    } catch (error) {
+      console.error('');
+      console.error('❌ Google Apps Script က JSON မဟုတ်သော response ပြန်လာပါသည်။');
+      console.error('----------------------------------------');
+      console.error(rawText.slice(0, 1500));
+      console.error('----------------------------------------');
+      throw new Error('Google Apps Script response သည် valid JSON မဟုတ်ပါ။');
+    }
+
+    // --------------------------------------------------
+    // 3. Validate API structure
+    // --------------------------------------------------
+    if (!data || typeof data !== 'object') {
+      throw new Error('API response သည် object မဟုတ်ပါ။');
+    }
+
+    if (!Array.isArray(data.datasets)) {
+      throw new Error('API response ထဲတွင် datasets array မတွေ့ပါ။');
+    }
+
+    console.log('');
+    console.log('✅ Google Sheet API အောင်မြင်ပါသည်။');
+    console.log(`📦 Datasets received: ${data.datasets.length}`);
+    console.log(`📊 Total records: ${data.stats?.data_records ?? 0}`);
+    console.log(`🎤 Speech hours: ${data.stats?.speech_hours ?? 0}`);
+    console.log(`✓ Verified datasets: ${data.stats?.verified_datasets ?? 0}`);
+
+    // --------------------------------------------------
+    // 4. Read existing index.html
+    // --------------------------------------------------
+    if (!fs.existsSync(HTML_FILE)) {
+      throw new Error('index.html ဖိုင်ကို မတွေ့ပါ။');
+    }
+
+    let htmlContent = fs.readFileSync(HTML_FILE, 'utf8');
+
+    // --------------------------------------------------
+    // 5. Generate Statistics HTML
+    // --------------------------------------------------
     const statsHtml = `
-        <div class="stat-card">
-          <div class="label">စုစုပေါင်း Dataset</div>
-          <div class="value">${data.stats?.total_datasets ?? 0}</div>
-        </div>
-        <div class="stat-card">
-          <div class="label">Data Records</div>
-          <div class="value">${data.stats?.data_records ?? 0}</div>
-        </div>
-        <div class="stat-card">
-          <div class="label">Speech Hours</div>
-          <div class="value">${data.stats?.speech_hours ?? 0}</div>
-        </div>
-        <div class="stat-card">
-          <div class="label">Verified Datasets</div>
-          <div class="value">${data.stats?.verified_datasets ?? 0}</div>
-        </div>
+      <div class="stat-card">
+        <div class="label">Total Datasets</div>
+        <div class="value">${text(data.stats?.total_datasets, '0')}</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Data Records</div>
+        <div class="value">${text(data.stats?.data_records, '0')}</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Speech Hours</div>
+        <div class="value">${text(data.stats?.speech_hours, '0')}</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Verified Datasets</div>
+        <div class="value">${text(data.stats?.verified_datasets, '0')}</div>
+      </div>
     `;
 
-    // ၂။ Datasets Cards HTML ဖန်တီးခြင်း
-    let cardsHtml = "";
-    if (data.datasets && data.datasets.length > 0) {
-      cardsHtml = data.datasets.map(item => {
-        const isVerified = item.status === "Verified";
-        const dotClass = isVerified ? "verified" : "review";
-        const tags = Array.isArray(item.tags)
-          ? item.tags.map(t => `<span class="tag" itemprop="keywords">${t}</span>`).join("")
-          : "";
+    // --------------------------------------------------
+    // 6. Generate Dataset Cards
+    // --------------------------------------------------
+    let cardsHtml = '';
 
-        let btnHtml = "";
-        if (item.hfUrl) {
-          btnHtml += `<a href="${item.hfUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-dark">Pa'O Digital Hub</a> `;
-        }
-        if (item.kaggleUrl) {
-          btnHtml += `<a href="${item.kaggleUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-kaggle">Pa'O Digital Hub</a>`;
-        }
-        if (!item.hfUrl && !item.kaggleUrl) {
-          btnHtml += `<span class="btn btn-disabled">Not Available</span>`;
-        }
+    if (data.datasets.length > 0) {
+      cardsHtml = data.datasets
+        .map((item) => {
+          const isVerified = String(item.status || '').toLowerCase() === 'verified';
+          const dotClass = isVerified ? 'verified' : 'review';
 
-        return `
-        <article class="card" itemscope itemtype="https://schema.org/Dataset">
-          <meta itemprop="url" content="${item.hfUrl || 'https://pao-dataset.pages.dev/'}">
-          <div itemprop="creator" itemscope itemtype="https://schema.org/Organization" style="display:none;">
-            <span itemprop="name">${item.creator || "Pa'O Digital Hub"}</span>
-          </div>
+          // Tags
+          const tags = Array.isArray(item.tags)
+            ? item.tags.map((tag) => `<span class="tag" itemprop="keywords">${text(tag, '')}</span>`).join('')
+            : '';
 
-          <div>
-            <div class="card-top">
-              <div class="badge-box">
-                <span>${item.type || 'Data'}</span> •
-                <span class="dot ${dotClass}"></span>
-                <span>${item.status || 'Pending'}</span>
+          // URLs
+          const hfUrl = safeUrl(item.hfUrl);
+          const kaggleUrl = safeUrl(item.kaggleUrl);
+          const datasetUrl = item.hfUrl || item.kaggleUrl || 'https://pao-dataset.pages.dev/';
+          const safeDatasetUrl = safeUrl(datasetUrl, 'https://pao-dataset.pages.dev/');
+
+          // License
+          const licenseUrl = safeUrl(item.licenseUrl);
+
+          // Buttons
+          let btnHtml = '';
+          if (item.hfUrl) {
+            btnHtml += `<a href="${hfUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-dark">Hugging Face</a>`;
+          }
+          if (item.kaggleUrl) {
+            btnHtml += `<a href="${kaggleUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-kaggle">Kaggle</a>`;
+          }
+          if (!item.hfUrl && !item.kaggleUrl) {
+            btnHtml = `<span class="btn btn-disabled">Not Available</span>`;
+          }
+
+          return `
+            <article class="card" itemscope itemtype="https://schema.org/Dataset">
+              <meta itemprop="url" content="${safeDatasetUrl}">
+              <div itemprop="creator" itemscope itemtype="https://schema.org/Organization" style="display:none;">
+                <span itemprop="name">${text(item.creator, "Pa'O Digital Hub")}</span>
               </div>
-            </div>
-
-            <h3 class="card-title" itemprop="name">${item.title || ''}</h3>
-            <div class="dataset-id" itemprop="identifier">${item.id || ''}</div>
-            <p class="card-desc" itemprop="description">${item.desc || ''}</p>
-            <div class="tags">${tags}</div>
-
-            <div class="meta-grid">
-              <div class="meta-item">
-                <span class="key">Language</span>
-                <span class="val" itemprop="inLanguage">${item.language || '-'}</span>
+              <div>
+                <div class="card-top">
+                  <div class="badge-box">
+                    <span>${text(item.type, 'Data')}</span> • <span class="dot ${dotClass}"></span> <span>${text(item.status, 'Pending')}</span>
+                  </div>
+                </div>
+                <h3 class="card-title" itemprop="name">${text(item.title, '')}</h3>
+                <div class="dataset-id" itemprop="identifier">${text(item.id, '')}</div>
+                <p class="card-desc" itemprop="description">${text(item.desc, '')}</p>
+                <div class="tags">${tags}</div>
+                <div class="meta-grid">
+                  <div class="meta-item">
+                    <span class="key">Language</span>
+                    <span class="val" itemprop="inLanguage">${text(item.language)}</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="key">Records</span>
+                    <span class="val">${text(item.records)}</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="key">Format</span>
+                    <span class="val">${text(item.format)}</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="key">License</span>
+                    <span class="val">
+                      ${item.licenseUrl ? `<a href="${licenseUrl}" itemprop="license" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">${text(item.license, 'CC BY 4.0')}</a>` : text(item.license, 'CC BY 4.0')}
+                    </span>
+                  </div>
+                </div>
               </div>
-              <div class="meta-item">
-                <span class="key">Records</span>
-                <span class="val">${item.records || '-'}</span>
-              </div>
-              <div class="meta-item">
-                <span class="key">Format</span>
-                <span class="val">${item.format || '-'}</span>
-              </div>
-              <div class="meta-item">
-                <span class="key">License</span>
-                <span class="val">
-                  <a href="${item.licenseUrl || '#'}" itemprop="license" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">
-                    ${item.license || 'CC BY 4.0'}
-                  </a>
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div class="card-actions">
-            ${btnHtml}
-          </div>
-        </article>`;
-      }).join("\n");
+              <div class="card-actions">${btnHtml}</div>
+            </article>
+          `;
+        })
+        .join('\n');
     } else {
       cardsHtml = `<div style="text-align:center; grid-column:1/-1;">Dataset များ ရှာမတွေ့ပါ။</div>`;
     }
 
-    // HTML ဖိုင်ထဲသို့ အစားထိုးထည့်သွင်းခြင်း (Function callback သုံး၍ $ ပြဿနာ ကာကွယ်ထားသည်)
-    htmlContent = htmlContent.replace(
-      /<!-- STATS_START -->[\s\S]*?<!-- STATS_END -->/,
-      () => `<!-- STATS_START -->\n${statsHtml}\n<!-- STATS_END -->`
-    );
+    // --------------------------------------------------
+    // 7. Replace Statistics
+    // --------------------------------------------------
+    const statsMarker = /<!--\s*STATS_START\s*-->[\s\S]*?<!--\s*STATS_END\s*-->/;
+
+    if (!statsMarker.test(htmlContent)) {
+      throw new Error('index.html ထဲတွင် STATS_START / STATS_END marker မတွေ့ပါ။');
+    }
 
     htmlContent = htmlContent.replace(
-      /<!-- DATASET_START -->[\s\S]*?<!-- DATASET_END -->/,
-      () => `<!-- DATASET_START -->\n${cardsHtml}\n<!-- DATASET_END -->`
+      statsMarker,
+      `<!-- STATS_START -->\n${statsHtml}\n<!-- STATS_END -->`
     );
 
-    fs.writeFileSync('index.html', htmlContent, 'utf8');
-    console.log("index.html ကို Google Sheet ဒေတာများဖြင့် အောင်မြင်စွာ Pre-render ရေးသွင်းပြီးပါပြီ။");
-  } catch (err) {
-    console.error("Build လုပ်ရာတွင် အမှားဖြစ်ပေါ်ပါသည်:", err.message || err);
+    // --------------------------------------------------
+    // 8. Replace Dataset Cards
+    // --------------------------------------------------
+    const datasetMarker = /<!--\s*DATASET_START\s*-->[\s\S]*?<!--\s*DATASET_END\s*-->/;
+
+    if (!datasetMarker.test(htmlContent)) {
+      throw new Error('index.html ထဲတွင် DATASET_START / DATASET_END marker မတွေ့ပါ။');
+    }
+
+    htmlContent = htmlContent.replace(
+      datasetMarker,
+      `<!-- DATASET_START -->\n${cardsHtml}\n<!-- DATASET_END -->`
+    );
+
+    // --------------------------------------------------
+    // 9. Write index.html
+    // --------------------------------------------------
+    fs.writeFileSync(HTML_FILE, htmlContent, 'utf8');
+
+    console.log('');
+    console.log('========================================');
+    console.log('✅ BUILD SUCCESS');
+    console.log('========================================');
+    console.log(`📦 Dataset count: ${data.datasets.length}`);
+    console.log(`📊 Records: ${data.stats?.data_records ?? 0}`);
+    console.log(`🎤 Speech hours: ${data.stats?.speech_hours ?? 0}`);
+    console.log(`✓ Verified: ${data.stats?.verified_datasets ?? 0}`);
+    console.log(`📄 Generated: ${HTML_FILE}`);
+    console.log('========================================');
+
+  } catch (error) {
+    console.error('');
+    console.error('========================================');
+    console.error('❌ BUILD FAILED');
+    console.error('========================================');
+    console.error(error?.stack || error);
+    console.error('========================================');
     process.exit(1);
   }
 }
