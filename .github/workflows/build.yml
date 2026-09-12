@@ -1,76 +1,103 @@
 name: Pa'O Digital Hub Update
 
 on:
-  # Google Sheet data ကို တစ်နာရီတစ်ကြိမ် စစ်မည်
+  # Google Sheet data ကို တစ်နာရီတစ်ကြိမ် update လုပ်မည်
   schedule:
     - cron: '0 * * * *'
   
-  # GitHub Actions မှ manual run လုပ်နိုင်ရန်
+  # GitHub Actions မှ Manual Run လုပ်နိုင်ရန်
   workflow_dispatch:
 
-# GitHub Actions က index.html ကို commit/push လုပ်ခွင့်
+# GitHub Actions မှ index.html ကို commit/push လုပ်ခွင့်ပေးရန်
 permissions:
   contents: write
 
 jobs:
   build:
-    name: Update Dataset Website
     runs-on: ubuntu-latest
 
     steps:
+      # -----------------------------------------------
+      # 1. Checkout Repository
+      # -----------------------------------------------
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      # -----------------------------------------------
+      # 2. Setup Node.js
+      # -----------------------------------------------
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      - name: Show Environment
+      # -----------------------------------------------
+      # 3. Check Files
+      # -----------------------------------------------
+      - name: Check Project Files
         run: |
-          echo "Node version:"
-          node --version
-          echo "Git version:"
-          git --version
-          echo "Current branch:"
-          git branch --show-current
+          echo "Current directory:"
+          pwd
+          echo ""
+          echo "Project files:"
+          ls -la
+          echo ""
+          echo "Checking build.js:"
+          test -f build.js && echo "build.js OK" || (echo "build.js NOT FOUND" && exit 1)
+          echo ""
+          echo "Checking index.html:"
+          test -f index.html && echo "index.html OK" || (echo "index.html NOT FOUND" && exit 1)
 
-      - name: Run Build Script
+      # -----------------------------------------------
+      # 4. Run Build Script
+      # -----------------------------------------------
+      - name: Build HTML from Google Sheet
         run: |
-          echo "Running build.js..."
+          echo "Starting build..."
           node build.js
 
-      - name: Check Generated HTML
+      # -----------------------------------------------
+      # 5. Verify Generated HTML
+      # -----------------------------------------------
+      - name: Verify Generated HTML
         run: |
+          echo "========================================"
+          echo "Checking generated index.html"
+          echo "========================================"
           echo ""
-          echo "===== Generated HTML Check ====="
+          echo "Statistics:"
+          grep -A 25 "STATS_START" index.html || true
           echo ""
-          echo "--- Statistics ---"
-          sed -n '/<!-- STATS_START -->/,/<!-- STATS_END -->/p' index.html
-          echo ""
-          echo "--- Dataset Count ---"
-          echo "Dataset cards:"
+          echo "Dataset card count:"
           grep -c '<article class="card"' index.html || true
           echo ""
-          echo "--- File Information ---"
-          ls -lh index.html
-          echo ""
-          echo "================================"
+          echo "Dataset names:"
+          grep 'class="card-title"' index.html || true
 
+      # -----------------------------------------------
+      # 6. Commit & Push Changes
+      # -----------------------------------------------
       - name: Commit and Push Updated HTML
         run: |
           git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
           if git diff --cached --quiet; then
+            echo "========================================"
             echo "No changes detected."
-            echo "index.html already contains the latest data."
+            echo "index.html is already up to date."
+            echo "========================================"
           else
+            echo "========================================"
             echo "Changes detected."
-            git diff --cached --stat
+            echo "Committing updated index.html..."
+            echo "========================================"
             git commit -m "Auto update dataset HTML"
-            git push
-            echo "✅ index.html pushed successfully."
+            echo "Pushing changes to main..."
+            git push origin HEAD:main
+            echo "========================================"
+            echo "Push completed successfully."
+            echo "========================================"
           fi
