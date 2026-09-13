@@ -162,10 +162,10 @@ async function generateHTML() {
           // Buttons
           let btnHtml = '';
           if (item.hfUrl) {
-            btnHtml += `<a href="${hfUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-dark">Hugging Face</a>`;
+            btnHtml += `<a href="${hfUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-dark">Pa'O Digital Hub in Hugging Face</a>`;
           }
           if (item.kaggleUrl) {
-            btnHtml += `<a href="${kaggleUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-kaggle">Kaggle</a>`;
+            btnHtml += `<a href="${kaggleUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-kaggle">Pa'O Digital Hub in Kaggle</a>`;
           }
           if (!item.hfUrl && !item.kaggleUrl) {
             btnHtml = `<span class="btn btn-disabled">Not Available</span>`;
